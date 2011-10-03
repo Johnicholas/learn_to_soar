@@ -1,0 +1,9 @@
+index(Nil, ?n) == Nothing
+index(Cons(?x, ?xs), Z) == Just(?x)
+index(Cons(?x, ?xs), S(?n)) == index(?xs, ?n)
+
+abc == Cons(A, Cons(B, Cons(C, Nil)))
+index(abc, Z)
+index(abc, S(Z))
+index(abc, S(S(Z)))
+index(abc, S(S(S(Z))))

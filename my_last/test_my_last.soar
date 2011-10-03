@@ -1,0 +1,59 @@
+setup {
+  source my_last.soar
+
+  sp {initialize
+     (state <s> ^operator <o>)
+	 (<o> ^name init)
+  -->
+      (<s> ^name test-my-last)}
+
+}
+
+test "Last of nil is nothing" {
+	sp {propose*last-of-nil
+	    (state <s> ^name test-my-last
+	-->
+	    (<s> ^operator <o>)
+		(<o> ^name my-last
+		     ^list nil
+			 ^return-to last-of-nil-is)}
+	sp {pass
+		(state <s> ^name test-my-last ^last-of-nil-is nothing)
+		-->
+		(pass)}
+}
+
+test "Last of singleton is just the element" {
+  sp {propose*last-of-singleton
+      (state <s> ^name test-my-last)
+  -->
+     (<s> ^operator <o>)
+     (<o> ^name my-last
+          ^list <cons>
+          ^return-to last-of-singleton-is)
+     (<cons> ^first foo ^rest nil)}
+		 
+
+  sp {pass
+      (state <s> ^name test-my-last ^last-of-singleton-is.just foo)
+  -->
+      (pass)}
+}
+
+test "Last of three-element list exercises recursion" {
+  sp {propose*last-of-triple
+      (state <s> ^name test-my-last)
+  -->
+      (<s> ^operator <o>)
+      (<o> ^name my-last
+           ^list <abc>
+           ^return-to last-of-triple-is)
+      (<abc> ^first a ^rest <bc>)
+	  (<bc> ^first b ^rest <c>)
+	  (<c> ^first c ^rest nil)}
+
+  sp {pass
+      (state <s> ^name test-my-last ^last-of-triple-is.just c)
+  -->
+      (pass)}
+}

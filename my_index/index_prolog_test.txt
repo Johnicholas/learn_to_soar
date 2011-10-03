@@ -1,0 +1,9 @@
+% a few stupid tests
+
+[index].
+
+index(cons(a, cons(b, cons(c, nil))), z, X).
+index(cons(a, cons(b, cons(c, nil))), s(z), X).
+index(cons(a, cons(b, cons(c, nil))), s(s(z)), X).
+index(cons(a, cons(b, cons(c, nil))), s(s(s(z))), X).
+

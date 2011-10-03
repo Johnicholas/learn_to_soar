@@ -1,0 +1,6 @@
+length(Nil) == Z
+length(Cons(?x, ?xs)) == S(length(?xs))
+
+length(Nil)
+length(Cons(A, Nil))
+length(Cons(A, Cons(B, Cons(C, Nil))))

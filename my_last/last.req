@@ -1,0 +1,12 @@
+
+my_last(Nil) == Nothing
+my_last(Cons(?x, ?xs)) == my_last_helper(?xs, ?x)
+my_last_helper(Nil, ?x) == Just(?x)
+my_last_helper(Cons(?x, ?xs), ?y) == my_last_helper(?xs, ?x)
+
+# a few stupid tests
+my_last(Nil)
+my_last(Cons(A, Nil))
+my_last(Cons(A, Cons(B, Nil)))
+my_last(Cons(A, Cons(B, Cons(C, Nil))))
+

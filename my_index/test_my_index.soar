@@ -1,0 +1,68 @@
+setup {
+  source my_last.soar
+
+  sp {initialize
+     (state <s> ^operator <o>)
+	 (<o> ^name init)
+  -->
+      (<s> ^name test-index)}
+}
+
+test "index first of three" {
+sp {propose*first-of-three
+    (state <s> ^name test-index)
+-->
+    (<s> ^operator <o>)
+    (<o> ^name index
+         ^list <abc>
+		 ^peano z
+         ^return-to first-of-three-is)
+	(<abc> ^first a ^rest <bc>)
+	(<bc> ^first b ^rest <c>)
+	(<c> ^first c ^rest nil)}
+
+sp {pass
+    (state <s> ^name test-index ^first-of-three-is.just a)
+-->
+    (pass)}
+}
+
+test "index last of three" {
+sp {propose*last-of-three
+    (state <s> ^name test-index)
+-->
+    (<s> ^operator <o>)
+    (<o> ^name index
+         ^list <abc>
+		 ^peano.s.s z                       # This is a hack but I'm in a hurry
+         ^return-to last-of-three-is)
+	(<abc> ^first a ^rest <bc>)
+	(<bc> ^first b ^rest <c>)
+	(<c> ^first c ^rest nil)}
+		 
+sp {pass
+    (state <s> ^name test-index ^last-of-three-is.just c)
+-->
+    (pass)}
+}
+
+test "index beyond the end" {
+sp {propose*beyond-the-end
+    (state <s> ^name test-index)
+-->
+    (<s> ^operator <o>)
+    (<o> ^name index
+         ^list <abc>
+		 ^peano.s.s.s z                       # This is a hack but I'm in a hurry
+         ^return-to beyond-the-end-is)
+	(<abc> ^first a ^rest <bc>)
+	(<bc> ^first b ^rest <c>)
+	(<c> ^first c ^rest nil)}
+		 
+
+sp {pass
+    (state <s> ^name test-index ^beyond-the-end-is nothing)
+-->
+    (pass)}
+}
+

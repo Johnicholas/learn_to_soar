@@ -1,0 +1,40 @@
+# a simple CPS-transformed normal-order lambda-calculus interpreter,
+# roughly speaking the Krivine machine, though I hesitate to say
+# that it IS the krivine machine; I am an amateur.
+
+# an expression can be a symbol, a quote, a lambda, or a function application
+# exp ::= Sym(name) | Quote(quoted) | Lambda(name, exp) | App(exp, exp)
+
+# the value of a symbol is looked up in the environment
+ev(Sym(?n1), Extend(?n2, Closure(?c, ?e1), ?e2), ?s) ==
+  if ?n1 = ?n2 then ev(?c, ?e1, ?s) else ev(Sym(?n1), ?e2, ?s)
+
+# take the quotes off and return whatever is inside,
+ev(Quote(?x), ?e, ?s) == ?x
+
+# we bind it to the formal parameter and continue into the body.
+ev(Lambda(?formal, ?body), ?e, Cons(?actual, ?stack)) ==
+  ev(?body, Extend(?formal, ?actual, ?e), ?stack)
+
+# We just push the argument, together with
+# the environment we'll need to eval it,
+# onto the stack for later.
+ev(App(?f, ?x), ?e, ?stack) == ev(?f, ?e, Cons(Closure(?x, ?e), ?stack))
+
+# to start evalling some code, use the empty environment and stack
+start(?c) == ev(?c, Empty, Nil)
+
+
+
+# the same, insufficient, test as in direct_terp.req:
+start(App(Lambda(x, Sym(x)), Quote(123)))
+
+# does not terminate
+#start(App(Lambda(x, App(Sym(x), Sym(x))), Lambda(x, App(Sym(x), Sym(x)))))
+
+# the K combinator applied to a quoted int and a nonterminating computation
+# lazy evaluation means we terminate, though the CEK machine doesn't.
+start(App(App(Lambda(x, Lambda(y, Sym(x))),
+              Quote(456)),
+          App(Lambda(x, App(Sym(x), Sym(x))),
+              Lambda(x, App(Sym(x), Sym(x))))))

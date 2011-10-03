@@ -1,0 +1,166 @@
+# this is a soar component for computing the last element in a linear, lisp-ish list
+# "component" because it's something like three operators
+#
+# in prolog, this might look like:
+#
+# % index(+List, +Peano, -Out)
+# index(nil, _N, Out) :- !, Out = nothing.
+# index(cons(X, _Xs), z, Out) :- !, Out = just(X).
+# index(cons(_X, Xs), s(N), Out) :- !, index(Xs, N, Out).
+#
+# in haskell, this might look like:
+#
+# data Peano = Z | S( Peano )
+# data List a = Nil | Cons( a, List a )
+#
+# index :: List a -> Peano -> Maybe a
+# index Nil _ = Nothing
+# index (Cons(x, _)) Z = Just x
+# index (Cons(_, xs)) (S(n)) = index xs n
+#
+
+sp {index*initialize
+    (state <s> ^attribute operator
+	           ^impasse no-change
+			   ^superstate <ss>)
+	(<ss> ^operator <o>)
+	(<o> ^name index
+	     ^list <l>
+		 ^peano <p>
+		 ^return-to <return-to>)
+-->
+	(<s> ^name index
+	     ^list <l>
+		 ^peano <p>
+		 ^return-to <return-to>)}
+		 
+sp {index*propose*base-case-nil
+    (state <s> ^name index ^list nil)
+-->
+	(<s> ^operator <o>)
+	(<o> ^name base-case-nil)}
+
+sp {index*apply*base-case-nil
+    (state <s> ^name index
+	           ^return-to <return-to>
+			   ^superstate <ss>
+	           ^operator <o>)
+	(<o> ^name base-case-nil)
+-->
+	(<ss> ^<return-to> nothing)}
+
+sp {index*propose*base-case-z
+    (state <s> ^name index
+	           ^list {<> nil <l>}
+			   ^peano z)
+-->
+	(<s> ^operator <o>)
+	(<o> ^name base-case-z)}
+
+sp {index*apply*base-case-z
+    (state <s> ^name index
+	           ^list.first <answer>
+			   ^return-to <return-to>
+			   ^superstate <ss>
+	           ^operator <o>)
+	(<o> ^name base-case-z)
+-->
+    (<ss> ^<return-to> <just>)
+	(<just> ^just <answer>)}
+
+sp {index*propose*recurse
+	(state <s> ^name index
+	           ^list {<> nil <l>}
+			   ^peano {<> z <p>}
+			   -^recursion-result)
+	(<l> ^first <x> ^rest <xs>)
+	(<p> ^s <pred>)
+-->
+	(<s> ^operator <o>)
+	(<o> ^name index ^list <xs> ^peano <pred> ^return-to recursion-result)}
+
+sp {index*propose*inductive-case
+	(state <s> ^name index
+			   ^recursion-result <answer>)
+-->
+	(<s> ^operator <o>)
+	(<o> ^name inductive-case)}
+
+sp {index*apply*inductive-case
+	(state <s> ^name index
+			   ^recursion-result <answer>
+			   ^return-to <return-to>
+			   ^superstate <ss>
+	           ^operator <o>)
+	(<o> ^name inductive-case)
+-->
+	# note that we don't put a ^just around the answer;
+	# the base case did that already
+    (<ss> ^<return-to> <answer>)} 
+
+################################################################
+# snip here - test-only stuffs below	
+sp {initialize
+    (state <s> ^superstate nil)
+-->
+    (<s> ^name test-index)}
+
+## first test
+#sp {propose*first-of-three
+#    (state <s> ^name test-index)
+#-->
+#    (<s> ^operator <o>)
+#    (<o> ^name index
+#         ^list <abc>
+#		 ^peano z
+#         ^return-to first-of-three-is)
+#	(<abc> ^first a ^rest <bc>)
+#	(<bc> ^first b ^rest <c>)
+#	(<c> ^first c ^rest nil)}
+#
+#sp {pass
+#    (state <s> ^name test-index ^first-of-three-is.just a)
+#-->
+#    (write (crlf) |pass|)
+#    (halt)}
+
+## second test
+#sp {propose*last-of-three
+#    (state <s> ^name test-index)
+#-->
+#    (<s> ^operator <o>)
+#    (<o> ^name index
+#         ^list <abc>
+#		 ^peano.s.s z                       # This is a hack but I'm in a hurry
+#         ^return-to last-of-three-is)
+#	(<abc> ^first a ^rest <bc>)
+#	(<bc> ^first b ^rest <c>)
+#	(<c> ^first c ^rest nil)}
+#		 
+#
+#sp {pass
+#    (state <s> ^name test-index ^last-of-three-is.just c)
+#-->
+#    (write (crlf) |pass|)
+#    (halt)}
+
+## third test
+sp {propose*beyond-the-end
+    (state <s> ^name test-index)
+-->
+    (<s> ^operator <o>)
+    (<o> ^name index
+         ^list <abc>
+		 ^peano.s.s.s z                       # This is a hack but I'm in a hurry
+         ^return-to beyond-the-end-is)
+	(<abc> ^first a ^rest <bc>)
+	(<bc> ^first b ^rest <c>)
+	(<c> ^first c ^rest nil)}
+		 
+
+sp {pass
+    (state <s> ^name test-index ^beyond-the-end-is nothing)
+-->
+    (write (crlf) |pass|)
+    (halt)}
+

@@ -1,0 +1,18 @@
+% a few stupid tests
+
+[krivine].
+
+start(quote(ok), X).
+start(app(lambda(x, sym(x)), quote(ok)), X).
+start(app(app(lambda(x, sym(x)), lambda(x, sym(x))), quote(ok)), X).
+
+% does not terminate
+% start(app(lambda(x, app(sym(x), sym(x))), lambda(x, app(sym(x), sym(x)))), X).
+
+% the K combinator applied to a quoted int and a nonterminating computation.
+% because we are doing lazy evaluation we terminate.
+start(app(app(lambda(x, lambda(y, sym(x))),
+              quote(ok)),
+          app(lambda(x, app(sym(x), sym(x))),
+              lambda(x, app(sym(x), sym(x))))), X).
+

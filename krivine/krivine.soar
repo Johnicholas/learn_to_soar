@@ -1,0 +1,248 @@
+# A simple continuation-passing-style normal-order lambda-calculus interpreter,
+# roughly speaking, the Krivine machine,
+# though I hesitate to say that it IS the Krivine machine;
+# there are a lot of variants and I am an amateur.
+#
+# 
+# in prolog, this might look like:
+# (Note: In this prolog implementation errors are signaled by failure.)
+#
+# % start(+Exp, -Val)
+# start(Code, Out) :- !, ev(Code, empty, nil, Out).
+#
+# % ev(+Exp, +Env, +Stack, -Val)
+# ev(sym(N1), extend(N2, closure(C, E1), _E2), S, Out) :- N1 = N2, !, ev(C, E1, S, Out).
+# ev(sym(N1), extend(N2, _C, E2), S, Out) :- N1 \= N2, !, ev(sym(N1), E2, S, Out).
+# ev(quote(X), _E, _S, Out) :- !, Out = X.
+# ev(lambda(Formal, Body, E, cons(Actual, Stack), Out) :- !, ev(Body, extend(Formal, Actual, E), Stack, Out).
+# ev(app(F, X), E, Stack, Out) :- !, ev(F, E, cons(closure(X, E), Stack), Out).
+#
+#
+# in haskell, this might look like:
+# (Note: In this haskell implementation errors are signaled by Nothing.)
+#
+# Note: the type of expressions is, in principle, polymorphic,
+# parameterized by a type of names, and a type of quoted values.
+# However, the syntax for such polymorphism is unduly Haskell-centric.
+# Instead we pretend that variable names are chars and quoted values are strings,
+# for concreteness
+
+# data Exp = Sym Char | Quote String | Lambda Char Exp | App Exp Exp
+# data Closure = Closure Exp Env
+# data Env = Empty | Extend Char Closure Env
+# data Stack = Nil | Cons Closure Stack
+#
+# start :: Exp -> Maybe String
+# start code = ev (code, Empty, Nil)
+#
+# ev :: (Exp, Env, Stack) -> Maybe String
+# ev (Sym n1, Extend n2 (Closure c e1) e2, s) = if n1 == n2 then ev (c, e1, s) else ev (Sym n1, e2, s)
+# ev (Sym n1, Empty, S ) = Nothing
+# ev (Quote x, e, Nil) = Just x
+# ev (Quote x, e, Cons actual stack) = Nothing
+# ev (Lambda formal body, e, Cons actual stack) = ev (body, Extend formal actual e, stack)
+# ev (Lambda formal body e, Nil) = Nothing
+# ev (App f x, e, stack) = ev (f, e, Cons (Closure x e) stack)
+# 
+# Note: in this Soar implementation, errors are currently "signaled" by state no-changes.
+
+sp {krivine*initialize
+	"To start out, use the empty environment and the empty stack."
+    (state <s> ^attribute operator
+	           ^impasse no-change
+			   ^superstate <ss>)
+	(<ss> ^operator <o>)
+	(<o> ^name krivine
+	     ^code <c>
+		 ^return-to <return-to>)
+-->
+	(<s> ^name krivine
+	     ^code <c>
+		 ^env empty
+		 ^stack nil
+		 ^return-to <return-to>)}
+
+sp {krivine*propose*look-up-symbol
+	"To eval a symbol, look it up in the environment"
+    (state <s> ^name krivine
+			   ^code.head sym)
+-->
+	(<s> ^operator <o>)
+	(<o> ^name look-up-symbol)}
+
+sp {krivine*apply*look-up-symbol*successfully
+    (state <s> ^name krivine
+			   ^code <old-c>
+			   ^env <old-e>
+	           ^operator <o>)
+	(<old-c> ^head sym
+	         ^name <n>)
+	(<old-e> ^name <n>  # same n - we found it!
+			 ^closure <value>)
+	(<value> ^code <new-c>
+	         ^env <new-e>)
+	(<o> ^name look-up-symbol)
+-->
+	(<s> ^code <old-c> - <new-c>
+	     ^env <old-e> - <new-e>)}
+
+sp {krivine*apply*look-up-symbol*failed
+    (state <s> ^name krivine
+			   ^code <old-c>
+			   ^env <old-e>
+	           ^operator <o>)
+	(<old-c> ^head sym
+	         ^name <n1>)
+	(<old-e> ^name {<> <n1> <n2>}
+			 ^closure <value>
+			 ^env <new-e>)
+	(<o> ^name look-up-symbol)
+-->
+	(<s> ^env <old-e> - <new-e>)}
+
+sp {krivine*propose*push-closure
+    (state <s> ^name krivine
+	           ^code.head app)
+-->
+    (<s> ^operator <o>)
+	(<o> ^name push-closure)}
+
+sp {krivine*apply*push-closure
+	"To eval an application, push the argument (together with the env we will need) to the stack for later."
+    (state <s> ^name krivine
+	           ^code <old-c>
+			   ^env <e>
+			   ^stack <old-s>
+			   ^operator <o>)
+	(<old-c> ^head app ^fun <f> ^arg <x>)
+-->
+	(<s> ^code <old-c> - <f>
+	     ^stack <old-s> - <cons>)
+	(<cons> ^first <closure> ^rest <old-s>)
+	(<closure> ^code <x> ^env <e>)}
+
+sp {krivine*propose*bind-variable
+	(state <s> ^name krivine ^code.head lambda)
+-->
+	(<s> ^operator <o>)
+	(<o> ^name bind-variable)}
+
+sp {krivine*apply*bind-variable
+	"To eval a lambda, bind the formal to the actual and continue into the body."
+	(state <s> ^name krivine
+	           ^code <old-c>
+			   ^env <old-e>
+			   ^stack <old-s>
+			   ^operator <o>)
+	(<old-c> ^head lambda ^formal <name> ^body <new-c>)
+	(<old-s> ^first <actual> ^rest <new-s>)
+	(<o> ^name bind-variable)
+-->
+	(<s> ^code <old-c> - <new-c>
+	     ^env <old-e> - <new-e>
+		 ^stack <old-s> - <new-s>)
+	(<new-e> ^name <name> ^closure <actual> ^env <old-e>)}
+
+sp {krivine*propose*unpack-quote
+	(state <s> ^name krivine ^code.head quote)
+-->
+	(<s> ^operator <o>)
+	(<o> ^name unpack-quote)}
+
+sp {krivine*apply*unpack-quote
+	"To eval a quote, return whatever is inside."
+	(state <s> ^name krivine
+	           ^code <old-c>
+			   ^stack nil
+			   ^return-to <return-to>
+			   ^superstate <ss>
+			   ^operator <o>)
+	(<old-c> ^head quote ^value <answer>)
+	(<o> ^name unpack-quote)
+-->
+	(<ss> ^<return-to> <just>)
+	(<just> ^just <answer>)}
+
+################################################################
+# snip here - test-only stuffs below	
+sp {initialize
+    (state <s> ^superstate nil)
+-->
+    (<s> ^name test-krivine)}
+
+## first test
+#sp {propose*id-ok
+#    (state <s> ^name test-krivine)
+#-->
+#    (<s> ^operator <o>)
+#    (<o> ^name krivine
+#         ^code <app-id-ok>
+#         ^return-to id-ok-evals-to)
+#	(<app-id-ok> ^head app ^fun <id> ^arg <quote-ok>)
+#	(<id> ^head lambda ^formal |x| ^body <sym-x>)
+#	(<sym-x> ^head sym ^name |x|)
+#	(<quote-ok> ^head quote ^value |ok|)
+#}
+#
+#sp {pass
+#    (state <s> ^name test-krivine ^ id-ok-evals-to.just |ok|)
+#-->
+#    (write (crlf) |pass|)
+#    (halt)}
+
+### second test
+#sp {propose*infinite-loop
+#    (state <s> ^name test-krivine)
+#-->
+#    (<s> ^operator <o>)
+#    (<o> ^name krivine
+#         ^code <omega>
+#		 ^return-to omega-evals-to)
+#	(<omega> ^head app ^fun <w1> ^arg <w2>)
+#	(<w1> ^head lambda ^formal <x> ^body <w1-body>)
+#	(<w1-body> ^head app ^fun <sym-x-1> ^arg <sym-x-2>)
+#	(<sym-x-1> ^head sym ^name <x>)
+#	(<sym-x-2> ^head sym ^name <x>)
+#	(<w2> ^head lambda ^formal <y> ^body <w2-body>)
+#	(<w2-body> ^head app ^fun <sym-y-3> ^arg <sym-y-4>)
+#	(<sym-y-3> ^head sym ^name <y>)
+#	(<sym-y-4> ^head sym ^name <y>)}
+#		 
+## note: it certainly runs for a long time,
+## but I'm suspicious that it's not doing
+## the right thing.
+## TODO: figure out a better way to do this.
+
+## third test
+sp {propose*k-ok-omega
+    (state <s> ^name test-krivine)
+-->
+    (<s> ^operator <o>)
+    (<o> ^name krivine
+         ^code <k-ok-omega>
+         ^return-to k-ok-omega-is)
+	(<k-ok-omega> ^head app ^fun <k-ok> ^arg <omega>)
+	(<k-ok> ^head app ^fun <k> ^arg <ok>)
+	(<k> ^head lambda ^formal <x> ^body <kbody>)
+	(<kbody> ^head lambda ^formal <y> ^body <symx>)
+	(<symx> ^head sym ^name <x>)
+	(<ok> ^head quote ^value |ok|)
+	(<omega> ^head app ^fun <w1> ^arg <w2>)
+	(<w1> ^head lambda ^formal <z> ^body <w1-body>)
+	(<w1-body> ^head app ^fun <sym-x-1> ^arg <sym-x-2>)
+	(<sym-x-1> ^head sym ^name <z>)
+	(<sym-x-2> ^head sym ^name <z>)
+	(<w2> ^head lambda ^formal <w> ^body <w2-body>)
+	(<w2-body> ^head app ^fun <sym-y-3> ^arg <sym-y-4>)
+	(<sym-y-3> ^head sym ^name <w>)
+	(<sym-y-4> ^head sym ^name <w>)}
+
+sp {pass
+    (state <s> ^name test-krivine ^k-ok-omega-is.just |ok|)
+-->
+    (write (crlf) |pass|)
+    (halt)}
+
+
+
+	

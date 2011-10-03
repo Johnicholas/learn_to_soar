@@ -1,0 +1,48 @@
+setup {
+
+source my_length.soar
+
+sp {initialize
+    (state <s> ^superstate nil)
+-->
+    (<s> ^name test-length)}
+
+}
+
+test "the length of nil is zero" {
+
+sp {propose*length-of-nil-is-zero
+    (state <s> ^name test-length)
+-->
+    (<s> ^operator <o>)
+    (<o> ^name length
+         ^list nil
+         ^return-to length-of-nil-is)}
+
+sp {pass
+    (state <s> ^name test-length ^length-of-nil-is z)
+-->
+    (pass)}
+
+}
+
+test "the length of abc is three" {
+
+sp {propose*length-of-abc-is-three
+    (state <s> ^name test-length)
+-->
+    (<s> ^operator <o>)
+    (<o> ^name length
+         ^list <abc>
+         ^return-to length-of-abc-is)
+	(<abc> ^first a ^rest <bc>)
+	(<bc> ^first b ^rest <c>)
+	(<c> ^first c ^rest nil)}
+		 
+
+sp {pass
+    (state <s> ^name test-length ^length-of-abc-is.s.s.s z)
+-->
+    (pass)}
+
+}

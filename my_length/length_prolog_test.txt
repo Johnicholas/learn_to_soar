@@ -1,0 +1,6 @@
+[length].
+
+my_length(nil, X).
+my_length(cons(a, nil), X).
+my_length(cons(a, cons(b, nil)), X).
+my_length(cons(a, cons(b, cons(c, nil))), X).

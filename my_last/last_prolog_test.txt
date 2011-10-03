@@ -1,0 +1,8 @@
+% a few stupid tests
+[last].
+
+my_last(nil, X).
+my_last(cons(a, nil), X).
+my_last(cons(a, cons(b, nil)), X).
+my_last(cons(a, cons(b, cons(c, nil))), X).
+
