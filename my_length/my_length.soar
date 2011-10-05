@@ -17,61 +17,61 @@
 
 sp {length*initialize
     (state <s> ^attribute operator
-	           ^impasse no-change
-			   ^superstate <ss>)
-	(<ss> ^operator <o>)
-	(<o> ^name length
-	     ^list <l>
-		 ^return-to <return-to>)
+               ^impasse no-change
+               ^superstate <ss>)
+    (<ss> ^operator <o>)
+    (<o> ^name length
+         ^list <l>
+         ^return-to <return-to>)
 -->
-	(<s> ^name length
-	     ^list <l>
-		 ^return-to <return-to>)}
-		 
+    (<s> ^name length
+         ^list <l>
+         ^return-to <return-to>)}
+         
 sp {length*propose*base-case-nil
     (state <s> ^name length ^list nil)
 -->
-	(<s> ^operator <o>)
-	(<o> ^name base-case-nil)}
+    (<s> ^operator <o>)
+    (<o> ^name base-case-nil)}
 
 sp {length*apply*base-case-nil
     (state <s> ^name length
-	           ^return-to <return-to>
-			   ^superstate <ss>
-	           ^operator <o>)
-	(<o> ^name base-case-nil)
+               ^return-to <return-to>
+               ^superstate <ss>
+               ^operator <o>)
+    (<o> ^name base-case-nil)
 -->
-	(<ss> ^<return-to> z)}
+    (<ss> ^<return-to> z)}
 
 sp {length*propose*recurse
-	(state <s> ^name length
-	           ^list {<> nil <l>}
-			   -^recursion-result)
-	(<l> ^first <x> ^rest <xs>)
+    (state <s> ^name length
+               ^list {<> nil <l>}
+               -^recursion-result)
+    (<l> ^first <x> ^rest <xs>)
 -->
-	(<s> ^operator <o>)
-	(<o> ^name length ^list <xs> ^return-to recursion-result)}
+    (<s> ^operator <o>)
+    (<o> ^name length ^list <xs> ^return-to recursion-result)}
 
 sp {length*propose*inductive-case
-	(state <s> ^name length
-			   ^recursion-result <answer>)
+    (state <s> ^name length
+               ^recursion-result <answer>)
 -->
-	(<s> ^operator <o>)
-	(<o> ^name inductive-case)}
+    (<s> ^operator <o>)
+    (<o> ^name inductive-case)}
 
 sp {length*apply*inductive-case
-	(state <s> ^name length
-			   ^recursion-result <answer>
-			   ^return-to <return-to>
-			   ^superstate <ss>
-	           ^operator <o>)
-	(<o> ^name inductive-case)
+    (state <s> ^name length
+               ^recursion-result <answer>
+               ^return-to <return-to>
+               ^superstate <ss>
+               ^operator <o>)
+    (<o> ^name inductive-case)
 -->
     (<ss> ^<return-to> <successor>)
-	(<successor> ^s <answer>)} 
+    (<successor> ^s <answer>)} 
 
 ################################################################
-# snip here - test-only stuffs below	
+# snip here - test-only stuffs below    
 sp {initialize
     (state <s> ^superstate nil)
 -->
@@ -100,10 +100,10 @@ sp {propose*length-of-abc-is-three
     (<o> ^name length
          ^list <abc>
          ^return-to length-of-abc-is)
-	(<abc> ^first a ^rest <bc>)
-	(<bc> ^first b ^rest <c>)
-	(<c> ^first c ^rest nil)}
-		 
+    (<abc> ^first a ^rest <bc>)
+    (<bc> ^first b ^rest <c>)
+    (<c> ^first c ^rest nil)}
+         
 
 sp {pass
     (state <s> ^name test-length ^length-of-abc-is.s.s.s z)

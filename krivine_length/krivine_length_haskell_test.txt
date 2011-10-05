@@ -1,0 +1,17 @@
+-- cons 1 (cons 2 (cons 3 nil)) 0 (\h -> (\t -> h))
+-- z 0 (\pred -> 1)
+-- (s z) 0 (\pred -> 1)
+-- (almost_length (\x -> x) nil) 0 (\pred -> 1)
+-- (almost_length (\x -> x) (cons 123 nil)) 0 (\pred -> 1)
+-- my_length nil
+-- my_length (cons 123 nil)
+
+start(A(A(z_term, Q("zero")), L('p', Q("nonzero"))))
+start(A(A(A(s_term, z_term), Q("zero")), L('p', Q("nonzero"))))
+
+start(A(A(A(length_term, nil_term), Q("zero")), L('p', Q("nonzero"))))
+start(A(A(A(length_term, A(A(cons_term, Q("foo")), nil_term)), Q("zero")), L('p', Q("nonzero"))))
+
+-- putStrLn (to_soar length_term)
+
+
