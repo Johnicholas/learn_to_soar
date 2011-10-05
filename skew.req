@@ -1,0 +1,33 @@
+# Trying to understand the Hinze/Okasaki number system <-> data structure correspondence
+
+s(SkewNil) == SkewCons(Z, SkewNil)
+s(SkewCons(?peano, SkewNil)) == SkewCons(Z, SkewCons(?peano, SkewNil))
+s(SkewCons(?p1, SkewCons(?p2, ?skew))) ==
+ if equals(?p1, ?p2) then SkewCons(S(?p1), ?skew) else SkewCons(Z,
+SkewCons(?p1, SkewCons(?p2, ?skew)))
+equals(Z, Z) == 1
+equals(Z, S(?x)) == 0
+equals(S(?x), Z) == 0
+equals(S(?x), S(?y)) == equals(?x, ?y)
+
+rep(SkewNil) == 0
+rep(SkewCons(?peano, ?skew)) == nines(?peano)+rep(?skew)
+nines(Z) == 1
+nines(S(?x)) == 1+2*nines(?x)
+
+from_normal(?x) == if ?x = 0 then SkewNil else s(from_normal(?x - 1))
+
+rep(from_normal(0))
+rep(from_normal(1))
+rep(from_normal(2))
+rep(from_normal(3))
+rep(from_normal(4))
+rep(from_normal(5))
+rep(from_normal(6))
+rep(from_normal(7))
+rep(from_normal(8))
+rep(from_normal(9))
+rep(from_normal(10))
+rep(from_normal(100))
+rep(from_normal(1000))
+rep(from_normal(10000))
