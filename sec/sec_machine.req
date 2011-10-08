@@ -59,7 +59,6 @@ fib == App(fix, almostfib)
 # fib 4 = 5
 # toprimitive(fib(S(S(S(S(Z)))))) = Int(5)
 main(App(toprimitive, App(fib, App(S, App(S, App(S, App(S, Z))))))) = Int(5)
-App(toprimitive, App(fib, App(S, App(S, App(S, App(S, Z))))))
 
 # this compiler is also from Ager et al., but it doesn't handle Lit or Succ
 # t denotes terms

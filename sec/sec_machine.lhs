@@ -1,41 +1,33 @@
-NOTE: this does not work, not even a little bit!
-TODO(johnicholas): make it work
-
 This is an SEC interpreter, and corresponding SEC compiler and vm from
 Ager et al's "From Interpreter to Compiler and Virtual Machine".
-We could be generic in the type of names, but for concreteness,
+
+Aside: We could be generic in the type of names, but for concreteness,
 let's use Char.
 
 > data Term = Lit Int | Var Char | Lam (Char, Term) | App (Term, Term) | Succ Term deriving Show
-> data Stack = Nil | Cons (Val, Stack)
-> data Val = Closure (Char, Env, Term) | IntVal Int
-> data Env = Mt | Extend (Char, Val, Env)
-> data StackEnv = Pair (Stack, Env)
+> data Stack = Nil | Cons (Val, Stack) deriving Show
+> data Val = Closure (Char, Env, Term) | IntVal Int deriving Show
+> data Env = Mt | Extend (Char, Val, Env) deriving Show
+> data StackEnv = Pair (Stack, Env) deriving Show
 > mymain :: Term -> Val
 > mymain term = mainhelper (eval Nil Mt term)
 > mainhelper (Pair (Cons (val, Nil), ignored)) = val
 
 > eval s e (Lit n) = Pair (Cons (IntVal n, s), e)
-> eval s e (Var x) = Pair (Cons (lookup e x, s), e)
+> eval s e (Var x) = Pair (Cons (mylookup e x, s), e)
+> eval s e (Lam (x, t)) = Pair (Cons (Closure (x, e, t), s), e)
+> eval s e (App (t0, t1)) = evalapphelper1 (eval s e t1) t0
+> eval s e (Succ t) = evalsucchelper (eval s e t)
 
+> mylookup (Extend (x, v, e)) y = if x == y then v else mylookup e y
 
-> lookup (Extend (x, v, e)) y = if x = y then v else lookup e y
+> evalapphelper1 (Pair (sprime, eprime)) t0 = evalapphelper2 (eval sprime eprime t0)
+> evalapphelper2 (Pair (Cons (Closure (fx, fe, ft), Cons(v, s)), e)) =
+>     evalapphelper3 (applyclosure fx fe ft (Cons(v, Nil)) e) s e
+> applyclosure fx fe ft (Cons (v, sprime)) eprime = eval Nil (Extend (fx, v, fe)) ft
+> evalapphelper3 (Pair (Cons (v, Nil), ignored)) s e = Pair (Cons (v, s), e)
 
-
-eval(?s, ?e, Lam(?x, ?t)) == Pair(Cons(Closure(?x, ?e, ?t), ?s), ?e)
-eval(?s, ?e, App(?t0, ?t1)) == evalapphelper1(eval(?s, ?e, ?t1), ?t0)
-evalapphelper1(Pair(?sprime, ?eprime), ?t0) ==
-    evalapphelper2(eval(?sprime, ?eprime, ?t0))
-evalapphelper2(Pair(Cons(Closure(?fx, ?fe, ?ft), Cons(?v, ?s)), ?e)) ==
-    evalapphelper3(applyclosure(?fx, ?fe, ?ft, Cons(?v, Nil), ?e), ?s, ?e)
-applyclosure(?fx, ?fe, ?ft, Cons(?v, ?sprime), ?eprime) ==
-    eval(Nil, Extend(?fx, ?v, ?fe), ?ft)
-evalapphelper3(Pair(Cons(?v, Nil), ?ignored), ?s, ?e) ==
-    Pair(Cons(?v, ?s), ?e)
-eval(?s, ?e, Succ(?t)) ==
-    evalsucchelper(eval(?s, ?e, ?t))
-evalsucchelper(Pair(Cons(IntVal(?n), ?s), ?e)) ==
-    Pair(Cons(IntVal(?n + 1), ?s), ?e)
+> evalsucchelper (Pair (Cons (IntVal n, s), e)) = Pair (Cons (IntVal (n + 1), s), e)
 
 this compiler is also from Ager et al., but it doesn't handle Lit or Succ
 t denotes terms
@@ -54,13 +46,13 @@ compile(App(?t0, ?t1)) == append(compile(?t1), append(compile(?t0), Cons(Call, N
 append(Nil, ?ys) == ?ys
 append(Cons(?x, ?xs), ?ys) == Cons(?x, append(?xs, ?ys))
 
-test the compiler superficially: (I K)
-compile(App(Lam(x, Var(x)), Lam(x, Lam(y, Var(x)))))
-
 this machine is also from Ager et al.
-initial transition
+the initial transition:
+
 machine_main(?c) == sec(Nil, Mt, ?c)
-state machine
+
+the state machine:
+
 sec(?s, ?e, Cons(Access(?x), ?c)) ==
     sec(Cons(lookup(?e, ?x), ?s), ?e, ?c)
 sec(?s, ?e, Cons(Close(?x, ?cprime), ?c)) ==
@@ -68,6 +60,3 @@ sec(?s, ?e, Cons(Close(?x, ?cprime), ?c)) ==
 sec(Cons(Val(?x, ?cprime, ?eprime), Cons(?v, ?s)), ?e, Cons(Call, ?c)) ==
     sec(?s, Extend(?x, ?v, ?eprime), append(?cprime, ?c))
 sec(Cons(?v, ?s), ?e, Nil) == ?v
-
-test the compiler and the machine superficially
-machine_main(compile(App(Lam(x, Var(x)), Lam(x, Lam(y, Var(x))))))

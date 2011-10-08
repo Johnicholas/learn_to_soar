@@ -1,6 +1,30 @@
 -- test the interpreter superficially: (succ (K 1 23)) == 2
-succ_term <- return (Lam 'x' (Succ (Var 'x')))
-k_term <- return (Lam 'x' (Lam 'y' (Var 'x')))
-main (App succ_term (App (App k_term (Lit 1)) (Lit 23)))
+succ_term <- return (Lam ('x', (Succ (Var 'x'))))
+k_term <- return (Lam ('x', (Lam ('y', (Var 'x')))))
+mymain (App (succ_term, App (App (k_term, (Lit 1)), (Lit 23))))
+
+
+-- one plus one is two
+mymain (Succ (Succ (Lit 0)))
+
+-- This mess is derived from the req implementation,
+-- it's supposed to be toprimitive(S(Z)) and reduce to int(1)
+mymain(App(App(Lam('f', App(Lam('x', App(Var('f'), Lam('y', App(App(Var('x'), Var('x')), Var('y'))))), Lam('x', App(Var('f'), Lam('y', App(App(Var('x'), Var('x')), Var('y'))))))), Lam('t', Lam('x', App(App(Var('x'), Lit(0)), Lam('p', Succ(App(Var('t'), Var('p')))))))), App(Lam('p', Lam('x', Lam('y', App(Var('y'), Var('p'))))), Lam('x', Lam('y', Var('x'))))))
+
+-- again, this bigger mess is derived from the req implementation,
+-- it's supposed to be toprimitive(plus(S(S(Z)), S(S(Z)))) and reduce to int(4)
+mymain(App(App(Lam('f', App(Lam('x', App(Var('f'), Lam('y', App(App(Var('x'), Var('x')), Var('y'))))), Lam('x', App(Var('f'), Lam('y', App(App(Var('x'), Var('x')), Var('y'))))))), Lam('t', Lam('x', App(App(Var('x'), Lit(0)), Lam('p', Succ(App(Var('t'), Var('p')))))))), App(App(App(Lam('f', App(Lam('x', App(Var('f'), Lam('y', App(App(Var('x'), Var('x')), Var('y'))))), Lam('x', App(Var('f'), Lam('y', App(App(Var('x'), Var('x')), Var('y'))))))), Lam('t', Lam('x', Lam('y', App(App(Var('x'), Var('y')), Lam('p', App(Lam('p', Lam('x', Lam('y', App(Var('y'), Var('p'))))), App(App(Var('t'), Var('p')), Var('y'))))))))), App(Lam('p', Lam('x', Lam('y', App(Var('y'), Var('p'))))), App(Lam('p', Lam('x', Lam('y', App(Var('y'), Var('p'))))), Lam('x', Lam('y', Var('x')))))), App(Lam('p', Lam('x', Lam('y', App(Var('y'), Var('p'))))), App(Lam('p', Lam('x', Lam('y', App(Var('y'), Var('p'))))), Lam('x', Lam('y', Var('x'))))))))
+
+-- this last one is supposed to be toprimitive(fib(S(S(S(S(Z)))))) and reduce to int(5)
+mymain(App(App(Lam('f', App(Lam('x', App(Var('f'), Lam('y', App(App(Var('x'), Var('x')), Var('y'))))), Lam('x', App(Var('f'), Lam('y', App(App(Var('x'), Var('x')), Var('y'))))))), Lam('t', Lam('x', App(App(Var('x'), Lit(0)), Lam('p', Succ(App(Var('t'), Var('p')))))))), App(App(Lam('f', App(Lam('x', App(Var('f'), Lam('y', App(App(Var('x'), Var('x')), Var('y'))))), Lam('x', App(Var('f'), Lam('y', App(App(Var('x'), Var('x')), Var('y'))))))), Lam('t', Lam('x', App(App(Var('x'), App(Lam('p', Lam('x', Lam('y', App(Var('y'), Var('p'))))), Lam('x', Lam('y', Var('x'))))), Lam('p', App(App(Lam('t', Lam('x', App(App(Var('x'), App(Lam('p', Lam('x', Lam('y', App(Var('y'), Var('p'))))), Lam('x', Lam('y', Var('x'))))), Lam('p', App(App(App(Lam('f', App(Lam('x', App(Var('f'), Lam('y', App(App(Var('x'), Var('x')), Var('y'))))), Lam('x', App(Var('f'), Lam('y', App(App(Var('x'), Var('x')), Var('y'))))))), Lam('t', Lam('x', Lam('y', App(App(Var('x'), Var('y')), Lam('p', App(Lam('p', Lam('x', Lam('y', App(Var('y'), Var('p'))))), App(App(Var('t'), Var('p')), Var('y'))))))))), App(Var('t'), Var('p'))), App(Var('t'), App(Lam('p', Lam('x', Lam('y', App(Var('y'), Var('p'))))), Var('p')))))))), Var('t')), Var('p'))))))), App(Lam('p', Lam('x', Lam('y', App(Var('y'), Var('p'))))), App(Lam('p', Lam('x', Lam('y', App(Var('y'), Var('p'))))), App(Lam('p', Lam('x', Lam('y', App(Var('y'), Var('p'))))), App(Lam('p', Lam('x', Lam('y', App(Var('y'), Var('p'))))), Lam('x', Lam('y', Var('x'))))))))))
+
+
+-- test the compiler superficially: (I K) == Cons(Close(x, Cons(Close(y, Cons(Access(x), Nil)), Nil)), Cons(Close(x, Cons(Access(x), Nil)), Cons(Call, Nil)))
+
+-- compile(App(Lam('x', Var('x')), Lam('x', Lam('y', Var('x')))), X).
+
+-- test the compiler and the machine superficially
+-- compile(App(Lam('x', Var('x')), Lam('x', Lam('y', Var('x')))), Code), machine_main(Code, X).
+
 
 
