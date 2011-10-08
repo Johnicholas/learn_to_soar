@@ -1,9 +1,8 @@
 setup {
-  source my_last.soar
+  source my_index.soar
 
   sp {initialize
-     (state <s> ^operator <o>)
-	 (<o> ^name init)
+     (state <s> ^superstate nil)
   -->
       (<s> ^name test-index)}
 }
@@ -15,11 +14,11 @@ sp {propose*first-of-three
     (<s> ^operator <o>)
     (<o> ^name index
          ^list <abc>
-		 ^peano z
+         ^peano z
          ^return-to first-of-three-is)
-	(<abc> ^first a ^rest <bc>)
-	(<bc> ^first b ^rest <c>)
-	(<c> ^first c ^rest nil)}
+    (<abc> ^first a ^rest <bc>)
+    (<bc> ^first b ^rest <c>)
+    (<c> ^first c ^rest nil)}
 
 sp {pass
     (state <s> ^name test-index ^first-of-three-is.just a)
@@ -34,12 +33,12 @@ sp {propose*last-of-three
     (<s> ^operator <o>)
     (<o> ^name index
          ^list <abc>
-		 ^peano.s.s z                       # This is a hack but I'm in a hurry
+         ^peano.s.s z                       # This is a hack but I'm in a hurry
          ^return-to last-of-three-is)
-	(<abc> ^first a ^rest <bc>)
-	(<bc> ^first b ^rest <c>)
-	(<c> ^first c ^rest nil)}
-		 
+    (<abc> ^first a ^rest <bc>)
+    (<bc> ^first b ^rest <c>)
+    (<c> ^first c ^rest nil)}
+         
 sp {pass
     (state <s> ^name test-index ^last-of-three-is.just c)
 -->
@@ -53,12 +52,12 @@ sp {propose*beyond-the-end
     (<s> ^operator <o>)
     (<o> ^name index
          ^list <abc>
-		 ^peano.s.s.s z                       # This is a hack but I'm in a hurry
+         ^peano.s.s.s z                       # This is a hack but I'm in a hurry
          ^return-to beyond-the-end-is)
-	(<abc> ^first a ^rest <bc>)
-	(<bc> ^first b ^rest <c>)
-	(<c> ^first c ^rest nil)}
-		 
+    (<abc> ^first a ^rest <bc>)
+    (<bc> ^first b ^rest <c>)
+    (<c> ^first c ^rest nil)}
+         
 
 sp {pass
     (state <s> ^name test-index ^beyond-the-end-is nothing)

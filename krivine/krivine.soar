@@ -165,11 +165,11 @@ sp {krivine*apply*unpack-quote
 
 ################################################################
 # snip here - test-only stuffs below    
-sp {initialize
-    (state <s> ^superstate nil)
--->
-    (<s> ^name test-krivine)}
-
+#sp {initialize
+#    (state <s> ^superstate nil)
+#-->
+#    (<s> ^name test-krivine)}
+#
 ## first test
 #sp {propose*id-ok
 #    (state <s> ^name test-krivine)
@@ -189,7 +189,7 @@ sp {initialize
 #-->
 #    (write (crlf) |pass|)
 #    (halt)}
-
+#
 ### second test
 #sp {propose*infinite-loop
 #    (state <s> ^name test-krivine)
@@ -212,33 +212,33 @@ sp {initialize
 ## but I'm suspicious that it's not doing
 ## the right thing.
 ## TODO: figure out a better way to do this.
-
+#
 ## third test
-sp {propose*k-ok-omega
-    (state <s> ^name test-krivine)
--->
-    (<s> ^operator <o>)
-    (<o> ^name krivine
-         ^code <k-ok-omega>
-         ^return-to k-ok-omega-is)
-    (<k-ok-omega> ^head app ^fun <k-ok> ^arg <omega>)
-    (<k-ok> ^head app ^fun <k> ^arg <ok>)
-    (<k> ^head lambda ^formal <x> ^body <kbody>)
-    (<kbody> ^head lambda ^formal <y> ^body <symx>)
-    (<symx> ^head sym ^name <x>)
-    (<ok> ^head quote ^value |ok|)
-    (<omega> ^head app ^fun <w1> ^arg <w2>)
-    (<w1> ^head lambda ^formal <z> ^body <w1-body>)
-    (<w1-body> ^head app ^fun <sym-x-1> ^arg <sym-x-2>)
-    (<sym-x-1> ^head sym ^name <z>)
-    (<sym-x-2> ^head sym ^name <z>)
-    (<w2> ^head lambda ^formal <w> ^body <w2-body>)
-    (<w2-body> ^head app ^fun <sym-y-3> ^arg <sym-y-4>)
-    (<sym-y-3> ^head sym ^name <w>)
-    (<sym-y-4> ^head sym ^name <w>)}
-
-sp {pass
-    (state <s> ^name test-krivine ^k-ok-omega-is.just |ok|)
--->
-    (write (crlf) |pass|)
-    (halt)}
+#sp {propose*k-ok-omega
+#    (state <s> ^name test-krivine)
+#-->
+#    (<s> ^operator <o>)
+#    (<o> ^name krivine
+#         ^code <k-ok-omega>
+#         ^return-to k-ok-omega-is)
+#    (<k-ok-omega> ^head app ^fun <k-ok> ^arg <omega>)
+#    (<k-ok> ^head app ^fun <k> ^arg <ok>)
+#    (<k> ^head lambda ^formal <x> ^body <kbody>)
+#    (<kbody> ^head lambda ^formal <y> ^body <symx>)
+#    (<symx> ^head sym ^name <x>)
+#    (<ok> ^head quote ^value |ok|)
+#    (<omega> ^head app ^fun <w1> ^arg <w2>)
+#    (<w1> ^head lambda ^formal <z> ^body <w1-body>)
+#    (<w1-body> ^head app ^fun <sym-x-1> ^arg <sym-x-2>)
+#    (<sym-x-1> ^head sym ^name <z>)
+#    (<sym-x-2> ^head sym ^name <z>)
+#    (<w2> ^head lambda ^formal <w> ^body <w2-body>)
+#    (<w2-body> ^head app ^fun <sym-y-3> ^arg <sym-y-4>)
+#    (<sym-y-3> ^head sym ^name <w>)
+#    (<sym-y-4> ^head sym ^name <w>)}
+#
+#sp {pass
+#    (state <s> ^name test-krivine ^k-ok-omega-is.just |ok|)
+#-->
+#    (write (crlf) |pass|)
+#    (halt)}

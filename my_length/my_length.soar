@@ -93,21 +93,21 @@ sp {initialize
 #    (halt)}
 
 # second test
-sp {propose*length-of-abc-is-three
-    (state <s> ^name test-length)
--->
-    (<s> ^operator <o>)
-    (<o> ^name length
-         ^list <abc>
-         ^return-to length-of-abc-is)
-    (<abc> ^first a ^rest <bc>)
-    (<bc> ^first b ^rest <c>)
-    (<c> ^first c ^rest nil)}
-         
-
-sp {pass
-    (state <s> ^name test-length ^length-of-abc-is.s.s.s z)
--->
-    (write (crlf) |pass|)
-    (halt)}
+#sp {propose*length-of-abc-is-three
+#    (state <s> ^name test-length)
+#-->
+#    (<s> ^operator <o>)
+#    (<o> ^name length
+#         ^list <abc>
+#         ^return-to length-of-abc-is)
+#    (<abc> ^first a ^rest <bc>)
+#    (<bc> ^first b ^rest <c>)
+#    (<c> ^first c ^rest nil)}
+#         
+#
+#sp {pass
+#    (state <s> ^name test-length ^length-of-abc-is.s.s.s z)
+#-->
+#    (write (crlf) |pass|)
+#    (halt)}
 
