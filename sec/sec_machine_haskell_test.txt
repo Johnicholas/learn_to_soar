@@ -1,0 +1,6 @@
+-- test the interpreter superficially: (succ (K 1 23)) == 2
+succ_term <- return (Lam 'x' (Succ (Var 'x')))
+k_term <- return (Lam 'x' (Lam 'y' (Var 'x')))
+main (App succ_term (App (App k_term (Lit 1)) (Lit 23)))
+
+

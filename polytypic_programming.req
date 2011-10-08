@@ -1,0 +1,195 @@
+# This is based on Ralph Hinze's paper, "Memo Functions, Polytypically!"
+
+# lookup looks up a particular element of a list,
+# using a peano number to indicate which one.
+lookup(Z, Cons(?x, ?xs)) == ?x
+lookup(S(?n), Cons(?x, ?xs)) == lookup(?n, ?xs)
+
+# grammar = Grammar( peano, list_of_constructors )
+# constructor = One | Plus( peano, peano ) | Times( peano, peano )
+
+# Now we have an explicit representation of peano integers:
+# peano = Z | S( peano )
+peano == Grammar(Z, Cons(Plus(S(Z), Z), Cons(One, Nil)))
+
+# We can define a generic equality, that takes an explicit grammar,
+# and checks that the two elements of that grammar are equal.
+eq(Grammar(?start, ?syms), ?x, ?y) ==
+    eq_helper(lookup(?start, ?syms), ?syms, ?x, ?y)
+eq_helper(One, ?syms, Unit, Unit) == True
+eq_helper(Plus(?p1, ?p2), ?syms, L(?x), L(?y)) ==
+    eq_helper(lookup(?p1, ?syms), ?syms, ?x, ?y)
+eq_helper(Plus(?p1, ?p2), ?syms, R(?x), R(?y)) ==
+    eq_helper(lookup(?p2, ?syms), ?syms, ?x, ?y)
+eq_helper(Plus(?p1, ?p2), ?syms, L(?x), R(?y)) == False
+eq_helper(Plus(?p1, ?p2), ?syms, R(?x), L(?y)) == False
+eq_helper(Times(?p1, ?p2), ?syms, Pair(?x1, ?x2), Pair(?y1, ?y2)) ==
+    and(eq_helper(lookup(?p1, ?syms), ?syms, ?x1, ?y1),
+        eq_helper(lookup(?p2, ?sysm), ?syms, ?x2, ?y2))
+
+assert(?x) == if ?x then ok else NOT_OK!
+
+# This is basically asking "Does Z equal Z?"
+assert(eq(peano, L(Unit), L(Unit)) = True)
+# "Does S(Z) == Z?"
+assert(eq(peano, R(L(Unit)), L(Unit)) = False)
+# "Does Z == S(Z)?"
+assert(eq(peano, L(Unit), R(L(Unit))) = False)
+# "Does S(Z) == S(Z)?"
+assert(eq(peano, R(L(Unit)), R(L(Unit))) = True)
+
+# apply is supposed to take a type, called k,
+# and a table indexed by values of that type to values of some unknown type v,
+# and a element of type k,
+# and it looks up the element, and returns the associated element of type v.
+
+# tabulate is supposed to take a type, called k,
+# and a function from k to v
+# and build a table from k to v
+
+# theoretically, apply(k, tabulate(k, f)) is supposed to be the same as memo(k, f);
+# but it depends on some features (lazy evaluation, in particular full laziness),
+# that might be tricky to guarantee in my current clumsy krivine-machine-in-soar
+
+# laws of exponentials:
+# 1->v = v # "a function type from a type with a single inhabitant is isomorphic to the target type"
+# (k1 + k2) -> v = (k1 -> v) x (k2 -> v) # "a function from a sum is isomorphic to a pair of functions, one from each half."
+# (k1 * k2) -> v = k1 -> (k2 -> v) # "a function from a product is isomorphic to a curried function"
+
+# table is a polytypic function... that returns a type?
+table(Grammar(?start, ?syms), ?v) == table_helper(lookup(?start, ?syms), ?syms, ?v)
+table_helper(One, ?syms, ?v) == ?v
+table_helper(Plus(?p1, ?p2), ?syms, ?v) == Pair(table_helper(lookup(?p1, ?syms), ?syms, ?v), table_helper(lookup(?p2, ?syms), ?syms, ?v))
+table_helper(Times(?p1, ?p2), ?syms, ?v) == table_helper(lookup(?p1, ?syms), ?syms, table_helper(lookup(?p2, ?syms), ?syms, ?v))
+
+# ideally, we should be able to apply table to peano,
+# and get the type of infinite lists
+# peano = 1 + peano
+# table(peano, v) = v * table(peano)
+#
+# binary numbers
+# bin = End | One( bin ) | Two( bin )
+# the corresponding memo table is an infinite binary tree
+# table(bin, v) = v * table(bin, v) * table(bin)
+#
+# binary trees that don't hold any data
+# tree = Leaf | Fork( tree, tree )
+# The corresponding memo table is a nested data type?
+# table(tree) = v * table(tree, table(tree, v))
+#
+# lists that do hold data
+# list a = Nil | Cons( a, list a )
+#
+# The corresponding memo tree is a "generalized rose tree?"
+# Tlist ta v = NList( v, ta( TList ta v ) )
+# This is an "ungeneralized rose tree":
+# Rose a = Rose( a, List (Rose a) )
+# If you wanted to generalize it so that List could be replaced with some other container,
+# then you would replace List with some type parameter:
+# GRose cont a = GRose( a, cont (GRose cont a) )
+
+# lookup (so-called apply) is a polytypic function:
+apply(Grammar(?start, ?syms), ?val, ?key) == apply_helper(lookup(?start, ?syms), ?syms, ?val, ?key)
+apply_helper(One, ?syms, ?val, Unit) == ?val
+apply_helper(Plus(?p1, ?p2), ?syms, Pair(?val1, ?val2), L(?key)) == apply_helper(lookup(?p1, ?syms), ?syms, ?val1, ?key)
+apply_helper(Plus(?p1, ?p2), ?syms, Pair(?val1, ?val2), R(?key)) == apply_helper(lookup(?p2, ?syms), ?syms, ?val2, ?key)
+# I don't really understand this, but we're doing something like
+# using half of the key to look up a memo table,
+# and then using the other half of the key to look up the answer inside that memo table.
+apply_helper(Times(?p1, ?p2), ?syms, ?val, Pair(?key1, ?key2)) ==
+    apply_helper(lookup(?p2, ?syms), ?syms, apply_helper(lookup(?p1, ?syms), ?syms, ?val, ?key1), ?key2)
+
+# specializing apply to peano keys yields infinite lists
+applyNat(NNat(?tz, ?ts), Z) == ?tz
+applyNat(NNat(?tz, ?ts), S(?n)) == applyNat(?ts, ?n)
+
+# a few tests
+assert(applyNat(NNat(foo, NNat(bar, NNat(baz, Error))), Z) = foo)
+assert(applyNat(NNat(foo, NNat(bar, NNat(baz, Error))), S(Z)) = bar)
+assert(applyNat(NNat(foo, NNat(bar, NNat(baz, Error))), S(S(Z))) = baz)
+
+# specializing apply to binary number keys yields binary trees
+applyBin(NBin(?tn, ?to, ?tt), End) == ?tn
+applyBin(NBin(?tn, ?to, ?tt), One(?b)) == applyBin(?to, ?b)
+applyBin(NBin(?tn, ?to, ?tt), Two(?b)) == applyBin(?tt, ?b)
+
+# specializing apply to tree-shaped keys yields: 
+applyTree(NTree(?tl, ?tf), Leaf) == ?tl
+applyTree(NTree(?tl, ?tf), Fork(?l, ?r)) == applyTree(applyTree(?tf, ?l), ?r)
+
+# specializing apply to list-shaped keys yields:
+applyList(?applya, NList(?tn, ?tc), Nil) == ?tn
+applyList(?applya, NList(?tn, ?tc), Cons(?a, ?as)) == applyList(?applya, ?applya(?tc, ?a), ?as)
+
+# using applyList with applyNat to do list-of-nat-shaped keys:
+# Here's a memo table encoding:
+# Nil -> foo
+# Cons(Z, Nil) -> bar
+# Cons(S(Z), Nil) -> baz
+# Cons(Z, Cons(Z, Nil)) -> qux
+listofnatexample == NList(foo, NNat(NList(bar, NNat(NList(qux, Error), Error)), NNat(NList(baz, Error), Error)))
+assert(applyList(applyNat, listofnatexample, Nil) = foo)
+assert(applyList(applyNat, listofnatexample, Cons(Z, Nil)) = bar)
+assert(applyList(applyNat, listofnatexample, Cons(S(Z), Nil)) = baz)
+assert(applyList(applyNat, listofnatexample, Cons(Z, Cons(Z, Nil))) = qux)
+
+# it's uglier, but we can do the same test cases with the polytypic, general-purpose apply
+# This maps:
+# z => foo
+# s(z) => bar
+# s(s(z)) => baz
+genericnatexample == Pair(foo, Pair(bar, Pair(baz, Error)))
+
+assert(apply(peano, genericnatexample, L(Unit)) = foo)
+assert(apply(peano, genericnatexample, R(L(Unit))) = bar)
+assert(apply(peano, genericnatexample, R(R(L(Unit)))) = baz)
+
+# I don't know how to do the higher-order applyList properly,
+# but we can do a specific "listofnat" generically.
+# listofnat = Nil | Cons( nat, listofnat )
+# where nat = Z | S( nat )
+# ...translating...
+# 0 -> listofnat -> Plus(nil, cons) -> Plus(1, 2)
+# 1 -> nil -> One
+# 2 -> cons -> Times(nat, listofnat) -> Times(3, 0)
+# 3 -> nat -> Plus(z, nat) -> Plus(1, 3)
+
+listofnat == Grammar(Z, Cons(Plus(S(Z), S(S(Z))), Cons(One, Cons(Times(S(S(S(Z))), Z), Cons(Plus(S(Z), S(S(S(Z)))), Nil)))))
+
+# Here's a generic memo table communicating:
+# Nil -> foo
+# Cons(Z, Nil) -> bar
+# Cons(S(Z), Nil) -> baz
+# Cons(Z, Cons(Z, Nil)) -> qux
+genericlistofnatexample == Pair(foo, Pair(Pair(bar, Pair(Pair(qux, Error), Error)), Pair(Pair(baz, Error), Error)))
+
+assert(apply(listofnat, genericlistofnatexample, L(Unit)) = foo)
+assert(apply(listofnat, genericlistofnatexample, R(Pair(L(Unit), L(Unit)))) = bar)
+assert(apply(listofnat, genericlistofnatexample, R(Pair(R(L(Unit)), L(Unit)))) = baz)
+assert(apply(listofnat, genericlistofnatexample, R(Pair(L(Unit), R(Pair(L(Unit), L(Unit)))))) = qux)
+
+
+# Now we want to actually memoize something?
+
+# straightforward exponential-time fibonacci
+fib(Z) == S(Z)
+fib(S(Z)) == S(Z)
+fib(S(S(?n))) == plus(fib(?n), fib(S(?n)))
+plus(Z, ?y) == ?y
+plus(S(?x), ?y) == S(plus(?x, ?y))
+
+# a few tests
+assert(fib(Z) = S(Z))
+assert(fib(S(Z)) = S(Z))
+assert(fib(S(S(Z))) = S(S(Z)))
+assert(fib(S(S(S(Z)))) = S(S(S(Z))))
+assert(fib(S(S(S(S(Z))))) = S(S(S(S(S(Z))))))
+
+# what do memo functions have to do with Soar chunking?
+# the structure of an (infinite) memo table corresponds to an (infinite) set of productions?
+# how do I get productions with a particular structure?
+# well, there has to be an impasse, which causes a substate, which then creates something,
+# which is linked to the superstate. That will cause chunking to create a production.
+
+
+

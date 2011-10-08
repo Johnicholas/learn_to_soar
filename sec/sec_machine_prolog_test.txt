@@ -1,0 +1,13 @@
+
+[sec_machine].
+
+% test the interpreter superficially: (succ (K 1 foo)) == 2
+main(app(lam(x, succ(var(x))), app(app(lam(x, lam(y, var(x))), lit(1)), lit(foo))), X).
+
+% test the compiler superficially: (I K) == Cons(Close(x, Cons(Close(y, Cons(Access(x), Nil)), Nil)), Cons(Close(x, Cons(Access(x), Nil)), Cons(Call, Nil)))
+
+compile(app(lam(x, var(x)), lam(x, lam(y, var(x)))), X).
+
+% test the compiler and the machine superficially
+compile(app(lam(x, var(x)), lam(x, lam(y, var(x)))), Code), machine_main(Code, X).
+
