@@ -22,8 +22,43 @@ eval(?s, ?e, Succ(?t)) ==
 evalsucchelper(Pair(Cons(Int(?n), ?s), ?e)) ==
     Pair(Cons(Int(?n + 1), ?s), ?e)
 
-# test the interpreter superficially: (succ (K 1 foo)) == 2
-main(App(Lam(x, Succ(Var(x))), App(App(Lam(x, Lam(y, Var(x))), Lit(1)), Lit(foo))))
+# test the interpreter less superficially:
+# scott encoding for Nat = Z | S(nat)
+Z == Lam(x, Lam(y, Var(x)))
+S == Lam(pred, Lam(x, Lam(y, App(Var(y), Var(pred)))))
+# this is the Z combinator, a fix-point combinator usable in call-by-value languages
+fix == Lam(f, App(Lam(x, App(Var(f), Lam(y, App(App(Var(x), Var(x)), Var(y))))),
+                  Lam(x, App(Var(f), Lam(y, App(App(Var(x), Var(x)), Var(y)))))))
+# almost_plus total_plus Z y = y
+# almost_plus total_plus S(pred) y = S(total_plus(pred, y)
+almostplus == Lam(tot, Lam(x, Lam(y, App(App(Var(x), Var(y)), Lam(pred, App(S, App(App(Var(tot), Var(pred)), Var(y))))))))
+# plus = App(fix, almostplus)
+plus == App(fix, almostplus)
+# We need a converter from scott-encoded nats to readable primitive numbers
+# almosttoprimitive tot Z = Lit(0)
+# almosttoprimitive tot S pred = Succ(App(Var(tot), Var(pred)))
+almosttoprimitive == Lam(tot, Lam(x, App(App(Var(x), Lit(0)), Lam(pred, Succ(App(Var(tot), Var(pred)))))))
+toprimitive == App(fix, almosttoprimitive)
+
+# tests 
+main(Succ(Succ(Lit(0)))) = Int(2)
+main(App(toprimitive, Z)) = Int(0)
+main(App(toprimitive, App(S, Z))) = Int(1)
+# 2 + 2 = 4
+# toprimitive(plus(S(S(Z)), S(S(Z)))) = Int(4)
+main(App(toprimitive, App(App(plus, App(S, App(S, Z))), App(S, App(S, Z))))) = Int(4)
+
+# almostfib tot Z = S(Z)
+# almostfib tot S(pred) = fib2 tot pred
+almostfib == Lam(tot, Lam(x, App(App(Var(x), App(S, Z)), Lam(pred, App(App(fib2, Var(tot)), Var(pred))))))
+# fib2 tot Z = S(Z)
+# fib2 tot S(pred) = plus(tot(pred), tot(S(pred)))
+fib2 == Lam(tot, Lam(x, App(App(Var(x), App(S, Z)), Lam(pred, App(App(plus, App(Var(tot), Var(pred))), App(Var(tot), App(S, Var(pred))))))))
+fib == App(fix, almostfib)
+
+# fib 4 = 5
+# toprimitive(fib(S(S(S(S(Z)))))) = Int(5)
+main(App(toprimitive, App(fib, App(S, App(S, App(S, App(S, Z))))))) = Int(5)
 
 # this compiler is also from Ager et al., but it doesn't handle Lit or Succ
 # t denotes terms
