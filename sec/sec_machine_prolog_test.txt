@@ -4,6 +4,21 @@
 % test the interpreter superficially: (succ (K 1 foo)) == 2
 main(app(lam(x, succ(var(x))), app(app(lam(x, lam(y, var(x))), lit(1)), lit(foo))), X).
 
+% one plus one is two
+main(succ(succ(lit(0))), int(2)).
+
+% This mess is derived from the req implementation,
+% it's supposed to be toprimitive(S(Z)) and reduce to int(1)
+main(app(app(lam(f, app(lam(x, app(var(f), lam(y, app(app(var(x), var(x)), var(y))))), lam(x, app(var(f), lam(y, app(app(var(x), var(x)), var(y))))))), lam(tot, lam(x, app(app(var(x), lit(0)), lam(pred, succ(app(var(tot), var(pred)))))))), app(lam(pred, lam(x, lam(y, app(var(y), var(pred))))), lam(x, lam(y, var(x))))), int(1)).
+
+% again, this bigger mess is derived from the req implementation,
+% it's supposed to be toprimitive(plus(S(S(Z)), S(S(Z)))) and reduce to int(4)
+main(app(app(lam(f, app(lam(x, app(var(f), lam(y, app(app(var(x), var(x)), var(y))))), lam(x, app(var(f), lam(y, app(app(var(x), var(x)), var(y))))))), lam(tot, lam(x, app(app(var(x), lit(0)), lam(pred, succ(app(var(tot), var(pred)))))))), app(app(app(lam(f, app(lam(x, app(var(f), lam(y, app(app(var(x), var(x)), var(y))))), lam(x, app(var(f), lam(y, app(app(var(x), var(x)), var(y))))))), lam(tot, lam(x, lam(y, app(app(var(x), var(y)), lam(pred, app(lam(pred, lam(x, lam(y, app(var(y), var(pred))))), app(app(var(tot), var(pred)), var(y))))))))), app(lam(pred, lam(x, lam(y, app(var(y), var(pred))))), app(lam(pred, lam(x, lam(y, app(var(y), var(pred))))), lam(x, lam(y, var(x)))))), app(lam(pred, lam(x, lam(y, app(var(y), var(pred))))), app(lam(pred, lam(x, lam(y, app(var(y), var(pred))))), lam(x, lam(y, var(x))))))), int(4)).
+
+% this last one is supposed to be toprimitive(fib(S(S(S(S(Z)))))) and reduce to int(5)
+main(app(app(lam(f, app(lam(x, app(var(f), lam(y, app(app(var(x), var(x)), var(y))))), lam(x, app(var(f), lam(y, app(app(var(x), var(x)), var(y))))))), lam(tot, lam(x, app(app(var(x), lit(0)), lam(pred, succ(app(var(tot), var(pred)))))))), app(app(lam(f, app(lam(x, app(var(f), lam(y, app(app(var(x), var(x)), var(y))))), lam(x, app(var(f), lam(y, app(app(var(x), var(x)), var(y))))))), lam(tot, lam(x, app(app(var(x), app(lam(pred, lam(x, lam(y, app(var(y), var(pred))))), lam(x, lam(y, var(x))))), lam(pred, app(app(lam(tot, lam(x, app(app(var(x), app(lam(pred, lam(x, lam(y, app(var(y), var(pred))))), lam(x, lam(y, var(x))))), lam(pred, app(app(app(lam(f, app(lam(x, app(var(f), lam(y, app(app(var(x), var(x)), var(y))))), lam(x, app(var(f), lam(y, app(app(var(x), var(x)), var(y))))))), lam(tot, lam(x, lam(y, app(app(var(x), var(y)), lam(pred, app(lam(pred, lam(x, lam(y, app(var(y), var(pred))))), app(app(var(tot), var(pred)), var(y))))))))), app(var(tot), var(pred))), app(var(tot), app(lam(pred, lam(x, lam(y, app(var(y), var(pred))))), var(pred)))))))), var(tot)), var(pred))))))), app(lam(pred, lam(x, lam(y, app(var(y), var(pred))))), app(lam(pred, lam(x, lam(y, app(var(y), var(pred))))), app(lam(pred, lam(x, lam(y, app(var(y), var(pred))))), app(lam(pred, lam(x, lam(y, app(var(y), var(pred))))), lam(x, lam(y, var(x))))))))), int(5)).
+
+
 % test the compiler superficially: (I K) == Cons(Close(x, Cons(Close(y, Cons(Access(x), Nil)), Nil)), Cons(Close(x, Cons(Access(x), Nil)), Cons(Call, Nil)))
 
 compile(app(lam(x, var(x)), lam(x, lam(y, var(x)))), X).
