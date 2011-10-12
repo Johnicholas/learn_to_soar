@@ -14,25 +14,26 @@ sp {initialize
 test "isEmpty(deleteMin(insert(Test(0),empty))) should be true" {
 
 sp {propose*empty
-    (state <s> ^name test-skew-binary-heap)
+    (state <s> ^name test-skew-binary-heap -^empty-heap-is)
 -->
     (<s> ^operator <o>)
     (<o> ^name empty-heap ^return-to empty-heap-is)}
 
-sp {propose*insert*test*zero
-    (state <s> ^name test-skew-binary-heap ^empty-heap-is <e>)
+sp {propose*insert-heap*test*zero
+    (state <s> ^name test-skew-binary-heap ^empty-heap-is <e> -^singleton-heap-is)
 -->
     (<s> ^operator <o>)
-    (<o> ^name insert-heap ^element <t0> ^heap <e> ^return-to singleton-heap-is)}
+    (<o> ^name insert-heap ^element <t0> ^heap <e> ^return-to singleton-heap-is)
+    (<t0> ^test 0)}
 
 sp {propose*delete-min
-    (state <s> ^name test-skew-binary-heap ^singleton-heap-is <singleton>)
+    (state <s> ^name test-skew-binary-heap ^singleton-heap-is <singleton> -^presume-empty-heap-is)
 -->
     (<s> ^operator <o>)
-    (<o> ^name delete-min ^heap <singleton> ^return-to presumtively-empty-heap-is)}
+    (<o> ^name delete-min ^heap <singleton> ^return-to presume-empty-heap-is)}
 
 sp {propose*is-empty
-    (state <s> ^name test-skew-binary-heap ^presumptively-empty-heap-is <e>)
+    (state <s> ^name test-skew-binary-heap ^presume-empty-heap-is <e> -^test-result-is)
 -->
     (<s> ^operator <o>)
     (<o> ^name is-empty ^heap <e> ^return-to test-result-is)}

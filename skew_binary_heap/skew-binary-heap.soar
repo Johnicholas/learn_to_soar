@@ -1,0 +1,264 @@
+# NOTE: THIS DEFINITELY DOES NOT WORK! ONLY ONE TEST PASSING!
+#
+# This is derived from the implementation Graeme Moss used in his Auburn thesis.
+#
+# We assume there are two operators named less-than and less-or-equal,
+# which can be invoked by proposing them,
+# augmented with ^left <foo> and ^right <bar> (to compare <foo> and <bar>),
+# and ^return-to baz if we want to see ^baz true, or ^baz false
+#
+# if <x> is a heap, then <x> is augmented with ^Heap <rep>,
+#     where <rep> is a list-of-trees
+# if <x> is a tree-list, then <x> is either nil, or augmented with both ^first <y> and ^rest <z>,
+#     where <y> is a tree and
+#     <z> is a tree-list
+# if <x> is a tree, then <x> is augmented with ^rank <r> ^root <x> ^elem-list <xs> ^tree-list <c>,
+#     where <r> is a number,
+#     <x> is comparable with less-than or less-or-equal,
+#     <xs> is an elem-list
+#     <c> is a tree-list
+# if <xs> is an elem-list, then <xs> is either nil, or augmented with both ^first <y> and ^rest <z>,
+#     where <y> is comparable with less-than or less-or-equal, and
+#     <z> is an elem-list
+#
+# empty-heap is an operator that allows people who don't know this internal representation of heaps,
+# to create an empty heap, and be guaranteed that they got the internal representation right.
+# To use it, propose an operator named empty-heap and augmented with ^return-to <wherever>
+#
+# insert-heap is an operator for inserting an element into a heap.
+# propose an operator named insert-heap, augmented with ^element <to-be-inserted> and ^heap <starting-point>,
+# as well as ^return-to <wherever>, and a new heap based on <starting-point> but including <to-be-inserted>
+# will be placed at <wherever>.
+#
+# delete-min is an operator for deleting an element from a heap.
+# propose an operator named delete-min, augmented with ^heap <starting-point> and ^return-to <wherever>
+# a new heap based on <starting-point> but with one fewer element will be placed at <wherever>
+# don't propose it if the heap is empty - or write your own rules for what you want to happen in that circumstance.
+#
+# is-empty is an operator that allows people who don't know (or don't want to know) the internal representation of heaps,
+# to test whether a heap is empty. Propose an operator named is-empty augmented with ^heap <to-test> and
+# ^return-to <wherever>. is-empty will test the heap and either create (<s> ^<wherever> true) or (<s> ^<wherever> false).
+#
+# PRIVATE
+#
+# these operators are helpers or suboperators of the above public operators
+# they aren't part of the heap concept or interface
+#
+# remove-min-tree is a smart destructor - it takes a list of trees and separates it into the one with the minimum root,
+# and the rest of them. to use it, propose an operator named remove-min-tree, augmented with ^tree-list and ^return-to,
+# and it will put an element at <return-to> that is augmented with ^tree <t> and ^tree-list <ts>,
+# based on the tree-list you gave it.
+#
+# reverse is an operator - it takes a list of trees and constructs a reversed list of trees.
+# to use it, propose an operator named reverse, augmented with ^tree-list and ^return-to
+# and it will put an element at <return-to> which is the tree list reversed, based on the tree list you gave it
+#
+# normalize is an operator - it takes a list of trees and constructs a normalized list of trees.
+#
+# merge-helper is an operator - it takes two lists of trees (distinguished as ^left and ^right)
+# and merges them
+#
+# insert-all is an operator - it takes an elem-list and a heap and inserts each element in the list into the heap
+
+sp {empty-heap*apply
+    (state <s> ^operator <o>)
+    (<o> ^name empty-heap ^return-to <return-to>)
+-->
+    (<s> ^<return-to> <e>)
+    (<e> ^Heap nil)}
+
+# this is the easiest case of insert - inserting into an empty heap
+# insert(?x, Heap(TNil)) == Heap(TCons(Node(0, ?x, ANil, TNil), TNil))
+sp {insert-heap*apply*heap-is-empty
+    (state <s> ^operator <o>)
+    (<o> ^name insert-heap ^element <x> ^heap <h> ^return-to <return-to>)
+    (<h> ^Heap nil)
+-->
+    (<s> ^<return-to> <h1>)
+    (<h1> ^Heap <h2>)
+    (<h2> ^first <h3> ^rest nil)
+    (<h3> ^rank 0 ^element <x> ^elem-list nil ^tree-list nil)}
+
+# we insist on an operator no-change impasse and subgoal state for delete-min
+sp {delete-min*initialize
+    (state <s> ^superstate.operator <o>)
+    (<o> ^name delete-min ^heap <h> ^return-to <r>)
+-->
+    (<s> ^name delete-min ^heap <h> ^return-to <r>)}
+
+# if we're computing delete-min, then we need the remove-min-tree result, unless we have it already
+sp {delete-min*propose*remove-min-tree
+    (state <s> ^name delete-min ^heap.Heap <ts> -^remove-min-tree-result)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name remove-min-tree ^tree-list <ts> ^return-to remove-min-tree-result)}
+
+# we insist on an operator no-change impasse and subgoal state for remove-min-tree
+sp {remove-min-tree*initialize
+    (state <s> ^superstate.operator <o>)
+    (<o> ^name remove-min-tree ^tree-list <ts> ^return-to <r>)
+-->
+    (<s> ^name remove-min-tree ^tree-list <ts> ^return-to <r>)}
+
+sp {remove-min-tree*propose*easy-case
+    (state <s> ^name remove-min-tree ^tree-list.rest nil)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name easy-case)}
+
+sp {remove-min-tree*apply*easy-case
+    (state <s> ^name remove-min-tree ^operator.name easy-case ^tree-list <ts> ^superstate <ss> ^return-to <r>)
+    (<ts> ^first <x>)
+-->
+    (<ss> ^<r> <p>)
+    (<p> ^tree <x> ^tree-list nil)}
+
+# if we're computing delete-min, and we have the remove-min-tree result,
+# then we need the reverse result, unless we have it already
+# deleteMinHelper(Pair(Node(?ignored, ?x, ?xs, ?ts1), ?ts2)) ==
+#   insertAll(?xs, Heap(mergeHelper(reverse(?ts1), normalize(?ts2))))
+sp {delete-min*propose*reverse
+    (state <s> ^name delete-min ^remove-min-tree-result.tree.tree-list <ts> -^reverse-result <r>)
+-->
+    (<s> ^operator <o> + =)
+    (<o> ^name reverse ^tree-list <ts> ^return-to reverse-result)}
+
+# we insist on an operator no-change and a new substate for reverse
+sp {reverse*initialize
+    (state <s> ^superstate.operator <o>)
+    (<o> ^name reverse ^tree-list <ts> ^return-to <r>)
+-->
+    (<s> ^name reverse ^tree-list <ts> ^return-to <r> ^accumulator nil)}
+
+sp {reverse*propose*done
+    (state <s> ^name reverse ^tree-list nil)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name done)}
+
+sp {reverse*apply*done
+    (state <s> ^name reverse ^operator.name done ^accumulator <a> ^return-to <r> ^superstate <ss>)
+-->
+    (<ss> ^<r> <a>)}
+
+# if we're computing delete-min, and we remove-min-tree result,
+# then we need the normalize result, unless we have it already
+# deleteMinHelper(Pair(Node(?ignored, ?x, ?xs, ?ts1), ?ts2)) ==
+#   insertAll(?xs, Heap(mergeHelper(reverse(?ts1), normalize(?ts2))))
+sp {delete-min*propose*normalize
+    (state <s> ^name delete-min ^remove-min-tree-result.tree-list <ts> -^normalize-result)
+-->
+    (<s> ^operator <o> + =)
+    (<o> ^name normalize ^tree-list <ts> ^return-to normalize-result)}
+
+# we insist on an operator no-change impasse and subgoal state for delete-min
+sp {normalize*initialize
+    (state <s> ^superstate.operator <o>)
+    (<o> ^name normalize ^tree-list <ts> ^return-to <r>)
+-->
+    (<s> ^name normalize ^tree-list <ts> ^return-to <r> ^accumulator nil)}
+
+sp {normalize*propose*done
+    (state <s> ^name normalize ^tree-list nil)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name done)}
+
+sp {normalize*apply*done
+    (state <s> ^name normalize ^accumulator <a> ^return-to <r> ^superstate <ss>)
+-->
+    (<ss> ^<r> <a>)}
+
+# if we're computing delete-min, and we have reverse-result and normalize-result
+# then we need merge-helper result, unless we have it already
+# deleteMinHelper(Pair(Node(?ignored, ?x, ?xs, ?ts1), ?ts2)) ==
+#   insertAll(?xs, Heap(mergeHelper(reverse(?ts1), normalize(?ts2))))
+sp {delete-min*propose*merge-helper
+    (state <s> ^name delete-min ^reverse-result <rr> ^normalize-result <nr> -^merge-helper-result)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name merge-helper ^left <rr> ^right <nr> ^return-to merge-helper-result)}
+
+sp {merge-helper*initialize
+    (state <s> ^superstate.operator <o>)
+    (<o> ^name merge-helper ^left <ts1> ^right <ts2> ^return-to <r>)
+-->
+    (<s> ^name merge-helper ^left <ts1> ^right <ts2> ^return-to <r>)}
+
+sp {merge-helper*propose*right-is-nil
+    (state <s> ^name merge-helper ^right nil)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name right-is-nil)}
+
+sp {merge-helper*apply*right-is-nil
+    (state <s> ^name merge-helper ^operator.name right-is-nil ^left <ts1> ^superstate <ss> ^return-to <r>)
+-->
+    (<ss> ^<r> <ts1>)}
+
+# if we're computing delete-min, and we have merge-helper-result
+# then we need to convert it into a heap
+# deleteMinHelper(Pair(Node(?ignored, ?x, ?xs, ?ts1), ?ts2)) ==
+#   insertAll(?xs, Heap(mergeHelper(reverse(?ts1), normalize(?ts2))))
+sp {delete-min*propose*convert-heap
+    (state <s> ^name delete-min ^merge-helper-result <ts> -^converted-heap)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name convert-heap)}
+
+# "converting" a tree-list into a heap just means blessing it with a ^Heap link
+sp {delete-min*apply*convert-heap
+    (state <s> ^name delete-min ^operator.name convert-heap ^merge-helper-result <ts>)
+-->
+    (<s> ^converted-heap.Heap <ts>)}
+
+# if we're computing delete-min, and we have converted-heap,
+# then we need insert-all-result unless we have it already
+# deleteMinHelper(Pair(Node(?ignored, ?x, ?xs, ?ts1), ?ts2)) ==
+#   insertAll(?xs, Heap(mergeHelper(reverse(?ts1), normalize(?ts2))))
+sp {delete-min*propose*insert-all
+    (state <s> ^name delete-min ^remove-min-tree-result.tree.elem-list <xs> ^converted-heap <h> -^insert-all-result)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name insert-all ^elem-list <xs> ^heap <h> ^return-to insert-all-result)}
+
+# we insist on an operator no-change impasse and subgoal state for delete-min
+sp {insert-all*initialize
+    (state <s> ^superstate.operator <o>)
+    (<o> ^name insert-all ^elem-list <xs> ^heap <h> ^return-to <r>)
+-->
+    (<s> ^name insert-all ^elem-list <xs> ^heap <h> ^return-to <r>)}
+
+sp {insert-all*propose*done
+    (state <s> ^name insert-all ^elem-list nil)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name done)}
+
+sp {insert-all*apply*done
+    (state <s> ^name insert-all ^operator.name done ^heap <h> ^return-to <r> ^superstate <ss>)
+-->
+    (<ss> ^<r> <h>)}
+
+# if we're computing delete-min, and we have merge-helper-result
+# then we need insert-all-result unless we have it already
+# deleteMinHelper(Pair(Node(?ignored, ?x, ?xs, ?ts1), ?ts2)) ==
+#   insertAll(?xs, Heap(mergeHelper(reverse(?ts1), normalize(?ts2))))
+sp {delete-min*propose*done
+    (state <s> ^name delete-min ^insert-all-result <h>)
+-->
+    (<s> ^operator <o>)
+    (<o> ^name done)}
+
+sp {delete-min*apply*done
+    (state <s> ^name delete-min ^operator <o> ^superstate <ss> ^return-to <r> ^insert-all-result <ir>)
+    (<o> ^name done)
+-->
+    (<ss> ^<r> <ir>)}
+
+sp {is-empty*apply*true-branch
+    (state <s> ^operator <o>)
+    (<o> ^name is-empty ^heap.Heap nil ^return-to <r>)
+-->
+    (<s> ^<r> true)}
+
