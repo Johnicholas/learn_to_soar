@@ -1,0 +1,63 @@
+setup {
+
+source skew-binary-heap.soar
+
+sp {initialize
+    (state <s> ^superstate nil)
+-->
+    (<s> ^name test-skew-binary-heap)}
+
+# TODO: define less-than and less-or-equal operators for test data
+
+}
+
+test "isEmpty(deleteMin(insert(Test(0),empty))) should be true" {
+
+sp {propose*empty
+    (state <s> ^name test-skew-binary-heap)
+-->
+    (<s> ^operator <o>)
+    (<o> ^name empty-heap ^return-to empty-heap-is)}
+
+sp {propose*insert*test*zero
+    (state <s> ^name test-skew-binary-heap ^empty-heap-is <e>)
+-->
+    (<s> ^operator <o>)
+    (<o> ^name insert-heap ^element <t0> ^heap <e> ^return-to singleton-heap-is)}
+
+sp {propose*delete-min
+    (state <s> ^name test-skew-binary-heap ^singleton-heap-is <singleton>)
+-->
+    (<s> ^operator <o>)
+    (<o> ^name delete-min ^heap <singleton> ^return-to presumtively-empty-heap-is)}
+
+sp {propose*is-empty
+    (state <s> ^name test-skew-binary-heap ^presumptively-empty-heap-is <e>)
+-->
+    (<s> ^operator <o>)
+    (<o> ^name is-empty ^heap <e> ^return-to test-result-is)}
+
+sp {pass
+    (state <s> ^name test-skew-binary-heap ^test-result-is true)
+-->
+    (pass)}
+
+}
+
+#"isEmpty(insert(Test(28), empty)) should be false"
+#"findMin(deleteMin(insert(Test(0), insert(Test(0), insert(Test(0), empty))))) should be 0"
+#"findMin(deleteMin(deleteMin(insert(Test(0), insert(Test(0), insert(Test(1), empty)))))) should be Test(1)"
+#"findMin(deleteMin(deleteMin(insert(Test(0), insert(Test(1), insert(Test(0), empty)))))) should be Test(1)"
+#"findMin(deleteMin(deleteMin(insert(Test(1), insert(Test(0), insert(Test(0), empty)))))) should be Test(1)"
+#"findMin(deleteMin(deleteMin(insert(Test(0), insert(Test(0), insert(Test(2), empty)))))) should be Test(2)"
+#"findMin(deleteMin(deleteMin(insert(Test(0), insert(Test(1), insert(Test(1), empty)))))) should be Test(1)"
+#"findMin(deleteMin(deleteMin(insert(Test(0), insert(Test(2), insert(Test(0), empty)))))) should be Test(2)"
+#"findMin(deleteMin(deleteMin(insert(Test(1), insert(Test(0), insert(Test(1), empty)))))) should be Test(1)"
+#"findMin(deleteMin(deleteMin(insert(Test(1), insert(Test(1), insert(Test(0), empty)))))) should be Test(1)"
+#"findMin(deleteMin(deleteMin(insert(Test(2), insert(Test(0), insert(Test(0), empty)))))) should be Test(1)"
+#"findMin(deleteMin(deleteMin(insert(Test(0), insert(Test(1), insert(Test(2), empty)))))) should be Test(2)"
+#"findMin(deleteMin(deleteMin(insert(Test(1), insert(Test(0), insert(Test(2), empty)))))) should be Test(2)"
+#"findMin(deleteMin(deleteMin(insert(Test(1), insert(Test(2), insert(Test(0), empty)))))) should be Test(2)"
+#"findMin(deleteMin(deleteMin(insert(Test(2), insert(Test(1), insert(Test(0), empty)))))) should be Test(2)"
+#"findMin(deleteMin(deleteMin(insert(Test(2), insert(Test(0), insert(Test(1), empty)))))) should be Test(2)"
+#"findMin(deleteMin(deleteMin(insert(Test(0), insert(Test(2), insert(Test(1), empty)))))) should be Test(2)"

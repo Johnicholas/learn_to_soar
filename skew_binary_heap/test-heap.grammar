@@ -1,0 +1,8 @@
+TEST ::= isEmpty( HEAP ) .
+TEST ::= findMin( HEAP ) .
+HEAP ::= deleteMin( HEAP ) .
+HEAP ::= empty .
+HEAP ::= insert( THING , HEAP ) .
+THING ::= Test( NUM ) .
+NUM ::= 0 .
+NUM ::= 1 + NUM .

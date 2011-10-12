@@ -1,0 +1,129 @@
+# this is derived from the implementation in Graeme Moss's Auburn thesis.
+#
+# We're going to create a concept called a heap
+# a heap is a container of arbitrary ORDERED things
+#
+# we're going to assume that there is a "lessThan"
+# and a "lessOrEqual" operators for these things
+# that we're containing.
+#
+# one of the things that you can do is to create a new empty heap
+# another thing you can do is test whether a heap is really empty
+# you can insert something into a heap
+# you can merge two heaps
+# you can find the minimum item in a heap
+# you can delete the minimum item in a heap
+
+# newtype Ord a => Heap a = Heap [Tree a]
+# A heap is a list of trees
+# data Ord a => Tree a = Node Int a [a] [Tree a]
+# A tree is formed of nodes
+# a node has
+# 1. an int, called the rank
+# 2. a single element, called the root
+# 3. a list of elements, called xs
+# 4. a list of trees, called c
+
+# rank :: Ord a => Tree a -> Int
+# rank is an accessor convenience method
+rank(Node(?r, ?x, ?xs, ?c)) == ?r
+
+# root :: Ord a => Tree a -> a
+# root is an accessor convenience method
+root(Node(?r, ?x, ?xs, ?c)) == ?x
+
+# link :: Ord a => Tree a -> Tree a -> Tree a
+# link takes two trees and links them together,
+# to form a new bigger tree
+link(Node(?r, ?x1, ?xs1, ?c1), Node(?ignored, ?x2, ?xs2, ?c2)) ==
+  if lessOrEqual(?x1, ?x2) then
+     Node(?r + 1, ?x1, ?xs1, TCons(Node(?ignored, ?x2, ?xs2, ?c2), ?c1)) else
+     Node(?r + 1, ?x2, ?xs2, TCons(Node(?r, ?x1, ?xs1, ?c1), ?c2))
+
+# skewLink :: Ord a => a -> Tree a -> Tree a -> Tree a
+# skewLink takes a single element and two trees
+# to form a new bigger tree
+skewLink(?x, ?t1, ?t2) == skewLinkHelper(link(?t1, ?t2), ?x)
+skewLinkHelper(Node(?r, ?y, ?ys, ?c), ?x) ==
+  if lessOrEqual(?x, ?y) then
+     Node(?r, ?x, ACons(?y, ?ys), ?c) else
+     Node(?r, ?y, ACons(?x, ?ys), ?c)
+
+# insTree :: Ord a => Tree a -> [Tree a] -> [Tree a]
+# insTree takes a single tree and a list of trees,
+# and inserts the single tree into the list, at appropriate spot for its rank
+insTree(?t, TNil) == TCons(?t, TNil)
+insTree(?t, TCons(?tprime, ?tsprime)) ==
+  if rank(?t) < rank(?tprime) then
+     TCons(?t, TCons(?tprime, ?tsprime)) else
+     insTree(link(?t, ?tprime), ?tsprime)
+
+# mergeHelper :: Ord a => [Tree a] -> [Tree a] -> [Tree a]
+# mergeHelper takes two lists of trees and merges them,
+# maintaining rank-order and at-most-one rank
+mergeHelper(?ts1, TNil) == ?ts1
+mergeHelper(TNil, ?ts2) == ?ts2
+mergeHelper(TCons(?t1, ?ts1prime), TCons(?t2, ?ts2prime)) ==
+  if rank(?t1) < rank(?t2) then
+     TCons(?t1, mergeHelper(?ts1prime, TCons(?t2, ?ts2prime))) else (
+     if rank(?t2) < rank(?t1) then
+        TCons(?t2, mergeHelper(TCons(?t1, ?ts1prime), ?ts2prime)) else
+        insTree(link(?t1, ?t2), mergeHelper(?ts1prime, ?ts2prime)))
+
+# normalize :: Ord a => [Tree a] -> [Tree a]
+# normalize takes a list of trees and enforces the invariant
+# (rank-ordered and at-most-one rank)
+normalize(TNil) == TNil
+normalize(TCons(?t, ?ts)) == insTree(?t, ?ts)
+
+# removeMinTree :: Ord a => [Tree a] -> (Tree a, [Tree a])
+# removeMinTree takes a list of trees,
+# finds the one with the minimum root,
+# and returns a pair - the minimum tree and the list without that tree.
+# note: does not work on empty lists of trees.
+removeMinTree(TCons(?t, TNil)) == Pair(?t, TNil)
+removeMinTree(TCons(?t, TCons(?ts1, ?tss))) == removeMinTreeHelper(removeMinTree(TCons(?ts1, ?tss)), ?t, TCons(?ts1, ?tss))
+removeMinTreeHelper(Pair(?tprime, ?tsprime), ?t, ?ts) ==
+  if lessThan(root(?t), root(?tprime)) then
+     Pair(?t, ?ts) else
+     Pair(?t, TCons(?t, ?tsprime))
+
+# empty :: Ord a => Heap a
+# empty constructs an empty heap
+empty == Heap(TNil)
+
+# isEmpty :: Ord a => Heap a -> Bool
+# isEmpty returns True if the heap is empty, and
+# False if the heap is nonempty
+isEmpty(Heap(TNil)) == True
+isEmpty(Heap(TCons(?x, ?xs))) == False
+
+# insert :: Ord a => a -> Heap a -> Heap a
+# insert inserts a single element into a heap
+insert(?x, Heap(TNil)) == Heap(TCons(Node(0, ?x, ANil, TNil), TNil))
+insert(?x, Heap(TCons(?t, TNil))) == Heap(TCons(Node(0, ?x, ANil, TNil), TCons(?t, TNil)))
+insert(?x, Heap(TCons(?t1, TCons(?t2, ?ts)))) ==
+  if rank(?t1) = rank(?t2) then
+     Heap(TCons(skewLink(?x, ?t1, ?t2), ?ts)) else
+     Heap(TCons(Node(0, ?x, ANil, TNil), ?ts))
+
+# merge :: Ord a => Heap a -> Heap a -> Heap a
+# merge takes two heaps and combines them
+merge(Heap(?ts1), Heap(?ts2)) == Heap(mergeHelper(normalize(?ts1), normalize(?ts2)))
+
+# findMin :: Ord a => Heap a -> a
+# findMin returns the minimum element of a heap
+findMin(Heap(?ts)) == findMinHelper(removeMinTree(?ts))
+findMinHelper(Pair(?t, ?ignored)) == root(?t)
+
+# deleteMin :: Ord a => Heap a -> Heap a
+# deleteMin returns an identical heap, but missing its minimum element
+deleteMin(Heap(?ts)) == deleteMinHelper(removeMinTree(?ts))
+deleteMinHelper(Pair(Node(?ignored, ?x, ?xs, ?ts1), ?ts2)) ==
+  insertAll(?xs, Heap(mergeHelper(reverse(?ts1), normalize(?ts2))))
+reverse(?xs) == reverseHelper(?xs, TNil)
+reverseHelper(TNil, ?accum) == ?accum
+reverseHelper(TCons(?x, ?xs), ?accum) == reverseHelper(?xs, TCons(?x, ?accum))
+insertAll(ANil, ?heap) == ?heap
+insertAll(ACons(?x, ?xs), ?heap) == insertAll(?xs, insert(?x, ?heap))
+

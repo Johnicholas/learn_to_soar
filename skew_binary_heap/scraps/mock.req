@@ -1,0 +1,10 @@
+isEmpty(Num(?x)) == if ?x > 0 then True else False
+isEmpty(ERROR) == ERROR
+findMin(Num(?x)) == if ?x > 0 then Test(x) else ERROR
+findMin(ERROR) == ERROR
+deleteMin(Num(?x)) == if ?x > 0 then Num(?x - 1) else ERROR
+deleteMin(ERROR) == ERROR
+empty == Num(0)
+insert(Test(?x), Num(?y)) == Num(?y + 1)
+insert(Test(?x), ERROR) == ERROR
+

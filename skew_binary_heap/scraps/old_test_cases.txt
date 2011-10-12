@@ -1,0 +1,1623 @@
+isEmpty(deleteMin(insert(Test(0),empty)))
+findMin(deleteMin(insert(Test(0), insert(Test(0), insert(Test(0), empty)))))
+
+isEmpty(empty)	> True
+isEmpty(insert(Test(0), empty))	> False
+isEmpty(insert(Test(1), empty))	> False
+isEmpty(insert(Test(2), empty))	> False
+isEmpty(insert(Test(3), empty))	> False
+isEmpty(insert(Test(4), empty))	> False
+isEmpty(insert(Test(5), empty))	> False
+isEmpty(insert(Test(6), empty))	> False
+isEmpty(insert(Test(7), empty))	> False
+isEmpty(insert(Test(0), insert(Test(0), empty)))	> False
+isEmpty(insert(Test(8), empty))	> False
+isEmpty(insert(Test(0), insert(Test(1), empty)))	> False
+isEmpty(insert(Test(1), insert(Test(0), empty)))	> False
+isEmpty(insert(Test(9), empty))	> False
+isEmpty(insert(Test(0), insert(Test(2), empty)))	> False
+isEmpty(insert(Test(1), insert(Test(1), empty)))	> False
+isEmpty(insert(Test(2), insert(Test(0), empty)))	> False
+isEmpty(insert(Test(10), empty))	> False
+isEmpty(insert(Test(0), insert(Test(3), empty)))	> False
+isEmpty(insert(Test(1), insert(Test(2), empty)))	> False
+isEmpty(insert(Test(2), insert(Test(1), empty)))	> False
+isEmpty(insert(Test(3), insert(Test(0), empty)))	> False
+isEmpty(insert(Test(11), empty))	> False
+isEmpty(insert(Test(0), insert(Test(4), empty)))	> False
+isEmpty(insert(Test(1), insert(Test(3), empty)))	> False
+isEmpty(insert(Test(2), insert(Test(2), empty)))	> False
+isEmpty(insert(Test(3), insert(Test(1), empty)))	> False
+isEmpty(insert(Test(4), insert(Test(0), empty)))	> False
+isEmpty(insert(Test(12), empty))	> False
+isEmpty(insert(Test(0), insert(Test(5), empty)))	> False
+isEmpty(insert(Test(1), insert(Test(4), empty)))	> False
+isEmpty(insert(Test(2), insert(Test(3), empty)))	> False
+isEmpty(insert(Test(3), insert(Test(2), empty)))	> False
+isEmpty(insert(Test(4), insert(Test(1), empty)))	> False
+isEmpty(insert(Test(5), insert(Test(0), empty)))	> False
+isEmpty(insert(Test(13), empty))	> False
+isEmpty(insert(Test(0), insert(Test(6), empty)))	> False
+isEmpty(insert(Test(1), insert(Test(5), empty)))	> False
+isEmpty(insert(Test(2), insert(Test(4), empty)))	> False
+isEmpty(insert(Test(3), insert(Test(3), empty)))	> False
+isEmpty(insert(Test(4), insert(Test(2), empty)))	> False
+isEmpty(insert(Test(5), insert(Test(1), empty)))	> False
+isEmpty(insert(Test(6), insert(Test(0), empty)))	> False
+isEmpty(insert(Test(14), empty))	> False
+isEmpty(insert(Test(0), insert(Test(7), empty)))	> False
+isEmpty(insert(Test(1), insert(Test(6), empty)))	> False
+isEmpty(insert(Test(2), insert(Test(5), empty)))	> False
+isEmpty(insert(Test(3), insert(Test(4), empty)))	> False
+isEmpty(insert(Test(4), insert(Test(3), empty)))	> False
+isEmpty(insert(Test(5), insert(Test(2), empty)))	> False
+isEmpty(insert(Test(6), insert(Test(1), empty)))	> False
+isEmpty(insert(Test(7), insert(Test(0), empty)))	> False
+isEmpty(insert(Test(15), empty))	> False
+isEmpty(insert(Test(0), insert(Test(0), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(8), empty)))	> False
+isEmpty(insert(Test(1), insert(Test(7), empty)))	> False
+isEmpty(insert(Test(2), insert(Test(6), empty)))	> False
+isEmpty(insert(Test(3), insert(Test(5), empty)))	> False
+isEmpty(insert(Test(4), insert(Test(4), empty)))	> False
+isEmpty(insert(Test(5), insert(Test(3), empty)))	> False
+isEmpty(insert(Test(6), insert(Test(2), empty)))	> False
+isEmpty(insert(Test(7), insert(Test(1), empty)))	> False
+isEmpty(insert(Test(8), insert(Test(0), empty)))	> False
+isEmpty(insert(Test(16), empty))	> False
+isEmpty(insert(Test(0), insert(Test(0), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(1), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(9), empty)))	> False
+isEmpty(insert(Test(1), insert(Test(0), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(8), empty)))	> False
+isEmpty(insert(Test(2), insert(Test(7), empty)))	> False
+isEmpty(insert(Test(3), insert(Test(6), empty)))	> False
+isEmpty(insert(Test(4), insert(Test(5), empty)))	> False
+isEmpty(insert(Test(5), insert(Test(4), empty)))	> False
+isEmpty(insert(Test(6), insert(Test(3), empty)))	> False
+isEmpty(insert(Test(7), insert(Test(2), empty)))	> False
+isEmpty(insert(Test(8), insert(Test(1), empty)))	> False
+isEmpty(insert(Test(9), insert(Test(0), empty)))	> False
+isEmpty(insert(Test(17), empty))	> False
+isEmpty(insert(Test(0), insert(Test(0), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(1), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(2), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(10), empty)))	> False
+isEmpty(insert(Test(1), insert(Test(0), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(1), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(9), empty)))	> False
+isEmpty(insert(Test(2), insert(Test(0), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(8), empty)))	> False
+isEmpty(insert(Test(3), insert(Test(7), empty)))	> False
+isEmpty(insert(Test(4), insert(Test(6), empty)))	> False
+isEmpty(insert(Test(5), insert(Test(5), empty)))	> False
+isEmpty(insert(Test(6), insert(Test(4), empty)))	> False
+isEmpty(insert(Test(7), insert(Test(3), empty)))	> False
+isEmpty(insert(Test(8), insert(Test(2), empty)))	> False
+isEmpty(insert(Test(9), insert(Test(1), empty)))	> False
+isEmpty(insert(Test(10), insert(Test(0), empty)))	> False
+isEmpty(insert(Test(18), empty))	> False
+isEmpty(insert(Test(0), insert(Test(0), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(1), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(2), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(3), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(11), empty)))	> False
+isEmpty(insert(Test(1), insert(Test(0), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(1), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(2), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(10), empty)))	> False
+isEmpty(insert(Test(2), insert(Test(0), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(1), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(9), empty)))	> False
+isEmpty(insert(Test(3), insert(Test(0), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(8), empty)))	> False
+isEmpty(insert(Test(4), insert(Test(7), empty)))	> False
+isEmpty(insert(Test(5), insert(Test(6), empty)))	> False
+isEmpty(insert(Test(6), insert(Test(5), empty)))	> False
+isEmpty(insert(Test(7), insert(Test(4), empty)))	> False
+isEmpty(insert(Test(8), insert(Test(3), empty)))	> False
+isEmpty(insert(Test(9), insert(Test(2), empty)))	> False
+isEmpty(insert(Test(10), insert(Test(1), empty)))	> False
+isEmpty(insert(Test(11), insert(Test(0), empty)))	> False
+isEmpty(insert(Test(19), empty))	> False
+isEmpty(insert(Test(0), insert(Test(0), insert(Test(4), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(1), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(2), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(3), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(4), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(12), empty)))	> False
+isEmpty(insert(Test(1), insert(Test(0), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(1), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(2), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(3), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(11), empty)))	> False
+isEmpty(insert(Test(2), insert(Test(0), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(1), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(2), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(10), empty)))	> False
+isEmpty(insert(Test(3), insert(Test(0), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(1), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(9), empty)))	> False
+isEmpty(insert(Test(4), insert(Test(0), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(4), insert(Test(8), empty)))	> False
+isEmpty(insert(Test(5), insert(Test(7), empty)))	> False
+isEmpty(insert(Test(6), insert(Test(6), empty)))	> False
+isEmpty(insert(Test(7), insert(Test(5), empty)))	> False
+isEmpty(insert(Test(8), insert(Test(4), empty)))	> False
+isEmpty(insert(Test(9), insert(Test(3), empty)))	> False
+isEmpty(insert(Test(10), insert(Test(2), empty)))	> False
+isEmpty(insert(Test(11), insert(Test(1), empty)))	> False
+isEmpty(insert(Test(12), insert(Test(0), empty)))	> False
+isEmpty(insert(Test(20), empty))	> False
+isEmpty(insert(Test(0), insert(Test(0), insert(Test(5), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(1), insert(Test(4), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(2), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(3), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(4), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(5), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(13), empty)))	> False
+isEmpty(insert(Test(1), insert(Test(0), insert(Test(4), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(1), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(2), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(3), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(4), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(12), empty)))	> False
+isEmpty(insert(Test(2), insert(Test(0), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(1), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(2), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(3), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(11), empty)))	> False
+isEmpty(insert(Test(3), insert(Test(0), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(1), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(2), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(10), empty)))	> False
+isEmpty(insert(Test(4), insert(Test(0), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(4), insert(Test(1), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(4), insert(Test(9), empty)))	> False
+isEmpty(insert(Test(5), insert(Test(0), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(5), insert(Test(8), empty)))	> False
+isEmpty(insert(Test(6), insert(Test(7), empty)))	> False
+isEmpty(insert(Test(7), insert(Test(6), empty)))	> False
+isEmpty(insert(Test(8), insert(Test(5), empty)))	> False
+isEmpty(insert(Test(9), insert(Test(4), empty)))	> False
+isEmpty(insert(Test(10), insert(Test(3), empty)))	> False
+isEmpty(insert(Test(11), insert(Test(2), empty)))	> False
+isEmpty(insert(Test(12), insert(Test(1), empty)))	> False
+isEmpty(insert(Test(13), insert(Test(0), empty)))	> False
+isEmpty(insert(Test(21), empty))	> False
+isEmpty(insert(Test(0), insert(Test(0), insert(Test(6), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(1), insert(Test(5), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(2), insert(Test(4), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(3), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(4), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(5), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(6), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(14), empty)))	> False
+isEmpty(insert(Test(1), insert(Test(0), insert(Test(5), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(1), insert(Test(4), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(2), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(3), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(4), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(5), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(13), empty)))	> False
+isEmpty(insert(Test(2), insert(Test(0), insert(Test(4), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(1), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(2), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(3), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(4), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(12), empty)))	> False
+isEmpty(insert(Test(3), insert(Test(0), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(1), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(2), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(3), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(11), empty)))	> False
+isEmpty(insert(Test(4), insert(Test(0), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(4), insert(Test(1), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(4), insert(Test(2), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(4), insert(Test(10), empty)))	> False
+isEmpty(insert(Test(5), insert(Test(0), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(5), insert(Test(1), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(5), insert(Test(9), empty)))	> False
+isEmpty(insert(Test(6), insert(Test(0), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(6), insert(Test(8), empty)))	> False
+isEmpty(insert(Test(7), insert(Test(7), empty)))	> False
+isEmpty(insert(Test(8), insert(Test(6), empty)))	> False
+isEmpty(insert(Test(9), insert(Test(5), empty)))	> False
+isEmpty(insert(Test(10), insert(Test(4), empty)))	> False
+isEmpty(insert(Test(11), insert(Test(3), empty)))	> False
+isEmpty(insert(Test(12), insert(Test(2), empty)))	> False
+isEmpty(insert(Test(13), insert(Test(1), empty)))	> False
+isEmpty(insert(Test(14), insert(Test(0), empty)))	> False
+isEmpty(insert(Test(22), empty))	> False
+isEmpty(insert(Test(0), insert(Test(0), insert(Test(7), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(1), insert(Test(6), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(2), insert(Test(5), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(3), insert(Test(4), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(4), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(5), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(6), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(7), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(15), empty)))	> False
+isEmpty(insert(Test(1), insert(Test(0), insert(Test(6), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(1), insert(Test(5), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(2), insert(Test(4), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(3), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(4), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(5), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(6), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(14), empty)))	> False
+isEmpty(insert(Test(2), insert(Test(0), insert(Test(5), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(1), insert(Test(4), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(2), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(3), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(4), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(5), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(13), empty)))	> False
+isEmpty(insert(Test(3), insert(Test(0), insert(Test(4), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(1), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(2), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(3), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(4), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(12), empty)))	> False
+isEmpty(insert(Test(4), insert(Test(0), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(4), insert(Test(1), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(4), insert(Test(2), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(4), insert(Test(3), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(4), insert(Test(11), empty)))	> False
+isEmpty(insert(Test(5), insert(Test(0), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(5), insert(Test(1), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(5), insert(Test(2), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(5), insert(Test(10), empty)))	> False
+isEmpty(insert(Test(6), insert(Test(0), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(6), insert(Test(1), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(6), insert(Test(9), empty)))	> False
+isEmpty(insert(Test(7), insert(Test(0), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(7), insert(Test(8), empty)))	> False
+isEmpty(insert(Test(8), insert(Test(7), empty)))	> False
+isEmpty(insert(Test(9), insert(Test(6), empty)))	> False
+isEmpty(insert(Test(10), insert(Test(5), empty)))	> False
+isEmpty(insert(Test(11), insert(Test(4), empty)))	> False
+isEmpty(insert(Test(12), insert(Test(3), empty)))	> False
+isEmpty(insert(Test(13), insert(Test(2), empty)))	> False
+isEmpty(insert(Test(14), insert(Test(1), empty)))	> False
+isEmpty(insert(Test(15), insert(Test(0), empty)))	> False
+isEmpty(insert(Test(23), empty))	> False
+isEmpty(insert(Test(0), insert(Test(0), insert(Test(0), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(0), insert(Test(8), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(1), insert(Test(7), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(2), insert(Test(6), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(3), insert(Test(5), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(4), insert(Test(4), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(5), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(6), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(7), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(8), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(16), empty)))	> False
+isEmpty(insert(Test(1), insert(Test(0), insert(Test(7), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(1), insert(Test(6), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(2), insert(Test(5), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(3), insert(Test(4), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(4), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(5), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(6), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(7), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(15), empty)))	> False
+isEmpty(insert(Test(2), insert(Test(0), insert(Test(6), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(1), insert(Test(5), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(2), insert(Test(4), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(3), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(4), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(5), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(6), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(14), empty)))	> False
+isEmpty(insert(Test(3), insert(Test(0), insert(Test(5), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(1), insert(Test(4), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(2), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(3), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(4), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(5), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(13), empty)))	> False
+isEmpty(insert(Test(4), insert(Test(0), insert(Test(4), empty))))	> False
+isEmpty(insert(Test(4), insert(Test(1), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(4), insert(Test(2), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(4), insert(Test(3), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(4), insert(Test(4), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(4), insert(Test(12), empty)))	> False
+isEmpty(insert(Test(5), insert(Test(0), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(5), insert(Test(1), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(5), insert(Test(2), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(5), insert(Test(3), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(5), insert(Test(11), empty)))	> False
+isEmpty(insert(Test(6), insert(Test(0), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(6), insert(Test(1), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(6), insert(Test(2), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(6), insert(Test(10), empty)))	> False
+isEmpty(insert(Test(7), insert(Test(0), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(7), insert(Test(1), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(7), insert(Test(9), empty)))	> False
+isEmpty(insert(Test(8), insert(Test(0), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(8), insert(Test(8), empty)))	> False
+isEmpty(insert(Test(9), insert(Test(7), empty)))	> False
+isEmpty(insert(Test(10), insert(Test(6), empty)))	> False
+isEmpty(insert(Test(11), insert(Test(5), empty)))	> False
+isEmpty(insert(Test(12), insert(Test(4), empty)))	> False
+isEmpty(insert(Test(13), insert(Test(3), empty)))	> False
+isEmpty(insert(Test(14), insert(Test(2), empty)))	> False
+isEmpty(insert(Test(15), insert(Test(1), empty)))	> False
+isEmpty(insert(Test(16), insert(Test(0), empty)))	> False
+isEmpty(insert(Test(24), empty))	> False
+isEmpty(insert(Test(0), insert(Test(0), insert(Test(0), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(0), insert(Test(1), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(0), insert(Test(9), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(1), insert(Test(0), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(1), insert(Test(8), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(2), insert(Test(7), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(3), insert(Test(6), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(4), insert(Test(5), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(5), insert(Test(4), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(6), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(7), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(8), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(9), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(17), empty)))	> False
+isEmpty(insert(Test(1), insert(Test(0), insert(Test(0), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(0), insert(Test(8), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(1), insert(Test(7), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(2), insert(Test(6), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(3), insert(Test(5), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(4), insert(Test(4), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(5), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(6), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(7), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(8), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(16), empty)))	> False
+isEmpty(insert(Test(2), insert(Test(0), insert(Test(7), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(1), insert(Test(6), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(2), insert(Test(5), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(3), insert(Test(4), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(4), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(5), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(6), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(7), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(15), empty)))	> False
+isEmpty(insert(Test(3), insert(Test(0), insert(Test(6), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(1), insert(Test(5), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(2), insert(Test(4), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(3), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(4), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(5), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(6), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(14), empty)))	> False
+isEmpty(insert(Test(4), insert(Test(0), insert(Test(5), empty))))	> False
+isEmpty(insert(Test(4), insert(Test(1), insert(Test(4), empty))))	> False
+isEmpty(insert(Test(4), insert(Test(2), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(4), insert(Test(3), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(4), insert(Test(4), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(4), insert(Test(5), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(4), insert(Test(13), empty)))	> False
+isEmpty(insert(Test(5), insert(Test(0), insert(Test(4), empty))))	> False
+isEmpty(insert(Test(5), insert(Test(1), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(5), insert(Test(2), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(5), insert(Test(3), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(5), insert(Test(4), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(5), insert(Test(12), empty)))	> False
+isEmpty(insert(Test(6), insert(Test(0), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(6), insert(Test(1), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(6), insert(Test(2), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(6), insert(Test(3), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(6), insert(Test(11), empty)))	> False
+isEmpty(insert(Test(7), insert(Test(0), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(7), insert(Test(1), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(7), insert(Test(2), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(7), insert(Test(10), empty)))	> False
+isEmpty(insert(Test(8), insert(Test(0), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(8), insert(Test(1), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(8), insert(Test(9), empty)))	> False
+isEmpty(insert(Test(9), insert(Test(0), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(9), insert(Test(8), empty)))	> False
+isEmpty(insert(Test(10), insert(Test(7), empty)))	> False
+isEmpty(insert(Test(11), insert(Test(6), empty)))	> False
+isEmpty(insert(Test(12), insert(Test(5), empty)))	> False
+isEmpty(insert(Test(13), insert(Test(4), empty)))	> False
+isEmpty(insert(Test(14), insert(Test(3), empty)))	> False
+isEmpty(insert(Test(15), insert(Test(2), empty)))	> False
+isEmpty(insert(Test(16), insert(Test(1), empty)))	> False
+isEmpty(insert(Test(17), insert(Test(0), empty)))	> False
+isEmpty(insert(Test(25), empty))	> False
+isEmpty(insert(Test(0), insert(Test(0), insert(Test(0), insert(Test(2), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(0), insert(Test(1), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(0), insert(Test(2), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(0), insert(Test(10), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(1), insert(Test(0), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(1), insert(Test(1), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(1), insert(Test(9), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(2), insert(Test(0), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(2), insert(Test(8), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(3), insert(Test(7), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(4), insert(Test(6), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(5), insert(Test(5), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(6), insert(Test(4), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(7), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(8), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(9), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(10), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(18), empty)))	> False
+isEmpty(insert(Test(1), insert(Test(0), insert(Test(0), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(0), insert(Test(1), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(0), insert(Test(9), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(1), insert(Test(0), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(1), insert(Test(8), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(2), insert(Test(7), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(3), insert(Test(6), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(4), insert(Test(5), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(5), insert(Test(4), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(6), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(7), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(8), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(9), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(17), empty)))	> False
+isEmpty(insert(Test(2), insert(Test(0), insert(Test(0), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(2), insert(Test(0), insert(Test(8), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(1), insert(Test(7), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(2), insert(Test(6), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(3), insert(Test(5), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(4), insert(Test(4), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(5), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(6), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(7), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(8), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(16), empty)))	> False
+isEmpty(insert(Test(3), insert(Test(0), insert(Test(7), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(1), insert(Test(6), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(2), insert(Test(5), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(3), insert(Test(4), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(4), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(5), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(6), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(7), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(15), empty)))	> False
+isEmpty(insert(Test(4), insert(Test(0), insert(Test(6), empty))))	> False
+isEmpty(insert(Test(4), insert(Test(1), insert(Test(5), empty))))	> False
+isEmpty(insert(Test(4), insert(Test(2), insert(Test(4), empty))))	> False
+isEmpty(insert(Test(4), insert(Test(3), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(4), insert(Test(4), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(4), insert(Test(5), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(4), insert(Test(6), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(4), insert(Test(14), empty)))	> False
+isEmpty(insert(Test(5), insert(Test(0), insert(Test(5), empty))))	> False
+isEmpty(insert(Test(5), insert(Test(1), insert(Test(4), empty))))	> False
+isEmpty(insert(Test(5), insert(Test(2), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(5), insert(Test(3), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(5), insert(Test(4), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(5), insert(Test(5), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(5), insert(Test(13), empty)))	> False
+isEmpty(insert(Test(6), insert(Test(0), insert(Test(4), empty))))	> False
+isEmpty(insert(Test(6), insert(Test(1), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(6), insert(Test(2), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(6), insert(Test(3), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(6), insert(Test(4), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(6), insert(Test(12), empty)))	> False
+isEmpty(insert(Test(7), insert(Test(0), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(7), insert(Test(1), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(7), insert(Test(2), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(7), insert(Test(3), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(7), insert(Test(11), empty)))	> False
+isEmpty(insert(Test(8), insert(Test(0), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(8), insert(Test(1), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(8), insert(Test(2), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(8), insert(Test(10), empty)))	> False
+isEmpty(insert(Test(9), insert(Test(0), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(9), insert(Test(1), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(9), insert(Test(9), empty)))	> False
+isEmpty(insert(Test(10), insert(Test(0), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(10), insert(Test(8), empty)))	> False
+isEmpty(insert(Test(11), insert(Test(7), empty)))	> False
+isEmpty(insert(Test(12), insert(Test(6), empty)))	> False
+isEmpty(insert(Test(13), insert(Test(5), empty)))	> False
+isEmpty(insert(Test(14), insert(Test(4), empty)))	> False
+isEmpty(insert(Test(15), insert(Test(3), empty)))	> False
+isEmpty(insert(Test(16), insert(Test(2), empty)))	> False
+isEmpty(insert(Test(17), insert(Test(1), empty)))	> False
+isEmpty(insert(Test(18), insert(Test(0), empty)))	> False
+isEmpty(insert(Test(26), empty))	> False
+isEmpty(insert(Test(0), insert(Test(0), insert(Test(0), insert(Test(3), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(0), insert(Test(1), insert(Test(2), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(0), insert(Test(2), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(0), insert(Test(3), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(0), insert(Test(11), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(1), insert(Test(0), insert(Test(2), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(1), insert(Test(1), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(1), insert(Test(2), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(1), insert(Test(10), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(2), insert(Test(0), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(2), insert(Test(1), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(2), insert(Test(9), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(3), insert(Test(0), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(3), insert(Test(8), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(4), insert(Test(7), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(5), insert(Test(6), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(6), insert(Test(5), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(7), insert(Test(4), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(8), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(9), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(10), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(11), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(19), empty)))	> False
+isEmpty(insert(Test(1), insert(Test(0), insert(Test(0), insert(Test(2), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(0), insert(Test(1), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(0), insert(Test(2), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(0), insert(Test(10), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(1), insert(Test(0), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(1), insert(Test(1), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(1), insert(Test(9), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(2), insert(Test(0), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(2), insert(Test(8), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(3), insert(Test(7), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(4), insert(Test(6), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(5), insert(Test(5), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(6), insert(Test(4), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(7), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(8), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(9), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(10), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(18), empty)))	> False
+isEmpty(insert(Test(2), insert(Test(0), insert(Test(0), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(2), insert(Test(0), insert(Test(1), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(2), insert(Test(0), insert(Test(9), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(1), insert(Test(0), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(2), insert(Test(1), insert(Test(8), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(2), insert(Test(7), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(3), insert(Test(6), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(4), insert(Test(5), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(5), insert(Test(4), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(6), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(7), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(8), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(9), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(17), empty)))	> False
+isEmpty(insert(Test(3), insert(Test(0), insert(Test(0), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(3), insert(Test(0), insert(Test(8), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(1), insert(Test(7), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(2), insert(Test(6), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(3), insert(Test(5), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(4), insert(Test(4), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(5), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(6), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(7), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(8), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(16), empty)))	> False
+isEmpty(insert(Test(4), insert(Test(0), insert(Test(7), empty))))	> False
+isEmpty(insert(Test(4), insert(Test(1), insert(Test(6), empty))))	> False
+isEmpty(insert(Test(4), insert(Test(2), insert(Test(5), empty))))	> False
+isEmpty(insert(Test(4), insert(Test(3), insert(Test(4), empty))))	> False
+isEmpty(insert(Test(4), insert(Test(4), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(4), insert(Test(5), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(4), insert(Test(6), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(4), insert(Test(7), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(4), insert(Test(15), empty)))	> False
+isEmpty(insert(Test(5), insert(Test(0), insert(Test(6), empty))))	> False
+isEmpty(insert(Test(5), insert(Test(1), insert(Test(5), empty))))	> False
+isEmpty(insert(Test(5), insert(Test(2), insert(Test(4), empty))))	> False
+isEmpty(insert(Test(5), insert(Test(3), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(5), insert(Test(4), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(5), insert(Test(5), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(5), insert(Test(6), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(5), insert(Test(14), empty)))	> False
+isEmpty(insert(Test(6), insert(Test(0), insert(Test(5), empty))))	> False
+isEmpty(insert(Test(6), insert(Test(1), insert(Test(4), empty))))	> False
+isEmpty(insert(Test(6), insert(Test(2), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(6), insert(Test(3), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(6), insert(Test(4), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(6), insert(Test(5), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(6), insert(Test(13), empty)))	> False
+isEmpty(insert(Test(7), insert(Test(0), insert(Test(4), empty))))	> False
+isEmpty(insert(Test(7), insert(Test(1), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(7), insert(Test(2), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(7), insert(Test(3), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(7), insert(Test(4), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(7), insert(Test(12), empty)))	> False
+isEmpty(insert(Test(8), insert(Test(0), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(8), insert(Test(1), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(8), insert(Test(2), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(8), insert(Test(3), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(8), insert(Test(11), empty)))	> False
+isEmpty(insert(Test(9), insert(Test(0), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(9), insert(Test(1), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(9), insert(Test(2), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(9), insert(Test(10), empty)))	> False
+isEmpty(insert(Test(10), insert(Test(0), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(10), insert(Test(1), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(10), insert(Test(9), empty)))	> False
+isEmpty(insert(Test(11), insert(Test(0), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(11), insert(Test(8), empty)))	> False
+isEmpty(insert(Test(12), insert(Test(7), empty)))	> False
+isEmpty(insert(Test(13), insert(Test(6), empty)))	> False
+isEmpty(insert(Test(14), insert(Test(5), empty)))	> False
+isEmpty(insert(Test(15), insert(Test(4), empty)))	> False
+isEmpty(insert(Test(16), insert(Test(3), empty)))	> False
+isEmpty(insert(Test(17), insert(Test(2), empty)))	> False
+isEmpty(insert(Test(18), insert(Test(1), empty)))	> False
+isEmpty(insert(Test(19), insert(Test(0), empty)))	> False
+isEmpty(insert(Test(27), empty))	> False
+isEmpty(insert(Test(0), insert(Test(0), insert(Test(0), insert(Test(4), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(0), insert(Test(1), insert(Test(3), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(0), insert(Test(2), insert(Test(2), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(0), insert(Test(3), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(0), insert(Test(4), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(0), insert(Test(12), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(1), insert(Test(0), insert(Test(3), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(1), insert(Test(1), insert(Test(2), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(1), insert(Test(2), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(1), insert(Test(3), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(1), insert(Test(11), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(2), insert(Test(0), insert(Test(2), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(2), insert(Test(1), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(2), insert(Test(2), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(2), insert(Test(10), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(3), insert(Test(0), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(3), insert(Test(1), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(3), insert(Test(9), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(4), insert(Test(0), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(4), insert(Test(8), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(5), insert(Test(7), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(6), insert(Test(6), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(7), insert(Test(5), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(8), insert(Test(4), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(9), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(10), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(11), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(12), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(20), empty)))	> False
+isEmpty(insert(Test(1), insert(Test(0), insert(Test(0), insert(Test(3), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(0), insert(Test(1), insert(Test(2), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(0), insert(Test(2), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(0), insert(Test(3), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(0), insert(Test(11), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(1), insert(Test(0), insert(Test(2), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(1), insert(Test(1), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(1), insert(Test(2), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(1), insert(Test(10), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(2), insert(Test(0), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(2), insert(Test(1), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(2), insert(Test(9), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(3), insert(Test(0), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(3), insert(Test(8), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(4), insert(Test(7), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(5), insert(Test(6), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(6), insert(Test(5), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(7), insert(Test(4), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(8), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(9), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(10), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(11), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(19), empty)))	> False
+isEmpty(insert(Test(2), insert(Test(0), insert(Test(0), insert(Test(2), empty)))))	> False
+isEmpty(insert(Test(2), insert(Test(0), insert(Test(1), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(2), insert(Test(0), insert(Test(2), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(2), insert(Test(0), insert(Test(10), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(1), insert(Test(0), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(2), insert(Test(1), insert(Test(1), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(2), insert(Test(1), insert(Test(9), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(2), insert(Test(0), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(2), insert(Test(2), insert(Test(8), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(3), insert(Test(7), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(4), insert(Test(6), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(5), insert(Test(5), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(6), insert(Test(4), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(7), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(8), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(9), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(10), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(18), empty)))	> False
+isEmpty(insert(Test(3), insert(Test(0), insert(Test(0), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(3), insert(Test(0), insert(Test(1), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(3), insert(Test(0), insert(Test(9), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(1), insert(Test(0), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(3), insert(Test(1), insert(Test(8), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(2), insert(Test(7), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(3), insert(Test(6), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(4), insert(Test(5), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(5), insert(Test(4), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(6), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(7), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(8), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(9), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(17), empty)))	> False
+isEmpty(insert(Test(4), insert(Test(0), insert(Test(0), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(4), insert(Test(0), insert(Test(8), empty))))	> False
+isEmpty(insert(Test(4), insert(Test(1), insert(Test(7), empty))))	> False
+isEmpty(insert(Test(4), insert(Test(2), insert(Test(6), empty))))	> False
+isEmpty(insert(Test(4), insert(Test(3), insert(Test(5), empty))))	> False
+isEmpty(insert(Test(4), insert(Test(4), insert(Test(4), empty))))	> False
+isEmpty(insert(Test(4), insert(Test(5), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(4), insert(Test(6), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(4), insert(Test(7), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(4), insert(Test(8), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(4), insert(Test(16), empty)))	> False
+isEmpty(insert(Test(5), insert(Test(0), insert(Test(7), empty))))	> False
+isEmpty(insert(Test(5), insert(Test(1), insert(Test(6), empty))))	> False
+isEmpty(insert(Test(5), insert(Test(2), insert(Test(5), empty))))	> False
+isEmpty(insert(Test(5), insert(Test(3), insert(Test(4), empty))))	> False
+isEmpty(insert(Test(5), insert(Test(4), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(5), insert(Test(5), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(5), insert(Test(6), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(5), insert(Test(7), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(5), insert(Test(15), empty)))	> False
+isEmpty(insert(Test(6), insert(Test(0), insert(Test(6), empty))))	> False
+isEmpty(insert(Test(6), insert(Test(1), insert(Test(5), empty))))	> False
+isEmpty(insert(Test(6), insert(Test(2), insert(Test(4), empty))))	> False
+isEmpty(insert(Test(6), insert(Test(3), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(6), insert(Test(4), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(6), insert(Test(5), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(6), insert(Test(6), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(6), insert(Test(14), empty)))	> False
+isEmpty(insert(Test(7), insert(Test(0), insert(Test(5), empty))))	> False
+isEmpty(insert(Test(7), insert(Test(1), insert(Test(4), empty))))	> False
+isEmpty(insert(Test(7), insert(Test(2), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(7), insert(Test(3), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(7), insert(Test(4), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(7), insert(Test(5), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(7), insert(Test(13), empty)))	> False
+isEmpty(insert(Test(8), insert(Test(0), insert(Test(4), empty))))	> False
+isEmpty(insert(Test(8), insert(Test(1), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(8), insert(Test(2), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(8), insert(Test(3), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(8), insert(Test(4), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(8), insert(Test(12), empty)))	> False
+isEmpty(insert(Test(9), insert(Test(0), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(9), insert(Test(1), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(9), insert(Test(2), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(9), insert(Test(3), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(9), insert(Test(11), empty)))	> False
+isEmpty(insert(Test(10), insert(Test(0), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(10), insert(Test(1), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(10), insert(Test(2), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(10), insert(Test(10), empty)))	> False
+isEmpty(insert(Test(11), insert(Test(0), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(11), insert(Test(1), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(11), insert(Test(9), empty)))	> False
+isEmpty(insert(Test(12), insert(Test(0), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(12), insert(Test(8), empty)))	> False
+isEmpty(insert(Test(13), insert(Test(7), empty)))	> False
+isEmpty(insert(Test(14), insert(Test(6), empty)))	> False
+isEmpty(insert(Test(15), insert(Test(5), empty)))	> False
+isEmpty(insert(Test(16), insert(Test(4), empty)))	> False
+isEmpty(insert(Test(17), insert(Test(3), empty)))	> False
+isEmpty(insert(Test(18), insert(Test(2), empty)))	> False
+isEmpty(insert(Test(19), insert(Test(1), empty)))	> False
+isEmpty(insert(Test(20), insert(Test(0), empty)))	> False
+isEmpty(insert(Test(28), empty))	> False
+isEmpty(insert(Test(0), insert(Test(0), insert(Test(0), insert(Test(5), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(0), insert(Test(1), insert(Test(4), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(0), insert(Test(2), insert(Test(3), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(0), insert(Test(3), insert(Test(2), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(0), insert(Test(4), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(0), insert(Test(5), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(0), insert(Test(13), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(1), insert(Test(0), insert(Test(4), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(1), insert(Test(1), insert(Test(3), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(1), insert(Test(2), insert(Test(2), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(1), insert(Test(3), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(1), insert(Test(4), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(1), insert(Test(12), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(2), insert(Test(0), insert(Test(3), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(2), insert(Test(1), insert(Test(2), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(2), insert(Test(2), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(2), insert(Test(3), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(2), insert(Test(11), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(3), insert(Test(0), insert(Test(2), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(3), insert(Test(1), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(3), insert(Test(2), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(3), insert(Test(10), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(4), insert(Test(0), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(4), insert(Test(1), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(4), insert(Test(9), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(5), insert(Test(0), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(5), insert(Test(8), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(6), insert(Test(7), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(7), insert(Test(6), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(8), insert(Test(5), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(9), insert(Test(4), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(10), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(11), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(12), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(13), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(21), empty)))	> False
+isEmpty(insert(Test(1), insert(Test(0), insert(Test(0), insert(Test(4), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(0), insert(Test(1), insert(Test(3), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(0), insert(Test(2), insert(Test(2), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(0), insert(Test(3), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(0), insert(Test(4), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(0), insert(Test(12), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(1), insert(Test(0), insert(Test(3), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(1), insert(Test(1), insert(Test(2), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(1), insert(Test(2), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(1), insert(Test(3), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(1), insert(Test(11), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(2), insert(Test(0), insert(Test(2), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(2), insert(Test(1), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(2), insert(Test(2), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(2), insert(Test(10), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(3), insert(Test(0), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(3), insert(Test(1), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(3), insert(Test(9), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(4), insert(Test(0), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(4), insert(Test(8), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(5), insert(Test(7), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(6), insert(Test(6), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(7), insert(Test(5), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(8), insert(Test(4), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(9), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(10), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(11), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(12), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(20), empty)))	> False
+isEmpty(insert(Test(2), insert(Test(0), insert(Test(0), insert(Test(3), empty)))))	> False
+isEmpty(insert(Test(2), insert(Test(0), insert(Test(1), insert(Test(2), empty)))))	> False
+isEmpty(insert(Test(2), insert(Test(0), insert(Test(2), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(2), insert(Test(0), insert(Test(3), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(2), insert(Test(0), insert(Test(11), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(1), insert(Test(0), insert(Test(2), empty)))))	> False
+isEmpty(insert(Test(2), insert(Test(1), insert(Test(1), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(2), insert(Test(1), insert(Test(2), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(2), insert(Test(1), insert(Test(10), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(2), insert(Test(0), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(2), insert(Test(2), insert(Test(1), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(2), insert(Test(2), insert(Test(9), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(3), insert(Test(0), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(2), insert(Test(3), insert(Test(8), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(4), insert(Test(7), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(5), insert(Test(6), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(6), insert(Test(5), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(7), insert(Test(4), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(8), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(9), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(10), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(11), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(19), empty)))	> False
+isEmpty(insert(Test(3), insert(Test(0), insert(Test(0), insert(Test(2), empty)))))	> False
+isEmpty(insert(Test(3), insert(Test(0), insert(Test(1), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(3), insert(Test(0), insert(Test(2), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(3), insert(Test(0), insert(Test(10), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(1), insert(Test(0), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(3), insert(Test(1), insert(Test(1), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(3), insert(Test(1), insert(Test(9), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(2), insert(Test(0), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(3), insert(Test(2), insert(Test(8), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(3), insert(Test(7), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(4), insert(Test(6), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(5), insert(Test(5), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(6), insert(Test(4), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(7), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(8), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(9), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(10), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(18), empty)))	> False
+isEmpty(insert(Test(4), insert(Test(0), insert(Test(0), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(4), insert(Test(0), insert(Test(1), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(4), insert(Test(0), insert(Test(9), empty))))	> False
+isEmpty(insert(Test(4), insert(Test(1), insert(Test(0), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(4), insert(Test(1), insert(Test(8), empty))))	> False
+isEmpty(insert(Test(4), insert(Test(2), insert(Test(7), empty))))	> False
+isEmpty(insert(Test(4), insert(Test(3), insert(Test(6), empty))))	> False
+isEmpty(insert(Test(4), insert(Test(4), insert(Test(5), empty))))	> False
+isEmpty(insert(Test(4), insert(Test(5), insert(Test(4), empty))))	> False
+isEmpty(insert(Test(4), insert(Test(6), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(4), insert(Test(7), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(4), insert(Test(8), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(4), insert(Test(9), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(4), insert(Test(17), empty)))	> False
+isEmpty(insert(Test(5), insert(Test(0), insert(Test(0), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(5), insert(Test(0), insert(Test(8), empty))))	> False
+isEmpty(insert(Test(5), insert(Test(1), insert(Test(7), empty))))	> False
+isEmpty(insert(Test(5), insert(Test(2), insert(Test(6), empty))))	> False
+isEmpty(insert(Test(5), insert(Test(3), insert(Test(5), empty))))	> False
+isEmpty(insert(Test(5), insert(Test(4), insert(Test(4), empty))))	> False
+isEmpty(insert(Test(5), insert(Test(5), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(5), insert(Test(6), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(5), insert(Test(7), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(5), insert(Test(8), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(5), insert(Test(16), empty)))	> False
+isEmpty(insert(Test(6), insert(Test(0), insert(Test(7), empty))))	> False
+isEmpty(insert(Test(6), insert(Test(1), insert(Test(6), empty))))	> False
+isEmpty(insert(Test(6), insert(Test(2), insert(Test(5), empty))))	> False
+isEmpty(insert(Test(6), insert(Test(3), insert(Test(4), empty))))	> False
+isEmpty(insert(Test(6), insert(Test(4), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(6), insert(Test(5), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(6), insert(Test(6), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(6), insert(Test(7), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(6), insert(Test(15), empty)))	> False
+isEmpty(insert(Test(7), insert(Test(0), insert(Test(6), empty))))	> False
+isEmpty(insert(Test(7), insert(Test(1), insert(Test(5), empty))))	> False
+isEmpty(insert(Test(7), insert(Test(2), insert(Test(4), empty))))	> False
+isEmpty(insert(Test(7), insert(Test(3), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(7), insert(Test(4), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(7), insert(Test(5), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(7), insert(Test(6), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(7), insert(Test(14), empty)))	> False
+isEmpty(insert(Test(8), insert(Test(0), insert(Test(5), empty))))	> False
+isEmpty(insert(Test(8), insert(Test(1), insert(Test(4), empty))))	> False
+isEmpty(insert(Test(8), insert(Test(2), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(8), insert(Test(3), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(8), insert(Test(4), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(8), insert(Test(5), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(8), insert(Test(13), empty)))	> False
+isEmpty(insert(Test(9), insert(Test(0), insert(Test(4), empty))))	> False
+isEmpty(insert(Test(9), insert(Test(1), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(9), insert(Test(2), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(9), insert(Test(3), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(9), insert(Test(4), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(9), insert(Test(12), empty)))	> False
+isEmpty(insert(Test(10), insert(Test(0), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(10), insert(Test(1), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(10), insert(Test(2), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(10), insert(Test(3), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(10), insert(Test(11), empty)))	> False
+isEmpty(insert(Test(11), insert(Test(0), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(11), insert(Test(1), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(11), insert(Test(2), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(11), insert(Test(10), empty)))	> False
+isEmpty(insert(Test(12), insert(Test(0), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(12), insert(Test(1), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(12), insert(Test(9), empty)))	> False
+isEmpty(insert(Test(13), insert(Test(0), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(13), insert(Test(8), empty)))	> False
+isEmpty(insert(Test(14), insert(Test(7), empty)))	> False
+isEmpty(insert(Test(15), insert(Test(6), empty)))	> False
+isEmpty(insert(Test(16), insert(Test(5), empty)))	> False
+isEmpty(insert(Test(17), insert(Test(4), empty)))	> False
+isEmpty(insert(Test(18), insert(Test(3), empty)))	> False
+isEmpty(insert(Test(19), insert(Test(2), empty)))	> False
+isEmpty(insert(Test(20), insert(Test(1), empty)))	> False
+isEmpty(insert(Test(21), insert(Test(0), empty)))	> False
+isEmpty(insert(Test(29), empty))	> False
+isEmpty(insert(Test(0), insert(Test(0), insert(Test(0), insert(Test(6), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(0), insert(Test(1), insert(Test(5), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(0), insert(Test(2), insert(Test(4), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(0), insert(Test(3), insert(Test(3), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(0), insert(Test(4), insert(Test(2), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(0), insert(Test(5), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(0), insert(Test(6), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(0), insert(Test(14), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(1), insert(Test(0), insert(Test(5), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(1), insert(Test(1), insert(Test(4), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(1), insert(Test(2), insert(Test(3), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(1), insert(Test(3), insert(Test(2), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(1), insert(Test(4), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(1), insert(Test(5), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(1), insert(Test(13), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(2), insert(Test(0), insert(Test(4), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(2), insert(Test(1), insert(Test(3), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(2), insert(Test(2), insert(Test(2), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(2), insert(Test(3), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(2), insert(Test(4), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(2), insert(Test(12), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(3), insert(Test(0), insert(Test(3), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(3), insert(Test(1), insert(Test(2), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(3), insert(Test(2), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(3), insert(Test(3), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(3), insert(Test(11), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(4), insert(Test(0), insert(Test(2), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(4), insert(Test(1), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(4), insert(Test(2), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(4), insert(Test(10), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(5), insert(Test(0), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(5), insert(Test(1), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(5), insert(Test(9), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(6), insert(Test(0), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(6), insert(Test(8), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(7), insert(Test(7), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(8), insert(Test(6), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(9), insert(Test(5), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(10), insert(Test(4), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(11), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(12), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(13), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(14), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(22), empty)))	> False
+isEmpty(insert(Test(1), insert(Test(0), insert(Test(0), insert(Test(5), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(0), insert(Test(1), insert(Test(4), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(0), insert(Test(2), insert(Test(3), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(0), insert(Test(3), insert(Test(2), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(0), insert(Test(4), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(0), insert(Test(5), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(0), insert(Test(13), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(1), insert(Test(0), insert(Test(4), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(1), insert(Test(1), insert(Test(3), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(1), insert(Test(2), insert(Test(2), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(1), insert(Test(3), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(1), insert(Test(4), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(1), insert(Test(12), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(2), insert(Test(0), insert(Test(3), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(2), insert(Test(1), insert(Test(2), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(2), insert(Test(2), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(2), insert(Test(3), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(2), insert(Test(11), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(3), insert(Test(0), insert(Test(2), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(3), insert(Test(1), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(3), insert(Test(2), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(3), insert(Test(10), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(4), insert(Test(0), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(4), insert(Test(1), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(4), insert(Test(9), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(5), insert(Test(0), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(5), insert(Test(8), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(6), insert(Test(7), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(7), insert(Test(6), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(8), insert(Test(5), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(9), insert(Test(4), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(10), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(11), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(12), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(13), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(21), empty)))	> False
+isEmpty(insert(Test(2), insert(Test(0), insert(Test(0), insert(Test(4), empty)))))	> False
+isEmpty(insert(Test(2), insert(Test(0), insert(Test(1), insert(Test(3), empty)))))	> False
+isEmpty(insert(Test(2), insert(Test(0), insert(Test(2), insert(Test(2), empty)))))	> False
+isEmpty(insert(Test(2), insert(Test(0), insert(Test(3), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(2), insert(Test(0), insert(Test(4), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(2), insert(Test(0), insert(Test(12), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(1), insert(Test(0), insert(Test(3), empty)))))	> False
+isEmpty(insert(Test(2), insert(Test(1), insert(Test(1), insert(Test(2), empty)))))	> False
+isEmpty(insert(Test(2), insert(Test(1), insert(Test(2), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(2), insert(Test(1), insert(Test(3), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(2), insert(Test(1), insert(Test(11), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(2), insert(Test(0), insert(Test(2), empty)))))	> False
+isEmpty(insert(Test(2), insert(Test(2), insert(Test(1), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(2), insert(Test(2), insert(Test(2), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(2), insert(Test(2), insert(Test(10), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(3), insert(Test(0), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(2), insert(Test(3), insert(Test(1), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(2), insert(Test(3), insert(Test(9), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(4), insert(Test(0), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(2), insert(Test(4), insert(Test(8), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(5), insert(Test(7), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(6), insert(Test(6), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(7), insert(Test(5), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(8), insert(Test(4), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(9), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(10), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(11), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(12), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(20), empty)))	> False
+isEmpty(insert(Test(3), insert(Test(0), insert(Test(0), insert(Test(3), empty)))))	> False
+isEmpty(insert(Test(3), insert(Test(0), insert(Test(1), insert(Test(2), empty)))))	> False
+isEmpty(insert(Test(3), insert(Test(0), insert(Test(2), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(3), insert(Test(0), insert(Test(3), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(3), insert(Test(0), insert(Test(11), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(1), insert(Test(0), insert(Test(2), empty)))))	> False
+isEmpty(insert(Test(3), insert(Test(1), insert(Test(1), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(3), insert(Test(1), insert(Test(2), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(3), insert(Test(1), insert(Test(10), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(2), insert(Test(0), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(3), insert(Test(2), insert(Test(1), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(3), insert(Test(2), insert(Test(9), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(3), insert(Test(0), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(3), insert(Test(3), insert(Test(8), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(4), insert(Test(7), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(5), insert(Test(6), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(6), insert(Test(5), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(7), insert(Test(4), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(8), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(9), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(10), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(11), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(19), empty)))	> False
+isEmpty(insert(Test(4), insert(Test(0), insert(Test(0), insert(Test(2), empty)))))	> False
+isEmpty(insert(Test(4), insert(Test(0), insert(Test(1), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(4), insert(Test(0), insert(Test(2), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(4), insert(Test(0), insert(Test(10), empty))))	> False
+isEmpty(insert(Test(4), insert(Test(1), insert(Test(0), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(4), insert(Test(1), insert(Test(1), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(4), insert(Test(1), insert(Test(9), empty))))	> False
+isEmpty(insert(Test(4), insert(Test(2), insert(Test(0), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(4), insert(Test(2), insert(Test(8), empty))))	> False
+isEmpty(insert(Test(4), insert(Test(3), insert(Test(7), empty))))	> False
+isEmpty(insert(Test(4), insert(Test(4), insert(Test(6), empty))))	> False
+isEmpty(insert(Test(4), insert(Test(5), insert(Test(5), empty))))	> False
+isEmpty(insert(Test(4), insert(Test(6), insert(Test(4), empty))))	> False
+isEmpty(insert(Test(4), insert(Test(7), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(4), insert(Test(8), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(4), insert(Test(9), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(4), insert(Test(10), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(4), insert(Test(18), empty)))	> False
+isEmpty(insert(Test(5), insert(Test(0), insert(Test(0), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(5), insert(Test(0), insert(Test(1), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(5), insert(Test(0), insert(Test(9), empty))))	> False
+isEmpty(insert(Test(5), insert(Test(1), insert(Test(0), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(5), insert(Test(1), insert(Test(8), empty))))	> False
+isEmpty(insert(Test(5), insert(Test(2), insert(Test(7), empty))))	> False
+isEmpty(insert(Test(5), insert(Test(3), insert(Test(6), empty))))	> False
+isEmpty(insert(Test(5), insert(Test(4), insert(Test(5), empty))))	> False
+isEmpty(insert(Test(5), insert(Test(5), insert(Test(4), empty))))	> False
+isEmpty(insert(Test(5), insert(Test(6), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(5), insert(Test(7), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(5), insert(Test(8), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(5), insert(Test(9), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(5), insert(Test(17), empty)))	> False
+isEmpty(insert(Test(6), insert(Test(0), insert(Test(0), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(6), insert(Test(0), insert(Test(8), empty))))	> False
+isEmpty(insert(Test(6), insert(Test(1), insert(Test(7), empty))))	> False
+isEmpty(insert(Test(6), insert(Test(2), insert(Test(6), empty))))	> False
+isEmpty(insert(Test(6), insert(Test(3), insert(Test(5), empty))))	> False
+isEmpty(insert(Test(6), insert(Test(4), insert(Test(4), empty))))	> False
+isEmpty(insert(Test(6), insert(Test(5), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(6), insert(Test(6), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(6), insert(Test(7), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(6), insert(Test(8), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(6), insert(Test(16), empty)))	> False
+isEmpty(insert(Test(7), insert(Test(0), insert(Test(7), empty))))	> False
+isEmpty(insert(Test(7), insert(Test(1), insert(Test(6), empty))))	> False
+isEmpty(insert(Test(7), insert(Test(2), insert(Test(5), empty))))	> False
+isEmpty(insert(Test(7), insert(Test(3), insert(Test(4), empty))))	> False
+isEmpty(insert(Test(7), insert(Test(4), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(7), insert(Test(5), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(7), insert(Test(6), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(7), insert(Test(7), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(7), insert(Test(15), empty)))	> False
+isEmpty(insert(Test(8), insert(Test(0), insert(Test(6), empty))))	> False
+isEmpty(insert(Test(8), insert(Test(1), insert(Test(5), empty))))	> False
+isEmpty(insert(Test(8), insert(Test(2), insert(Test(4), empty))))	> False
+isEmpty(insert(Test(8), insert(Test(3), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(8), insert(Test(4), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(8), insert(Test(5), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(8), insert(Test(6), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(8), insert(Test(14), empty)))	> False
+isEmpty(insert(Test(9), insert(Test(0), insert(Test(5), empty))))	> False
+isEmpty(insert(Test(9), insert(Test(1), insert(Test(4), empty))))	> False
+isEmpty(insert(Test(9), insert(Test(2), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(9), insert(Test(3), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(9), insert(Test(4), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(9), insert(Test(5), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(9), insert(Test(13), empty)))	> False
+isEmpty(insert(Test(10), insert(Test(0), insert(Test(4), empty))))	> False
+isEmpty(insert(Test(10), insert(Test(1), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(10), insert(Test(2), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(10), insert(Test(3), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(10), insert(Test(4), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(10), insert(Test(12), empty)))	> False
+isEmpty(insert(Test(11), insert(Test(0), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(11), insert(Test(1), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(11), insert(Test(2), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(11), insert(Test(3), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(11), insert(Test(11), empty)))	> False
+isEmpty(insert(Test(12), insert(Test(0), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(12), insert(Test(1), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(12), insert(Test(2), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(12), insert(Test(10), empty)))	> False
+isEmpty(insert(Test(13), insert(Test(0), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(13), insert(Test(1), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(13), insert(Test(9), empty)))	> False
+isEmpty(insert(Test(14), insert(Test(0), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(14), insert(Test(8), empty)))	> False
+isEmpty(insert(Test(15), insert(Test(7), empty)))	> False
+isEmpty(insert(Test(16), insert(Test(6), empty)))	> False
+isEmpty(insert(Test(17), insert(Test(5), empty)))	> False
+isEmpty(insert(Test(18), insert(Test(4), empty)))	> False
+isEmpty(insert(Test(19), insert(Test(3), empty)))	> False
+isEmpty(insert(Test(20), insert(Test(2), empty)))	> False
+isEmpty(insert(Test(21), insert(Test(1), empty)))	> False
+isEmpty(insert(Test(22), insert(Test(0), empty)))	> False
+isEmpty(insert(Test(30), empty))	> False
+isEmpty(insert(Test(0), insert(Test(0), insert(Test(0), insert(Test(7), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(0), insert(Test(1), insert(Test(6), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(0), insert(Test(2), insert(Test(5), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(0), insert(Test(3), insert(Test(4), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(0), insert(Test(4), insert(Test(3), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(0), insert(Test(5), insert(Test(2), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(0), insert(Test(6), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(0), insert(Test(7), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(0), insert(Test(15), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(1), insert(Test(0), insert(Test(6), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(1), insert(Test(1), insert(Test(5), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(1), insert(Test(2), insert(Test(4), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(1), insert(Test(3), insert(Test(3), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(1), insert(Test(4), insert(Test(2), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(1), insert(Test(5), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(1), insert(Test(6), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(1), insert(Test(14), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(2), insert(Test(0), insert(Test(5), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(2), insert(Test(1), insert(Test(4), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(2), insert(Test(2), insert(Test(3), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(2), insert(Test(3), insert(Test(2), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(2), insert(Test(4), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(2), insert(Test(5), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(2), insert(Test(13), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(3), insert(Test(0), insert(Test(4), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(3), insert(Test(1), insert(Test(3), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(3), insert(Test(2), insert(Test(2), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(3), insert(Test(3), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(3), insert(Test(4), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(3), insert(Test(12), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(4), insert(Test(0), insert(Test(3), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(4), insert(Test(1), insert(Test(2), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(4), insert(Test(2), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(4), insert(Test(3), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(4), insert(Test(11), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(5), insert(Test(0), insert(Test(2), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(5), insert(Test(1), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(5), insert(Test(2), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(5), insert(Test(10), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(6), insert(Test(0), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(6), insert(Test(1), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(6), insert(Test(9), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(7), insert(Test(0), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(7), insert(Test(8), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(8), insert(Test(7), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(9), insert(Test(6), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(10), insert(Test(5), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(11), insert(Test(4), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(12), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(13), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(14), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(15), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(23), empty)))	> False
+isEmpty(insert(Test(1), insert(Test(0), insert(Test(0), insert(Test(6), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(0), insert(Test(1), insert(Test(5), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(0), insert(Test(2), insert(Test(4), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(0), insert(Test(3), insert(Test(3), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(0), insert(Test(4), insert(Test(2), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(0), insert(Test(5), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(0), insert(Test(6), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(0), insert(Test(14), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(1), insert(Test(0), insert(Test(5), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(1), insert(Test(1), insert(Test(4), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(1), insert(Test(2), insert(Test(3), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(1), insert(Test(3), insert(Test(2), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(1), insert(Test(4), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(1), insert(Test(5), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(1), insert(Test(13), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(2), insert(Test(0), insert(Test(4), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(2), insert(Test(1), insert(Test(3), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(2), insert(Test(2), insert(Test(2), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(2), insert(Test(3), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(2), insert(Test(4), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(2), insert(Test(12), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(3), insert(Test(0), insert(Test(3), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(3), insert(Test(1), insert(Test(2), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(3), insert(Test(2), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(3), insert(Test(3), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(3), insert(Test(11), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(4), insert(Test(0), insert(Test(2), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(4), insert(Test(1), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(4), insert(Test(2), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(4), insert(Test(10), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(5), insert(Test(0), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(5), insert(Test(1), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(5), insert(Test(9), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(6), insert(Test(0), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(6), insert(Test(8), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(7), insert(Test(7), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(8), insert(Test(6), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(9), insert(Test(5), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(10), insert(Test(4), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(11), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(12), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(13), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(14), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(22), empty)))	> False
+isEmpty(insert(Test(2), insert(Test(0), insert(Test(0), insert(Test(5), empty)))))	> False
+isEmpty(insert(Test(2), insert(Test(0), insert(Test(1), insert(Test(4), empty)))))	> False
+isEmpty(insert(Test(2), insert(Test(0), insert(Test(2), insert(Test(3), empty)))))	> False
+isEmpty(insert(Test(2), insert(Test(0), insert(Test(3), insert(Test(2), empty)))))	> False
+isEmpty(insert(Test(2), insert(Test(0), insert(Test(4), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(2), insert(Test(0), insert(Test(5), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(2), insert(Test(0), insert(Test(13), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(1), insert(Test(0), insert(Test(4), empty)))))	> False
+isEmpty(insert(Test(2), insert(Test(1), insert(Test(1), insert(Test(3), empty)))))	> False
+isEmpty(insert(Test(2), insert(Test(1), insert(Test(2), insert(Test(2), empty)))))	> False
+isEmpty(insert(Test(2), insert(Test(1), insert(Test(3), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(2), insert(Test(1), insert(Test(4), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(2), insert(Test(1), insert(Test(12), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(2), insert(Test(0), insert(Test(3), empty)))))	> False
+isEmpty(insert(Test(2), insert(Test(2), insert(Test(1), insert(Test(2), empty)))))	> False
+isEmpty(insert(Test(2), insert(Test(2), insert(Test(2), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(2), insert(Test(2), insert(Test(3), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(2), insert(Test(2), insert(Test(11), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(3), insert(Test(0), insert(Test(2), empty)))))	> False
+isEmpty(insert(Test(2), insert(Test(3), insert(Test(1), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(2), insert(Test(3), insert(Test(2), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(2), insert(Test(3), insert(Test(10), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(4), insert(Test(0), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(2), insert(Test(4), insert(Test(1), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(2), insert(Test(4), insert(Test(9), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(5), insert(Test(0), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(2), insert(Test(5), insert(Test(8), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(6), insert(Test(7), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(7), insert(Test(6), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(8), insert(Test(5), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(9), insert(Test(4), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(10), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(11), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(12), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(13), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(2), insert(Test(21), empty)))	> False
+isEmpty(insert(Test(3), insert(Test(0), insert(Test(0), insert(Test(4), empty)))))	> False
+isEmpty(insert(Test(3), insert(Test(0), insert(Test(1), insert(Test(3), empty)))))	> False
+isEmpty(insert(Test(3), insert(Test(0), insert(Test(2), insert(Test(2), empty)))))	> False
+isEmpty(insert(Test(3), insert(Test(0), insert(Test(3), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(3), insert(Test(0), insert(Test(4), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(3), insert(Test(0), insert(Test(12), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(1), insert(Test(0), insert(Test(3), empty)))))	> False
+isEmpty(insert(Test(3), insert(Test(1), insert(Test(1), insert(Test(2), empty)))))	> False
+isEmpty(insert(Test(3), insert(Test(1), insert(Test(2), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(3), insert(Test(1), insert(Test(3), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(3), insert(Test(1), insert(Test(11), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(2), insert(Test(0), insert(Test(2), empty)))))	> False
+isEmpty(insert(Test(3), insert(Test(2), insert(Test(1), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(3), insert(Test(2), insert(Test(2), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(3), insert(Test(2), insert(Test(10), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(3), insert(Test(0), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(3), insert(Test(3), insert(Test(1), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(3), insert(Test(3), insert(Test(9), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(4), insert(Test(0), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(3), insert(Test(4), insert(Test(8), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(5), insert(Test(7), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(6), insert(Test(6), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(7), insert(Test(5), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(8), insert(Test(4), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(9), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(10), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(11), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(12), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(3), insert(Test(20), empty)))	> False
+isEmpty(insert(Test(4), insert(Test(0), insert(Test(0), insert(Test(3), empty)))))	> False
+isEmpty(insert(Test(4), insert(Test(0), insert(Test(1), insert(Test(2), empty)))))	> False
+isEmpty(insert(Test(4), insert(Test(0), insert(Test(2), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(4), insert(Test(0), insert(Test(3), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(4), insert(Test(0), insert(Test(11), empty))))	> False
+isEmpty(insert(Test(4), insert(Test(1), insert(Test(0), insert(Test(2), empty)))))	> False
+isEmpty(insert(Test(4), insert(Test(1), insert(Test(1), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(4), insert(Test(1), insert(Test(2), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(4), insert(Test(1), insert(Test(10), empty))))	> False
+isEmpty(insert(Test(4), insert(Test(2), insert(Test(0), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(4), insert(Test(2), insert(Test(1), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(4), insert(Test(2), insert(Test(9), empty))))	> False
+isEmpty(insert(Test(4), insert(Test(3), insert(Test(0), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(4), insert(Test(3), insert(Test(8), empty))))	> False
+isEmpty(insert(Test(4), insert(Test(4), insert(Test(7), empty))))	> False
+isEmpty(insert(Test(4), insert(Test(5), insert(Test(6), empty))))	> False
+isEmpty(insert(Test(4), insert(Test(6), insert(Test(5), empty))))	> False
+isEmpty(insert(Test(4), insert(Test(7), insert(Test(4), empty))))	> False
+isEmpty(insert(Test(4), insert(Test(8), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(4), insert(Test(9), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(4), insert(Test(10), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(4), insert(Test(11), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(4), insert(Test(19), empty)))	> False
+isEmpty(insert(Test(5), insert(Test(0), insert(Test(0), insert(Test(2), empty)))))	> False
+isEmpty(insert(Test(5), insert(Test(0), insert(Test(1), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(5), insert(Test(0), insert(Test(2), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(5), insert(Test(0), insert(Test(10), empty))))	> False
+isEmpty(insert(Test(5), insert(Test(1), insert(Test(0), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(5), insert(Test(1), insert(Test(1), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(5), insert(Test(1), insert(Test(9), empty))))	> False
+isEmpty(insert(Test(5), insert(Test(2), insert(Test(0), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(5), insert(Test(2), insert(Test(8), empty))))	> False
+isEmpty(insert(Test(5), insert(Test(3), insert(Test(7), empty))))	> False
+isEmpty(insert(Test(5), insert(Test(4), insert(Test(6), empty))))	> False
+isEmpty(insert(Test(5), insert(Test(5), insert(Test(5), empty))))	> False
+isEmpty(insert(Test(5), insert(Test(6), insert(Test(4), empty))))	> False
+isEmpty(insert(Test(5), insert(Test(7), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(5), insert(Test(8), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(5), insert(Test(9), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(5), insert(Test(10), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(5), insert(Test(18), empty)))	> False
+isEmpty(insert(Test(6), insert(Test(0), insert(Test(0), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(6), insert(Test(0), insert(Test(1), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(6), insert(Test(0), insert(Test(9), empty))))	> False
+isEmpty(insert(Test(6), insert(Test(1), insert(Test(0), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(6), insert(Test(1), insert(Test(8), empty))))	> False
+isEmpty(insert(Test(6), insert(Test(2), insert(Test(7), empty))))	> False
+isEmpty(insert(Test(6), insert(Test(3), insert(Test(6), empty))))	> False
+isEmpty(insert(Test(6), insert(Test(4), insert(Test(5), empty))))	> False
+isEmpty(insert(Test(6), insert(Test(5), insert(Test(4), empty))))	> False
+isEmpty(insert(Test(6), insert(Test(6), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(6), insert(Test(7), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(6), insert(Test(8), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(6), insert(Test(9), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(6), insert(Test(17), empty)))	> False
+isEmpty(insert(Test(7), insert(Test(0), insert(Test(0), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(7), insert(Test(0), insert(Test(8), empty))))	> False
+isEmpty(insert(Test(7), insert(Test(1), insert(Test(7), empty))))	> False
+isEmpty(insert(Test(7), insert(Test(2), insert(Test(6), empty))))	> False
+isEmpty(insert(Test(7), insert(Test(3), insert(Test(5), empty))))	> False
+isEmpty(insert(Test(7), insert(Test(4), insert(Test(4), empty))))	> False
+isEmpty(insert(Test(7), insert(Test(5), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(7), insert(Test(6), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(7), insert(Test(7), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(7), insert(Test(8), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(7), insert(Test(16), empty)))	> False
+isEmpty(insert(Test(8), insert(Test(0), insert(Test(7), empty))))	> False
+isEmpty(insert(Test(8), insert(Test(1), insert(Test(6), empty))))	> False
+isEmpty(insert(Test(8), insert(Test(2), insert(Test(5), empty))))	> False
+isEmpty(insert(Test(8), insert(Test(3), insert(Test(4), empty))))	> False
+isEmpty(insert(Test(8), insert(Test(4), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(8), insert(Test(5), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(8), insert(Test(6), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(8), insert(Test(7), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(8), insert(Test(15), empty)))	> False
+isEmpty(insert(Test(9), insert(Test(0), insert(Test(6), empty))))	> False
+isEmpty(insert(Test(9), insert(Test(1), insert(Test(5), empty))))	> False
+isEmpty(insert(Test(9), insert(Test(2), insert(Test(4), empty))))	> False
+isEmpty(insert(Test(9), insert(Test(3), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(9), insert(Test(4), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(9), insert(Test(5), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(9), insert(Test(6), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(9), insert(Test(14), empty)))	> False
+isEmpty(insert(Test(10), insert(Test(0), insert(Test(5), empty))))	> False
+isEmpty(insert(Test(10), insert(Test(1), insert(Test(4), empty))))	> False
+isEmpty(insert(Test(10), insert(Test(2), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(10), insert(Test(3), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(10), insert(Test(4), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(10), insert(Test(5), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(10), insert(Test(13), empty)))	> False
+isEmpty(insert(Test(11), insert(Test(0), insert(Test(4), empty))))	> False
+isEmpty(insert(Test(11), insert(Test(1), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(11), insert(Test(2), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(11), insert(Test(3), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(11), insert(Test(4), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(11), insert(Test(12), empty)))	> False
+isEmpty(insert(Test(12), insert(Test(0), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(12), insert(Test(1), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(12), insert(Test(2), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(12), insert(Test(3), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(12), insert(Test(11), empty)))	> False
+isEmpty(insert(Test(13), insert(Test(0), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(13), insert(Test(1), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(13), insert(Test(2), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(13), insert(Test(10), empty)))	> False
+isEmpty(insert(Test(14), insert(Test(0), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(14), insert(Test(1), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(14), insert(Test(9), empty)))	> False
+isEmpty(insert(Test(15), insert(Test(0), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(15), insert(Test(8), empty)))	> False
+isEmpty(insert(Test(16), insert(Test(7), empty)))	> False
+isEmpty(insert(Test(17), insert(Test(6), empty)))	> False
+isEmpty(insert(Test(18), insert(Test(5), empty)))	> False
+isEmpty(insert(Test(19), insert(Test(4), empty)))	> False
+isEmpty(insert(Test(20), insert(Test(3), empty)))	> False
+isEmpty(insert(Test(21), insert(Test(2), empty)))	> False
+isEmpty(insert(Test(22), insert(Test(1), empty)))	> False
+isEmpty(insert(Test(23), insert(Test(0), empty)))	> False
+isEmpty(insert(Test(31), empty))	> False
+isEmpty(insert(Test(0), insert(Test(0), insert(Test(0), insert(Test(0), insert(Test(0), empty))))))	> False
+isEmpty(insert(Test(0), insert(Test(0), insert(Test(0), insert(Test(8), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(0), insert(Test(1), insert(Test(7), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(0), insert(Test(2), insert(Test(6), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(0), insert(Test(3), insert(Test(5), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(0), insert(Test(4), insert(Test(4), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(0), insert(Test(5), insert(Test(3), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(0), insert(Test(6), insert(Test(2), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(0), insert(Test(7), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(0), insert(Test(8), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(0), insert(Test(16), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(1), insert(Test(0), insert(Test(7), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(1), insert(Test(1), insert(Test(6), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(1), insert(Test(2), insert(Test(5), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(1), insert(Test(3), insert(Test(4), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(1), insert(Test(4), insert(Test(3), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(1), insert(Test(5), insert(Test(2), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(1), insert(Test(6), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(1), insert(Test(7), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(1), insert(Test(15), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(2), insert(Test(0), insert(Test(6), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(2), insert(Test(1), insert(Test(5), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(2), insert(Test(2), insert(Test(4), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(2), insert(Test(3), insert(Test(3), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(2), insert(Test(4), insert(Test(2), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(2), insert(Test(5), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(2), insert(Test(6), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(2), insert(Test(14), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(3), insert(Test(0), insert(Test(5), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(3), insert(Test(1), insert(Test(4), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(3), insert(Test(2), insert(Test(3), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(3), insert(Test(3), insert(Test(2), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(3), insert(Test(4), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(3), insert(Test(5), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(3), insert(Test(13), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(4), insert(Test(0), insert(Test(4), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(4), insert(Test(1), insert(Test(3), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(4), insert(Test(2), insert(Test(2), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(4), insert(Test(3), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(4), insert(Test(4), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(4), insert(Test(12), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(5), insert(Test(0), insert(Test(3), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(5), insert(Test(1), insert(Test(2), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(5), insert(Test(2), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(5), insert(Test(3), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(5), insert(Test(11), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(6), insert(Test(0), insert(Test(2), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(6), insert(Test(1), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(6), insert(Test(2), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(6), insert(Test(10), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(7), insert(Test(0), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(7), insert(Test(1), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(7), insert(Test(9), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(8), insert(Test(0), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(0), insert(Test(8), insert(Test(8), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(9), insert(Test(7), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(10), insert(Test(6), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(11), insert(Test(5), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(12), insert(Test(4), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(13), insert(Test(3), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(14), insert(Test(2), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(15), insert(Test(1), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(16), insert(Test(0), empty))))	> False
+isEmpty(insert(Test(0), insert(Test(24), empty)))	> False
+isEmpty(insert(Test(1), insert(Test(0), insert(Test(0), insert(Test(7), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(0), insert(Test(1), insert(Test(6), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(0), insert(Test(2), insert(Test(5), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(0), insert(Test(3), insert(Test(4), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(0), insert(Test(4), insert(Test(3), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(0), insert(Test(5), insert(Test(2), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(0), insert(Test(6), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(0), insert(Test(7), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(0), insert(Test(15), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(1), insert(Test(0), insert(Test(6), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(1), insert(Test(1), insert(Test(5), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(1), insert(Test(2), insert(Test(4), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(1), insert(Test(3), insert(Test(3), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(1), insert(Test(4), insert(Test(2), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(1), insert(Test(5), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(1), insert(Test(6), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(1), insert(Test(14), empty))))	> False
+isEmpty(insert(Test(1), insert(Test(2), insert(Test(0), insert(Test(5), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(2), insert(Test(1), insert(Test(4), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(2), insert(Test(2), insert(Test(3), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(2), insert(Test(3), insert(Test(2), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(2), insert(Test(4), insert(Test(1), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(2), insert(Test(5), insert(Test(0), empty)))))	> False
+isEmpty(insert(Test(1), insert(Test(2), insert(Test(13), empty))))	> False
+--- /dev/fd/63	2011-10-12 07:50:14.648745610 -0700
++++ /dev/fd/62	2011-10-12 07:50:14.648745610 -0700
+@@ -2563,7 +2563,7 @@
+ isEmpty(insert(Test(19), insert(Test(1), empty)))	False
+ isEmpty(insert(Test(20), insert(Test(0), empty)))	False
+ isEmpty(insert(Test(28), empty))	False
+-findMin(deleteMin(deleteMin(insert(Test(0), insert(Test(0), insert(Test(1), empty))))))	Test(1)
++findMin(deleteMin(deleteMin(insert(Test(0), insert(Test(0), insert(Test(1), empty))))))	Test(0)
+ findMin(deleteMin(deleteMin(insert(Test(0), insert(Test(1), insert(Test(0), empty))))))	Test(1)
+ findMin(deleteMin(deleteMin(insert(Test(1), insert(Test(0), insert(Test(0), empty))))))	Test(1)
+ findMin(deleteMin(insert(Test(0), deleteMin(insert(Test(0), insert(Test(1), empty))))))	Test(1)
+@@ -3243,7 +3243,7 @@
+ isEmpty(insert(Test(20), insert(Test(1), empty)))	False
+ isEmpty(insert(Test(21), insert(Test(0), empty)))	False
+ isEmpty(insert(Test(29), empty))	False
+-findMin(deleteMin(deleteMin(insert(Test(0), insert(Test(0), insert(Test(2), empty))))))	Test(2)
++findMin(deleteMin(deleteMin(insert(Test(0), insert(Test(0), insert(Test(2), empty))))))	Test(0)
+ findMin(deleteMin(deleteMin(insert(Test(0), insert(Test(1), insert(Test(1), empty))))))	Test(1)
+ findMin(deleteMin(deleteMin(insert(Test(0), insert(Test(2), insert(Test(0), empty))))))	Test(2)
+ findMin(deleteMin(deleteMin(insert(Test(1), insert(Test(0), insert(Test(1), empty))))))	Test(1)
+@@ -4106,11 +4106,11 @@
+ isEmpty(insert(Test(21), insert(Test(1), empty)))	False
+ isEmpty(insert(Test(22), insert(Test(0), empty)))	False
+ isEmpty(insert(Test(30), empty))	False
+-findMin(deleteMin(deleteMin(insert(Test(0), insert(Test(0), insert(Test(3), empty))))))	Test(3)
+-findMin(deleteMin(deleteMin(insert(Test(0), insert(Test(1), insert(Test(2), empty))))))	Test(2)
++findMin(deleteMin(deleteMin(insert(Test(0), insert(Test(0), insert(Test(3), empty))))))	Test(0)
++findMin(deleteMin(deleteMin(insert(Test(0), insert(Test(1), insert(Test(2), empty))))))	Test(1)
+ findMin(deleteMin(deleteMin(insert(Test(0), insert(Test(2), insert(Test(1), empty))))))	Test(2)
+ findMin(deleteMin(deleteMin(insert(Test(0), insert(Test(3), insert(Test(0), empty))))))	Test(3)
+-findMin(deleteMin(deleteMin(insert(Test(1), insert(Test(0), insert(Test(2), empty))))))	Test(2)
++findMin(deleteMin(deleteMin(insert(Test(1), insert(Test(0), insert(Test(2), empty))))))	Test(1)
+ findMin(deleteMin(deleteMin(insert(Test(1), insert(Test(1), insert(Test(1), empty))))))	Test(1)
+ findMin(deleteMin(deleteMin(insert(Test(1), insert(Test(2), insert(Test(0), empty))))))	Test(2)
+ findMin(deleteMin(deleteMin(insert(Test(2), insert(Test(0), insert(Test(1), empty))))))	Test(2)
+@@ -5201,13 +5201,13 @@
+ isEmpty(insert(Test(22), insert(Test(1), empty)))	False
+ isEmpty(insert(Test(23), insert(Test(0), empty)))	False
+ isEmpty(insert(Test(31), empty))	False
+-findMin(deleteMin(deleteMin(insert(Test(0), insert(Test(0), insert(Test(4), empty))))))	Test(4)
+-findMin(deleteMin(deleteMin(insert(Test(0), insert(Test(1), insert(Test(3), empty))))))	Test(3)
++findMin(deleteMin(deleteMin(insert(Test(0), insert(Test(0), insert(Test(4), empty))))))	Test(0)
++findMin(deleteMin(deleteMin(insert(Test(0), insert(Test(1), insert(Test(3), empty))))))	Test(1)
+ findMin(deleteMin(deleteMin(insert(Test(0), insert(Test(2), insert(Test(2), empty))))))	Test(2)
+ findMin(deleteMin(deleteMin(insert(Test(0), insert(Test(3), insert(Test(1), empty))))))	Test(3)
+ findMin(deleteMin(deleteMin(insert(Test(0), insert(Test(4), insert(Test(0), empty))))))	Test(4)
+-findMin(deleteMin(deleteMin(insert(Test(1), insert(Test(0), insert(Test(3), empty))))))	Test(3)
+-findMin(deleteMin(deleteMin(insert(Test(1), insert(Test(1), insert(Test(2), empty))))))	Test(2)
++findMin(deleteMin(deleteMin(insert(Test(1), insert(Test(0), insert(Test(3), empty))))))	Test(1)
++findMin(deleteMin(deleteMin(insert(Test(1), insert(Test(1), insert(Test(2), empty))))))	Test(1)
+ findMin(deleteMin(deleteMin(insert(Test(1), insert(Test(2), insert(Test(1), empty))))))	Test(2)
+ findMin(deleteMin(deleteMin(insert(Test(1), insert(Test(3), insert(Test(0), empty))))))	Test(3)
+ findMin(deleteMin(deleteMin(insert(Test(2), insert(Test(0), insert(Test(2), empty))))))	Test(2)
