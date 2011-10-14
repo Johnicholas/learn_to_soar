@@ -106,60 +106,16 @@ sp {pass
 
 }
 
+# TODO: "findMin(deleteMin(insert(Test(0), insert(Test(0), insert(Test(0), empty))))) should be 0"
+
 test "findMin(deleteMin(deleteMin(insert(Test(0), insert(Test(0), insert(Test(0), empty))))) should be 0" {
 
-sp {propose*empty
-    (state <s> ^name test-skew-binary-heap -^empty-heap-is)
--->
-    (<s> ^operator <o> + =)
-    (<o> ^name empty-heap ^return-to empty-heap-is)}
-
-sp {propose*create-test-cases
-    (state <s> ^name test-skew-binary-heap -^first-test)
--->
-    (<s> ^operator <o> + =)
-    (<o> ^name create-test-cases)}
+source reusable-testing-productions.soar
 
 sp {apply*create-test-cases
     (state <s> ^name test-skew-binary-heap ^operator.name create-test-cases)
 -->
     (<s> ^first-test.test 0 ^second-test.test 0 ^third-test.test 0)}
-
-sp {propose*insert-heap*step-one
-    (state <s> ^name test-skew-binary-heap ^empty-heap-is <e> ^first-test <t1> -^step-one-is)
--->
-    (<s> ^operator <o>)
-    (<o> ^name insert-heap ^element <t1> ^heap <e> ^return-to step-one-is)}
-
-sp {propose*insert-heap*step-two
-    (state <s> ^name test-skew-binary-heap ^step-one-is <h1> ^second-test <t2> -^step-two-is)
--->
-    (<s> ^operator <o>)
-    (<o> ^name insert-heap ^element <t2> ^heap <h1> ^return-to step-two-is)}
-
-sp {propose*insert-heap*step-three
-    (state <s> ^name test-skew-binary-heap ^step-two-is <h2> ^third-test <t3> -^step-three-is)
--->
-    (<s> ^operator <o>)
-    (<o> ^name insert-heap ^element <t3> ^heap <h2> ^return-to step-three-is)}
-
-sp {propose*delete-min*step-four
-    (state <s> ^name test-skew-binary-heap ^step-three-is <h3> -^step-four-is)
--->
-    (<s> ^operator <o>)
-    (<o> ^name delete-min ^heap <h3> ^return-to step-four-is)}
-
-sp {propose*delete-min*step-five
-    (state <s> ^name test-skew-binary-heap ^step-four-is <h2> -^step-five-is)
--->
-    (<s> ^operator <o>)
-    (<o> ^name delete-min ^heap <h2> ^return-to step-five-is)}
-
-sp {propose*find-min*step-six
-    (state <s> ^name test-skew-binary-heap ^step-five-is <h1> -^step-six-is)
--->
-    (<s> ^operator <o>)
-    (<o> ^name find-min ^heap <h1> ^return-to answer-is)}
 
 sp {pass
     (state <s> ^name test-skew-binary-heap ^answer-is.test 0)
@@ -168,8 +124,22 @@ sp {pass
 
 }
 
-#"findMin(deleteMin(insert(Test(0), insert(Test(0), insert(Test(0), empty))))) should be 0"
-#"findMin(deleteMin(deleteMin(insert(Test(0), insert(Test(0), insert(Test(1), empty)))))) should be Test(1)"
+test "findMin(deleteMin(deleteMin(insert(Test(0), insert(Test(0), insert(Test(1), empty)))))) should be Test(1)" {
+
+source reusable-testing-productions.soar
+
+sp {apply*create-test-cases
+    (state <s> ^name test-skew-binary-heap ^operator.name create-test-cases)
+-->
+    (<s> ^first-test.test 0 ^second-test.test 0 ^third-test.test 1)}
+
+sp {pass
+    (state <s> ^name test-skew-binary-heap ^answer-is.test 1)
+-->
+    (pass)}
+
+}
+
 #"findMin(deleteMin(deleteMin(insert(Test(0), insert(Test(1), insert(Test(0), empty)))))) should be Test(1)"
 #"findMin(deleteMin(deleteMin(insert(Test(1), insert(Test(0), insert(Test(0), empty)))))) should be Test(1)"
 #"findMin(deleteMin(deleteMin(insert(Test(0), insert(Test(0), insert(Test(2), empty)))))) should be Test(2)"
@@ -184,6 +154,7 @@ sp {pass
 #"findMin(deleteMin(deleteMin(insert(Test(2), insert(Test(1), insert(Test(0), empty)))))) should be Test(2)"
 #"findMin(deleteMin(deleteMin(insert(Test(2), insert(Test(0), insert(Test(1), empty)))))) should be Test(2)"
 #"findMin(deleteMin(deleteMin(insert(Test(0), insert(Test(2), insert(Test(1), empty)))))) should be Test(2)"
+
 #"findMin(insert(Test(1), insert(Test(0), empty))) should be Test(0)"
 # ideas: insert insert insert delete findMin
 # ideas: insert insert delete insert findMin
