@@ -33,11 +33,16 @@
 # delete-min is an operator for deleting an element from a heap.
 # propose an operator named delete-min, augmented with ^heap <starting-point> and ^return-to <wherever>
 # a new heap based on <starting-point> but with one fewer element will be placed at <wherever>
-# don't propose it if the heap is empty - or write your own rules for what you want to happen in that circumstance.
+# Don't propose it if the heap is empty - or write your own rules for what you want to happen in that circumstance.
 #
 # is-empty is an operator that allows people who don't know (or don't want to know) the internal representation of heaps,
 # to test whether a heap is empty. Propose an operator named is-empty augmented with ^heap <to-test> and
 # ^return-to <wherever>. is-empty will test the heap and either create (<s> ^<wherever> true) or (<s> ^<wherever> false).
+#
+# find-min is an operator to access the minimum element of a heap.
+# propose an operator named find-min, augmented with ^heap <h> and ^return-to <wherever>
+# the minimum element of the heap <h> will be put at ^<wherever>
+# Don't propose it if the heap is empty - or write your own rules for what you want to happen in that circumstance.
 #
 # PRIVATE
 #
@@ -277,7 +282,7 @@ sp {remove-min-tree*apply*false-branch
                ^tree-list <ts1>
                ^superstate <ss>
                ^return-to <return-to>)
-    (<ts> ^first <t> ^rest <ts2>)
+    (<ts1> ^first <t> ^rest <ts2>)
     (<rr> ^tree <tprime> ^tree-list <tsprime>)
 -->
     (<ss> ^<return-to> <pair>)
@@ -342,24 +347,29 @@ sp {normalize*nil
 -->
     (<ss> ^<r> nil)}
 
-#sp {normalize*propose*ins-tree
-#    (state <s> ^name normalize ^tree-list <ts1>)
-#    (<ts1> ^first <t> ^rest <ts2>)
-#-->
-#    (<s> ^operator <o> +)
-#    (<o> ^name ins-tree ^tree <t> ^tree-list <ts2> ^return-to ins-tree-result)}
+sp {normalize*propose*ins-tree
+    (state <s> ^name normalize ^tree-list <ts1>)
+    (<ts1> ^first <t> ^rest <ts2>)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name ins-tree ^tree <t> ^tree-list <ts2> ^return-to ins-tree-result)}
 
-#sp {ins-tree*initialize
-#    (state <s> ^superstate.operator <o>)
-#    (<o> ^name ins-tree ^tree <t> ^tree-list <ts2> ^return-to <r>)
-#-->
-#    (<s> ^name ins-tree ^tree <t> ^tree-list <ts2> ^return-to <r>)}
+sp {normalize*apply*ins-tree*done
+    (state <s> ^name normalize ^superstate <ss> ^return-to <r> ^ins-tree-result <a>)
+-->
+    (<ss> ^<r> <a>)}
 
-#sp {ins-tree*apply*base-case
-#    (state <s> ^name ins-tree ^superstate <ss> ^return-to <r> ^tree-list nil ^tree <t>)
-#-->
-#    (<ss> ^<r> <cons>)
-#    (<cons> ^first <t> ^rest nil)}
+sp {ins-tree*initialize
+    (state <s> ^superstate.operator <o>)
+    (<o> ^name ins-tree ^tree <t> ^tree-list <ts2> ^return-to <r>)
+-->
+    (<s> ^name ins-tree ^tree <t> ^tree-list <ts2> ^return-to <r>)}
+
+sp {ins-tree*apply*base-case
+    (state <s> ^name ins-tree ^superstate <ss> ^return-to <r> ^tree-list nil ^tree <t>)
+-->
+    (<ss> ^<r> <cons>)
+    (<cons> ^first <t> ^rest nil)}
 
 # TODO: ins-tree step
 
@@ -379,16 +389,15 @@ sp {merge-helper*initialize
 -->
     (<s> ^name merge-helper ^left <ts1> ^right <ts2> ^return-to <r>)}
 
-sp {merge-helper*propose*right-is-nil
-    (state <s> ^name merge-helper ^right nil)
--->
-    (<s> ^operator <o> +)
-    (<o> ^name right-is-nil)}
-
 sp {merge-helper*apply*right-is-nil
-    (state <s> ^name merge-helper ^operator.name right-is-nil ^left <ts1> ^superstate <ss> ^return-to <r>)
+    (state <s> ^name merge-helper ^right nil ^superstate <ss> ^return-to <r> ^left <ts>)
 -->
-    (<ss> ^<r> <ts1>)}
+    (<ss> ^<r> <ts>)}
+
+sp {merge-helper*apply*left-is-nil
+    (state <s> ^name merge-helper ^left nil ^superstate <ss> ^return-to <r> ^right <ts>)
+-->
+    (<ss> ^<r> <ts>)}
 
 # if we're computing delete-min, and we have merge-helper-result
 # then we need to convert it into a heap
@@ -476,7 +485,22 @@ sp {is-empty*apply*false-branch
 -->
     (<s> ^<r> false)}
 
+sp {find-min*initialize
+    (state <s> ^superstate.operator <o>)
+    (<o> ^name find-min ^heap <h> ^return-to <r>)
+-->
+    (<s> ^name find-min ^heap <h> ^return-to <r>)}
 
+# the first step in finding the minimum element is finding the minimum tree
+sp {find-min*propose*remove-min-tree
+    (state <s> ^name find-min ^heap.Heap <ts> -^find-min-tree-result)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name remove-min-tree ^tree-list <ts> ^return-to find-min-tree-result)}
 
-
+# the minimum element is the root of the minimum tree
+sp {find-min*apply*done
+    (state <s> ^name find-min ^superstate <ss> ^return-to <r> ^find-min-tree-result.tree.element <x>)
+-->
+    (<ss> ^<r> <x>)}
 
