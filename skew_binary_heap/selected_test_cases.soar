@@ -45,7 +45,34 @@ sp {pass
 
 }
 
-#"isEmpty(insert(Test(28), empty)) should be false"
+test "isEmpty(insert(Test(28), empty)) should be false" {
+
+sp {propose*empty
+    (state <s> ^name test-skew-binary-heap -^empty-heap-is)
+-->
+    (<s> ^operator <o>)
+    (<o> ^name empty-heap ^return-to empty-heap-is)}
+
+sp {propose*insert-heap*test*28
+    (state <s> ^name test-skew-binary-heap ^empty-heap-is <e> -^singleton-heap-is)
+-->
+    (<s> ^operator <o>)
+    (<o> ^name insert-heap ^element <t28> ^heap <e> ^return-to singleton-heap-is)
+    (<t28> ^test 28)}
+
+sp {propose*is-empty
+    (state <s> ^name test-skew-binary-heap ^singleton-heap-is <e> -^test-result-is)
+-->
+    (<s> ^operator <o>)
+    (<o> ^name is-empty ^heap <e> ^return-to test-result-is)}
+
+sp {pass
+    (state <s> ^name test-skew-binary-heap ^test-result-is false)
+-->
+    (pass)}
+
+}
+
 #"findMin(deleteMin(insert(Test(0), insert(Test(0), insert(Test(0), empty))))) should be 0"
 #"findMin(deleteMin(deleteMin(insert(Test(0), insert(Test(0), insert(Test(1), empty)))))) should be Test(1)"
 #"findMin(deleteMin(deleteMin(insert(Test(0), insert(Test(1), insert(Test(0), empty)))))) should be Test(1)"
