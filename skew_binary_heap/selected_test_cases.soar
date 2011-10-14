@@ -61,10 +61,10 @@ sp {propose*insert-heap*test*28
     (<t28> ^test 28)}
 
 sp {propose*is-empty
-    (state <s> ^name test-skew-binary-heap ^singleton-heap-is <e> -^test-result-is)
+    (state <s> ^name test-skew-binary-heap ^singleton-heap-is <sing> -^test-result-is)
 -->
     (<s> ^operator <o>)
-    (<o> ^name is-empty ^heap <e> ^return-to test-result-is)}
+    (<o> ^name is-empty ^heap <sing> ^return-to test-result-is)}
 
 sp {pass
     (state <s> ^name test-skew-binary-heap ^test-result-is false)

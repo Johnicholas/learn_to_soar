@@ -1,4 +1,4 @@
-# NOTE: THIS DEFINITELY DOES NOT WORK! ONLY ONE TEST PASSING!
+# NOTE: THIS DEFINITELY DOES NOT WORK! ONLY TWO TESTS PASSING!
 #
 # This is derived from the implementation Graeme Moss used in his Auburn thesis.
 #
@@ -12,7 +12,7 @@
 # if <x> is a tree-list, then <x> is either nil, or augmented with both ^first <y> and ^rest <z>,
 #     where <y> is a tree and
 #     <z> is a tree-list
-# if <x> is a tree, then <x> is augmented with ^rank <r> ^root <x> ^elem-list <xs> ^tree-list <c>,
+# if <x> is a tree, then <x> is augmented with ^rank <r> ^element <x> ^elem-list <xs> ^tree-list <c>,
 #     where <r> is a number,
 #     <x> is comparable with less-than or less-or-equal,
 #     <xs> is an elem-list
@@ -261,4 +261,13 @@ sp {is-empty*apply*true-branch
     (<o> ^name is-empty ^heap.Heap nil ^return-to <r>)
 -->
     (<s> ^<r> true)}
+
+# not the absolute minimum, but pretty close
+sp {is-empty*apply*false-branch
+    (state <s> ^operator <o>)
+    (<o> ^name is-empty ^heap.Heap <ts> ^return-to <r>)
+    (<ts> ^first <n> ^rest)
+    (<n> ^rank ^element ^elem-list ^tree-list)
+-->
+    (<s> ^<r> false)}
 
