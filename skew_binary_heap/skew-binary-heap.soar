@@ -1,6 +1,6 @@
-# NOTE: THIS DEFINITELY DOES NOT WORK! ONLY TWO TESTS PASSING!
+# NOTE: THIS DEFINITELY DOES NOT WORK! ONLY 3 TESTS PASSING!
 #
-# This is derived from the implementation Graeme Moss used in his Auburn thesis.
+# This is derived from the SkewBinTree.hs implementation Graeme Moss used in his Auburn thesis.
 #
 # We assume there are two operators named less-than and less-or-equal,
 # which can be invoked by proposing them,
