@@ -114,6 +114,20 @@ sp {insert-heap*propose*skew-link
     (<s> ^operator <o> +)
     (<o> ^name skew-link ^element <x> ^left <t1> ^right <t2> ^return-to skew-link-result)}
 
+# insert(?x, Heap(TCons(?t1, TCons(?t2, ?ts)))) ==
+#   if rank(?t1) = rank(?t2) then
+#      Heap(TCons(skewLink(?x, ?t1, ?t2), ?ts)) else
+#      Heap(TCons(Node(0, ?x, ANil, TNil), ?ts))
+sp {insert-heap*apply*true-branch
+    (state <s> ^name insert-heap
+               ^superstate <ss>
+               ^return-to <return-to>
+               ^skew-link-result <r>
+               ^heap.Heap.rest.rest <ts>)
+-->
+    (<ss> ^<return-to>.Heap <cons>)
+    (<cons> ^first <r> ^rest <ts>)}
+
 # we insist on an operator no-change impasse and subgoal for skew-link
 sp {skew-link*initialize
     (state <s> ^superstate.operator <o>)
@@ -121,16 +135,49 @@ sp {skew-link*initialize
 -->
     (<s> ^name skew-link ^element <x> ^left <t1> ^right <t2> ^return-to <r>)}
 
-# skewLink(?x, ?t1, ?t2) == skewLinkHelper(link(?t1, ?t2), ?x)
-# skewLinkHelper(Node(?r, ?y, ?ys, ?c), ?x) ==
-#  if lessOrEqual(?x, ?y) then
-#     Node(?r, ?x, ACons(?y, ?ys), ?c) else
-#     Node(?r, ?y, ACons(?x, ?ys), ?c)
+# first we link the left and right trees
 sp {skew-link*propose-link
     (state <s> ^name skew-link ^left <t1> ^right <t2> -^link-result)
 -->
     (<s> ^operator <o> +)
     (<o> ^name link ^left <t1> ^right <t2> ^return-to link-result)}
+
+# once we have the link-result, 
+# we need a comparison between the root of the linked tree,
+# and our single element
+sp {skew-link*propose*less-or-equal
+    (state <s> ^name skew-link ^element <x> ^link-result.element <y> -^less-or-equal-result)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name less-or-equal ^left <x> ^right <y> ^return-to less-or-equal-result)}
+
+# skewLink(?x, ?t1, ?t2) == skewLinkHelper(link(?t1, ?t2), ?x)
+# skewLinkHelper(Node(?r, ?y, ?ys, ?c), ?x) ==
+#  if lessOrEqual(?x, ?y) then
+#     Node(?r, ?x, ACons(?y, ?ys), ?c) else
+#     Node(?r, ?y, ACons(?x, ?ys), ?c)
+sp {skew-link*apply*true-branch
+    (state <s> ^name skew-link
+               ^less-or-equal-result true
+               ^superstate <ss>
+               ^return-to <return-to>
+               ^element <x>
+               ^link-result <lr>)
+    (<lr> ^rank <r> ^element <y> ^elem-list <ys> ^tree-list <c>)
+-->
+    (<ss> ^<return-to> <newnode>)
+    (<newnode> ^rank <r> ^element <x> ^elem-list <cons> ^tree-list <c>)
+    (<cons> ^first <y> ^rest <ys>)}
+
+## skewLink(?x, ?t1, ?t2) == skewLinkHelper(link(?t1, ?t2), ?x)
+## skewLinkHelper(Node(?r, ?y, ?ys, ?c), ?x) ==
+##  if lessOrEqual(?x, ?y) then
+##     Node(?r, ?x, ACons(?y, ?ys), ?c) else
+##     Node(?r, ?y, ACons(?x, ?ys), ?c)
+#sp {skew-link*apply*false-branch
+#
+# TODO
+#
 
 # we insist on an operator no-change impasse and subgoal for link
 sp {link*initialize
@@ -148,10 +195,28 @@ sp {link*propose*less-or-equal
     (<s> ^operator <o> +)
     (<o> ^name less-or-equal ^left <x1> ^right <x2> ^return-to less-or-equal-result)}
 
-sp {link*propose*less-or-equal*debug
-    (state <s> ^name link ^left.element <x1> ^right.element <x2> -^less-or-equal-result)
+#link(Node(?r, ?x1, ?xs1, ?c1), Node(?ignored, ?x2, ?xs2, ?c2)) ==
+#  if lessOrEqual(?x1, ?x2) then
+#     Node(?r + 1, ?x1, ?xs1, TCons(Node(?ignored, ?x2, ?xs2, ?c2), ?c1)) else
+#     Node(?r + 1, ?x2, ?xs2, TCons(Node(?r, ?x1, ?xs1, ?c1), ?c2))
+sp {link*apply*true-branch
+    (state <s> ^name link ^less-or-equal-result true ^left <l> ^right <r> ^superstate <ss> ^return-to <return-to>)
+    (<l> ^rank <rank> ^element <x1> ^elem-list <xs1> ^tree-list <c1>)
 -->
-    (wait)}
+    (<ss> ^<return-to> <newnode>)
+    (<newnode> ^rank (+ <rank> 1) ^element <x1> ^elem-list <x1> ^tree-list <cons>)
+    (<cons> ^first <r> ^rest <c1>)}
+
+##link(Node(?r, ?x1, ?xs1, ?c1), Node(?ignored, ?x2, ?xs2, ?c2)) ==
+##  if lessOrEqual(?x1, ?x2) then
+##     Node(?r + 1, ?x1, ?xs1, TCons(Node(?ignored, ?x2, ?xs2, ?c2), ?c1)) else
+##     Node(?r + 1, ?x2, ?xs2, TCons(Node(?r, ?x1, ?xs1, ?c1), ?c2))
+#sp {link*apply*false-branch
+#    (state <s> ^name link ^less-or-equal-result false
+#
+# TODO
+#
+
 
 # we insist on an operator no-change impasse and subgoal state for delete-min
 sp {delete-min*initialize
@@ -344,4 +409,8 @@ sp {is-empty*apply*false-branch
     (<n> ^rank ^element ^elem-list ^tree-list)
 -->
     (<s> ^<r> false)}
+
+
+
+
 
