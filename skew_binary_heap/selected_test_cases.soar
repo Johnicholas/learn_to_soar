@@ -23,10 +23,10 @@ sp {test-less-or-equal*equal
 #-->
 #    (<ss> ^<r> true)}
 
-#sp {test-less-or-equal*greater
-#    (state <s> ^name test-less-or-equal ^right <n> ^min <n> ^left <> <n> ^superstate <ss> ^return-to <r>)
-#-->
-#    (<ss> ^<r> false)}
+sp {test-less-or-equal*greater
+    (state <s> ^name test-less-or-equal ^right <n> ^min <n> ^left <> <n> ^superstate <ss> ^return-to <r>)
+-->
+    (<ss> ^<r> false)}
 
 sp {test*less-than*initialize
     (state <s> ^superstate.operator <o>)
@@ -39,8 +39,17 @@ sp {test-less-than*equal
 -->
     (<ss> ^<r> false)}
 
-# TODO: less-than less
-# TODO: less-than greater
+#sp {test-less-than*less
+#    (state <s> ^name test-less-than ^left <n> ^min <n> ^right <> <n> ^superstate <ss> ^return-to <r>)
+#-->
+#    (<ss> ^<r> true)}
+
+sp {test-less-than*greater
+    (state <s> ^name test-less-than ^right <n> ^min <n> ^left <> <n> ^superstate <ss> ^return-to <r>)
+-->
+    (<ss> ^<r> false)}
+
+
 
 }
 
