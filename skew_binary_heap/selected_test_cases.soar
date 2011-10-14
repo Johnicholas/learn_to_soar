@@ -7,51 +7,10 @@ sp {initialize
 -->
     (<s> ^name test-skew-binary-heap)}
 
-sp {test*less-or-equal*initialize
-    (state <s> ^superstate.operator <o>)
-    (<o> ^name less-or-equal ^left.test <n1> ^right.test <n2> ^return-to <r>)
--->
-    (<s> ^name test-less-or-equal ^left <n1> ^right <n2> ^min (min <n1> <n2>) ^return-to <r>)}
-
-sp {test-less-or-equal*equal
-    (state <s> ^name test-less-or-equal ^left <n> ^right <n> ^superstate <ss> ^return-to <r>)
--->
-    (<ss> ^<r> true)}
-
-#sp {test-less-or-equal*less
-#    (state <s> ^name test-less-or-equal ^left <n> ^min <n> ^right <> <n> ^superstate <ss> ^return-to <r>)
-#-->
-#    (<ss> ^<r> true)}
-
-sp {test-less-or-equal*greater
-    (state <s> ^name test-less-or-equal ^right <n> ^min <n> ^left <> <n> ^superstate <ss> ^return-to <r>)
--->
-    (<ss> ^<r> false)}
-
-sp {test*less-than*initialize
-    (state <s> ^superstate.operator <o>)
-    (<o> ^name less-than ^left.test <n1> ^right.test <n2> ^return-to <r>)
--->
-    (<s> ^name test-less-than ^left <n1> ^right <n2> ^min (min <n1> <n2>) ^return-to <r>)}
-
-sp {test-less-than*equal
-    (state <s> ^name test-less-than ^left <n> ^right <n> ^superstate <ss> ^return-to <r>)
--->
-    (<ss> ^<r> false)}
-
-#sp {test-less-than*less
-#    (state <s> ^name test-less-than ^left <n> ^min <n> ^right <> <n> ^superstate <ss> ^return-to <r>)
-#-->
-#    (<ss> ^<r> true)}
-
-sp {test-less-than*greater
-    (state <s> ^name test-less-than ^right <n> ^min <n> ^left <> <n> ^superstate <ss> ^return-to <r>)
--->
-    (<ss> ^<r> false)}
-
-
+source test-comparisons.soar
 
 }
+
 
 test "isEmpty(deleteMin(insert(Test(0),empty))) should be true" {
 
@@ -115,8 +74,6 @@ sp {pass
 
 }
 
-# TODO: "findMin(deleteMin(insert(Test(0), insert(Test(0), insert(Test(0), empty))))) should be 0"
-
 test "findMin(deleteMin(deleteMin(insert(Test(0), insert(Test(0), insert(Test(0), empty))))) should be 0" {
 
 source reusable-testing-productions.soar
@@ -149,21 +106,240 @@ sp {pass
 
 }
 
-#"findMin(deleteMin(deleteMin(insert(Test(0), insert(Test(1), insert(Test(0), empty)))))) should be Test(1)"
-#"findMin(deleteMin(deleteMin(insert(Test(1), insert(Test(0), insert(Test(0), empty)))))) should be Test(1)"
-#"findMin(deleteMin(deleteMin(insert(Test(0), insert(Test(0), insert(Test(2), empty)))))) should be Test(2)"
-#"findMin(deleteMin(deleteMin(insert(Test(0), insert(Test(1), insert(Test(1), empty)))))) should be Test(1)"
-#"findMin(deleteMin(deleteMin(insert(Test(0), insert(Test(2), insert(Test(0), empty)))))) should be Test(2)"
-#"findMin(deleteMin(deleteMin(insert(Test(1), insert(Test(0), insert(Test(1), empty)))))) should be Test(1)"
-#"findMin(deleteMin(deleteMin(insert(Test(1), insert(Test(1), insert(Test(0), empty)))))) should be Test(1)"
-#"findMin(deleteMin(deleteMin(insert(Test(2), insert(Test(0), insert(Test(0), empty)))))) should be Test(1)"
-#"findMin(deleteMin(deleteMin(insert(Test(0), insert(Test(1), insert(Test(2), empty)))))) should be Test(2)"
-#"findMin(deleteMin(deleteMin(insert(Test(1), insert(Test(0), insert(Test(2), empty)))))) should be Test(2)"
-#"findMin(deleteMin(deleteMin(insert(Test(1), insert(Test(2), insert(Test(0), empty)))))) should be Test(2)"
-#"findMin(deleteMin(deleteMin(insert(Test(2), insert(Test(1), insert(Test(0), empty)))))) should be Test(2)"
-#"findMin(deleteMin(deleteMin(insert(Test(2), insert(Test(0), insert(Test(1), empty)))))) should be Test(2)"
-#"findMin(deleteMin(deleteMin(insert(Test(0), insert(Test(2), insert(Test(1), empty)))))) should be Test(2)"
+test "findMin(deleteMin(deleteMin(insert(Test(0), insert(Test(1), insert(Test(0), empty)))))) should be Test(1)" {
 
+source reusable-testing-productions.soar
+
+sp {apply*create-test-cases
+    (state <s> ^name test-skew-binary-heap ^operator.name create-test-cases)
+-->
+    (<s> ^first-test.test 0 ^second-test.test 1 ^third-test.test 0)}
+
+sp {pass
+    (state <s> ^name test-skew-binary-heap ^answer-is.test 1)
+-->
+    (pass)}
+
+}
+
+test "findMin(deleteMin(deleteMin(insert(Test(1), insert(Test(0), insert(Test(0), empty)))))) should be Test(1)" {
+
+source reusable-testing-productions.soar
+
+sp {apply*create-test-cases
+    (state <s> ^name test-skew-binary-heap ^operator.name create-test-cases)
+-->
+    (<s> ^first-test.test 1 ^second-test.test 0 ^third-test.test 0)}
+
+sp {pass
+    (state <s> ^name test-skew-binary-heap ^answer-is.test 1)
+-->
+    (pass)}
+
+}
+
+test "findMin(deleteMin(deleteMin(insert(Test(0), insert(Test(0), insert(Test(2), empty)))))) should be Test(2)" {
+
+source reusable-testing-productions.soar
+
+sp {apply*create-test-cases
+    (state <s> ^name test-skew-binary-heap ^operator.name create-test-cases)
+-->
+    (<s> ^first-test.test 0 ^second-test.test 0 ^third-test.test 2)}
+
+sp {pass
+    (state <s> ^name test-skew-binary-heap ^answer-is.test 2)
+-->
+    (pass)}
+
+}
+
+test "findMin(deleteMin(deleteMin(insert(Test(0), insert(Test(1), insert(Test(1), empty)))))) should be Test(1)" {
+source reusable-testing-productions.soar
+
+sp {apply*create-test-cases
+    (state <s> ^name test-skew-binary-heap ^operator.name create-test-cases)
+-->
+    (<s> ^first-test.test 0 ^second-test.test 1 ^third-test.test 1)}
+
+sp {pass
+    (state <s> ^name test-skew-binary-heap ^answer-is.test 1)
+-->
+    (pass)}
+
+}
+
+
+test "findMin(deleteMin(deleteMin(insert(Test(0), insert(Test(2), insert(Test(0), empty)))))) should be Test(2)" {
+
+source reusable-testing-productions.soar
+
+sp {apply*create-test-cases
+    (state <s> ^name test-skew-binary-heap ^operator.name create-test-cases)
+-->
+    (<s> ^first-test.test 0 ^second-test.test 2 ^third-test.test 0)}
+
+sp {pass
+    (state <s> ^name test-skew-binary-heap ^answer-is.test 2)
+-->
+    (pass)}
+
+}
+
+
+test "findMin(deleteMin(deleteMin(insert(Test(1), insert(Test(0), insert(Test(1), empty)))))) should be Test(1)" {
+
+source reusable-testing-productions.soar
+
+sp {apply*create-test-cases
+    (state <s> ^name test-skew-binary-heap ^operator.name create-test-cases)
+-->
+    (<s> ^first-test.test 1 ^second-test.test 0 ^third-test.test 1)}
+
+sp {pass
+    (state <s> ^name test-skew-binary-heap ^answer-is.test 1)
+-->
+    (pass)}
+
+}
+
+
+test "findMin(deleteMin(deleteMin(insert(Test(1), insert(Test(1), insert(Test(0), empty)))))) should be Test(1)" {
+
+source reusable-testing-productions.soar
+
+sp {apply*create-test-cases
+    (state <s> ^name test-skew-binary-heap ^operator.name create-test-cases)
+-->
+    (<s> ^first-test.test 1 ^second-test.test 1 ^third-test.test 0)}
+
+sp {pass
+    (state <s> ^name test-skew-binary-heap ^answer-is.test 1)
+-->
+    (pass)}
+
+}
+
+
+test "findMin(deleteMin(deleteMin(insert(Test(2), insert(Test(0), insert(Test(0), empty)))))) should be Test(2)" {
+
+source reusable-testing-productions.soar
+
+sp {apply*create-test-cases
+    (state <s> ^name test-skew-binary-heap ^operator.name create-test-cases)
+-->
+    (<s> ^first-test.test 2 ^second-test.test 0 ^third-test.test 0)}
+
+sp {pass
+    (state <s> ^name test-skew-binary-heap ^answer-is.test 2)
+-->
+    (pass)}
+
+}
+
+
+test "findMin(deleteMin(deleteMin(insert(Test(0), insert(Test(1), insert(Test(2), empty)))))) should be Test(2)" {
+
+source reusable-testing-productions.soar
+
+sp {apply*create-test-cases
+    (state <s> ^name test-skew-binary-heap ^operator.name create-test-cases)
+-->
+    (<s> ^first-test.test 0 ^second-test.test 1 ^third-test.test 2)}
+
+sp {pass
+    (state <s> ^name test-skew-binary-heap ^answer-is.test 2)
+-->
+    (pass)}
+
+}
+
+
+test "findMin(deleteMin(deleteMin(insert(Test(1), insert(Test(0), insert(Test(2), empty)))))) should be Test(2)" {
+
+source reusable-testing-productions.soar
+
+sp {apply*create-test-cases
+    (state <s> ^name test-skew-binary-heap ^operator.name create-test-cases)
+-->
+    (<s> ^first-test.test 1 ^second-test.test 0 ^third-test.test 2)}
+
+sp {pass
+    (state <s> ^name test-skew-binary-heap ^answer-is.test 2)
+-->
+    (pass)}
+
+}
+
+
+test "findMin(deleteMin(deleteMin(insert(Test(1), insert(Test(2), insert(Test(0), empty)))))) should be Test(2)" {
+
+source reusable-testing-productions.soar
+
+sp {apply*create-test-cases
+    (state <s> ^name test-skew-binary-heap ^operator.name create-test-cases)
+-->
+    (<s> ^first-test.test 1 ^second-test.test 2 ^third-test.test 0)}
+
+sp {pass
+    (state <s> ^name test-skew-binary-heap ^answer-is.test 2)
+-->
+    (pass)}
+
+}
+
+
+test "findMin(deleteMin(deleteMin(insert(Test(2), insert(Test(1), insert(Test(0), empty)))))) should be Test(2)" {
+
+source reusable-testing-productions.soar
+
+sp {apply*create-test-cases
+    (state <s> ^name test-skew-binary-heap ^operator.name create-test-cases)
+-->
+    (<s> ^first-test.test 2 ^second-test.test 1 ^third-test.test 0)}
+
+sp {pass
+    (state <s> ^name test-skew-binary-heap ^answer-is.test 2)
+-->
+    (pass)}
+
+}
+
+
+test "findMin(deleteMin(deleteMin(insert(Test(2), insert(Test(0), insert(Test(1), empty)))))) should be Test(2)" {
+
+source reusable-testing-productions.soar
+
+sp {apply*create-test-cases
+    (state <s> ^name test-skew-binary-heap ^operator.name create-test-cases)
+-->
+    (<s> ^first-test.test 2 ^second-test.test 0 ^third-test.test 1)}
+
+sp {pass
+    (state <s> ^name test-skew-binary-heap ^answer-is.test 2)
+-->
+    (pass)}
+
+}
+
+
+test "findMin(deleteMin(deleteMin(insert(Test(0), insert(Test(2), insert(Test(1), empty)))))) should be Test(2)" {
+
+source reusable-testing-productions.soar
+
+sp {apply*create-test-cases
+    (state <s> ^name test-skew-binary-heap ^operator.name create-test-cases)
+-->
+    (<s> ^first-test.test 0 ^second-test.test 2 ^third-test.test 1)}
+
+sp {pass
+    (state <s> ^name test-skew-binary-heap ^answer-is.test 2)
+-->
+    (pass)}
+
+}
+
+# TODO: "findMin(deleteMin(insert(Test(0), insert(Test(0), insert(Test(0), empty))))) should be 0"
 #"findMin(insert(Test(1), insert(Test(0), empty))) should be Test(0)"
 # ideas: insert insert insert delete findMin
 # ideas: insert insert delete insert findMin
