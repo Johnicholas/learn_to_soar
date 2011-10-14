@@ -99,7 +99,7 @@ note: does not work on empty lists of trees.
 > removeMinTreeHelper((tprime, tsprime), t, ts) =
 >   if lessThan(root(t), root(tprime)) then
 >      (t, ts) else
->      (t, TCons(t, tsprime))
+>      (tprime, TCons(t, tsprime))
 
 empty constructs an empty heap
 

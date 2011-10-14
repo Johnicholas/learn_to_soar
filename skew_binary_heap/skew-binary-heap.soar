@@ -45,7 +45,7 @@
 # they aren't part of the heap concept or interface
 #
 # remove-min-tree is a smart destructor - it takes a list of trees and separates it into the one with the minimum root,
-# and the rest of them. to use it, propose an operator named remove-min-tree, augmented with ^tree-list and ^return-to,
+# and the rest of them. To use it, propose an operator named remove-min-tree, augmented with ^tree-list and ^return-to,
 # and it will put an element at <return-to> that is augmented with ^tree <t> and ^tree-list <ts>,
 # based on the tree-list you gave it.
 #
@@ -64,6 +64,9 @@
 # a new bigger tree, including the single element.
 #
 # link is an operator - it takes a left and right tree and links them to form a new bigger tree.
+#
+# ins-tree is an operator - it takes a tree and list of trees, and walks along the list,
+# linking trees together until  it finds one of greater rank. 
 
 sp {empty-heap*apply
     (state <s> ^operator <o>)
@@ -239,18 +242,47 @@ sp {remove-min-tree*initialize
 -->
     (<s> ^name remove-min-tree ^tree-list <ts> ^return-to <r>)}
 
-sp {remove-min-tree*propose*easy-case
-    (state <s> ^name remove-min-tree ^tree-list.rest nil)
--->
-    (<s> ^operator <o> +)
-    (<o> ^name easy-case)}
-
-sp {remove-min-tree*apply*easy-case
-    (state <s> ^name remove-min-tree ^operator.name easy-case ^tree-list <ts> ^superstate <ss> ^return-to <r>)
-    (<ts> ^first <x>)
+sp {remove-min-tree*apply*base-case
+    (state <s> ^name remove-min-tree ^tree-list <ts> ^superstate <ss> ^return-to <r>)
+    (<ts> ^first <x> ^rest nil)
 -->
     (<ss> ^<r> <p>)
     (<p> ^tree <x> ^tree-list nil)}
+
+#sp {remove-min-tree*propose*recurse
+#    (state <s> ^name remove-min-tree ^tree-list.rest <ts> -^recursive-result)
+#    (<ts> ^first <ts1> ^rest <tss>)
+#-->
+#    (<s> ^operator <o> +)
+#    (<o> ^name remove-min-tree ^tree-list <ts> ^return-to recursive-result)}
+
+## we've recursed, and now we're comparing the first of the list we started with to the min of the recursion
+#sp {remove-min-tree*propose*less-than
+#    (state <s> ^name remove-min-tree ^tree-list.first.element <rt> ^recursive-result.tree.element <rtprime>)
+#-->
+#    (<s> ^operator <o> +)
+#    (<o> ^name less-than ^left <rt> ^right <rtprime> ^return-to less-than-result)}
+
+#sp {remove-min-tree*apply*true-branch
+#
+# TODO
+#
+
+## we've recursed and tested, but the best of the recursion is equal or better to ours
+## we return a pair consisting of the best of the recursion, and our tree consed onto the tree-list.
+#sp {remove-min-tree*apply*false-branch
+#    (state <s> ^name remove-min-tree
+#               ^recursive-result <rr>
+#               ^less-than-result false
+#               ^tree-list <ts1>
+#               ^superstate <ss>
+#               ^return-to <return-to>)
+#    (<ts> ^first <t> ^rest <ts2>)
+#    (<rr> ^tree <tprime> ^tree-list <tsprime>)
+#-->
+#    (<ss> ^<return-to> <pair>)
+#    (<pair> ^tree <tprime> ^tree-list <cons>)
+#    (<cons> ^first <t> ^rest <tsprime>)}
 
 # if we're computing delete-min, and we have the remove-min-tree result,
 # then we need the reverse result, unless we have it already
@@ -269,16 +301,24 @@ sp {reverse*initialize
 -->
     (<s> ^name reverse ^tree-list <ts> ^return-to <r> ^accumulator nil)}
 
-sp {reverse*propose*done
-    (state <s> ^name reverse ^tree-list nil)
--->
-    (<s> ^operator <o> +)
-    (<o> ^name done)}
-
-sp {reverse*apply*done
-    (state <s> ^name reverse ^operator.name done ^accumulator <a> ^return-to <r> ^superstate <ss>)
+sp {reverse*done
+    (state <s> ^name reverse ^tree-list nil ^superstate <ss> ^return-to <r> ^accumulator <a>)
 -->
     (<ss> ^<r> <a>)}
+
+sp {reverse*propose*step
+    (state <s> ^name reverse ^tree-list <ts1>)
+    (<ts1> ^first <t> ^rest <ts2>)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name step)}
+
+sp {reverse*apply*step
+    (state <s> ^name reverse ^operator.name step ^tree-list <ts1> ^accumulator <a1>)
+    (<ts1> ^first <t> ^rest <ts2>)
+-->
+    (<s> ^tree-list <ts1> - <ts2> ^accumulator <a1> - <a2>)
+    (<a2> ^first <t> ^rest <a1>)}
 
 # if we're computing delete-min, and we remove-min-tree result,
 # then we need the normalize result, unless we have it already
@@ -295,18 +335,33 @@ sp {normalize*initialize
     (state <s> ^superstate.operator <o>)
     (<o> ^name normalize ^tree-list <ts> ^return-to <r>)
 -->
-    (<s> ^name normalize ^tree-list <ts> ^return-to <r> ^accumulator nil)}
+    (<s> ^name normalize ^tree-list <ts> ^return-to <r>)}
 
-sp {normalize*propose*done
-    (state <s> ^name normalize ^tree-list nil)
+sp {normalize*nil
+    (state <s> ^name normalize ^tree-list nil ^superstate <ss> ^return-to <r>)
 -->
-    (<s> ^operator <o> +)
-    (<o> ^name done)}
+    (<ss> ^<r> nil)}
 
-sp {normalize*apply*done
-    (state <s> ^name normalize ^accumulator <a> ^return-to <r> ^superstate <ss>)
--->
-    (<ss> ^<r> <a>)}
+#sp {normalize*propose*ins-tree
+#    (state <s> ^name normalize ^tree-list <ts1>)
+#    (<ts1> ^first <t> ^rest <ts2>)
+#-->
+#    (<s> ^operator <o> +)
+#    (<o> ^name ins-tree ^tree <t> ^tree-list <ts2> ^return-to ins-tree-result)}
+
+#sp {ins-tree*initialize
+#    (state <s> ^superstate.operator <o>)
+#    (<o> ^name ins-tree ^tree <t> ^tree-list <ts2> ^return-to <r>)
+#-->
+#    (<s> ^name ins-tree ^tree <t> ^tree-list <ts2> ^return-to <r>)}
+
+#sp {ins-tree*apply*base-case
+#    (state <s> ^name ins-tree ^superstate <ss> ^return-to <r> ^tree-list nil ^tree <t>)
+#-->
+#    (<ss> ^<r> <cons>)
+#    (<cons> ^first <t> ^rest nil)}
+
+# TODO: ins-tree step
 
 # if we're computing delete-min, and we have reverse-result and normalize-result
 # then we need merge-helper result, unless we have it already

@@ -86,7 +86,7 @@ removeMinTree(TCons(?t, TCons(?ts1, ?tss))) == removeMinTreeHelper(removeMinTree
 removeMinTreeHelper(Pair(?tprime, ?tsprime), ?t, ?ts) ==
   if lessThan(root(?t), root(?tprime)) then
      Pair(?t, ?ts) else
-     Pair(?t, TCons(?t, ?tsprime))
+     Pair(?tprime, TCons(?t, ?tsprime))
 
 # empty :: Ord a => Heap a
 # empty constructs an empty heap
