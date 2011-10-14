@@ -59,6 +59,11 @@
 # and merges them
 #
 # insert-all is an operator - it takes an elem-list and a heap and inserts each element in the list into the heap
+#
+# skew-link is an operator - it takes a single element and a left and right tree and links them to form
+# a new bigger tree, including the single element.
+#
+# link is an operator - it takes a left and right tree and links them to form a new bigger tree.
 
 sp {empty-heap*apply
     (state <s> ^operator <o>)
@@ -67,17 +72,86 @@ sp {empty-heap*apply
     (<s> ^<return-to> <e>)
     (<e> ^Heap nil)}
 
+sp {insert-heap*initialize
+    (state <s> ^superstate.operator <o>)
+    (<o> ^name insert-heap ^element <x> ^heap <h> ^return-to <r>)
+-->
+    (<s> ^name insert-heap ^element <x> ^heap <h> ^return-to <r>)}
+
 # this is the easiest case of insert - inserting into an empty heap
 # insert(?x, Heap(TNil)) == Heap(TCons(Node(0, ?x, ANil, TNil), TNil))
 sp {insert-heap*apply*heap-is-empty
-    (state <s> ^operator <o>)
-    (<o> ^name insert-heap ^element <x> ^heap <h> ^return-to <return-to>)
+    (state <s> ^name insert-heap ^element <x> ^heap <h> ^superstate <ss> ^return-to <r>)
     (<h> ^Heap nil)
 -->
-    (<s> ^<return-to> <h1>)
+    (<ss> ^<r> <h1>)
     (<h1> ^Heap <h2>)
     (<h2> ^first <h3> ^rest nil)
     (<h3> ^rank 0 ^element <x> ^elem-list nil ^tree-list nil)}
+
+# this is next-easiest case, inserting into a single-treed heap
+# insert(?x, Heap(TCons(?t, TNil))) == Heap(TCons(Node(0, ?x, ANil, TNil), TCons(?t, TNil)))
+sp {insert-heap*apply*heap-is-single-treed
+    (state <s> ^name insert-heap ^element <x> ^heap.Heap <ts> ^superstate <ss> ^return-to <r>)
+    (<ts> ^first <t> ^rest nil)
+-->
+    (<ss> ^<r>.Heap <a>)
+    (<a> ^first <n> ^rest <ts>)
+    (<n> ^rank 0 ^element <x> ^elem-list nil ^tree-list nil)}
+
+# okay, this is the same-rank insert case, one of the two slightly tricky ones.
+# insert(?x, Heap(TCons(?t1, TCons(?t2, ?ts)))) ==
+#   if rank(?t1) = rank(?t2) then
+#      Heap(TCons(skewLink(?x, ?t1, ?t2), ?ts)) else
+#      Heap(TCons(Node(0, ?x, ANil, TNil), ?ts))
+sp {insert-heap*propose*skew-link
+    (state <s> ^name insert-heap ^element <x> ^heap.Heap <ts1> -^skew-link-result)
+    (<ts1> ^first <t1> ^rest <ts2>)
+    (<ts2> ^first <t2> ^rest <ts>)
+    (<t1> ^rank <r>)
+    (<t2> ^rank <r>)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name skew-link ^element <x> ^left <t1> ^right <t2> ^return-to skew-link-result)}
+
+# we insist on an operator no-change impasse and subgoal for skew-link
+sp {skew-link*initialize
+    (state <s> ^superstate.operator <o>)
+    (<o> ^name skew-link ^element <x> ^left <t1> ^right <t2> ^return-to <r>)
+-->
+    (<s> ^name skew-link ^element <x> ^left <t1> ^right <t2> ^return-to <r>)}
+
+# skewLink(?x, ?t1, ?t2) == skewLinkHelper(link(?t1, ?t2), ?x)
+# skewLinkHelper(Node(?r, ?y, ?ys, ?c), ?x) ==
+#  if lessOrEqual(?x, ?y) then
+#     Node(?r, ?x, ACons(?y, ?ys), ?c) else
+#     Node(?r, ?y, ACons(?x, ?ys), ?c)
+sp {skew-link*propose-link
+    (state <s> ^name skew-link ^left <t1> ^right <t2> -^link-result)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name link ^left <t1> ^right <t2> ^return-to link-result)}
+
+# we insist on an operator no-change impasse and subgoal for link
+sp {link*initialize
+    (state <s> ^superstate.operator <o>)
+    (<o> ^name link ^left <t1> ^right <t2> ^return-to <r>)
+-->
+    (<s> ^name link ^left <t1> ^right <t2> ^return-to <r>)}
+
+# to decide which way we're going to link the trees, we need to compare their elements
+# note again that less-or-equal is not provided by Heap.
+# less-or-equal is assumed by Heap to be provided by the Heap client.
+sp {link*propose*less-or-equal
+    (state <s> ^name link ^left.element <x1> ^right.element <x2> -^less-or-equal-result)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name less-or-equal ^left <x1> ^right <x2> ^return-to less-or-equal-result)}
+
+sp {link*propose*less-or-equal*debug
+    (state <s> ^name link ^left.element <x1> ^right.element <x2> -^less-or-equal-result)
+-->
+    (wait)}
 
 # we insist on an operator no-change impasse and subgoal state for delete-min
 sp {delete-min*initialize

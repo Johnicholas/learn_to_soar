@@ -7,7 +7,26 @@ sp {initialize
 -->
     (<s> ^name test-skew-binary-heap)}
 
-# TODO: define less-than and less-or-equal operators for test data
+sp {test*less-or-equal*initialize
+    (state <s> ^superstate.operator <o>)
+    (<o> ^name less-or-equal ^left.test <n1> ^right.test <n2> ^return-to <r>)
+-->
+    (<s> ^name test-less-or-equal ^left <n1> ^right <n2> ^min (min <n1> <n2>) ^return-to <r>)}
+
+sp {test-less-or-equal*equal
+    (state <s> ^name test-less-or-equal ^left <n> ^right <n> ^superstate <ss> ^return-to <r>)
+-->
+    (<ss> ^<r> true)}
+
+#sp {test-less-or-equal*less
+#    (state <s> ^name test-less-or-equal ^left <n> ^min <n> ^right <> <n> ^superstate <ss> ^return-to <r>)
+#-->
+#    (<ss> ^<r> true)}
+
+#sp {test-less-or-equal*greater
+#    (state <s> ^name test-less-or-equal ^right <n> ^min <n> ^left <> <n> ^superstate <ss> ^return-to <r>)
+#-->
+#    (<ss> ^<r> false)}
 
 }
 
@@ -68,6 +87,60 @@ sp {propose*is-empty
 
 sp {pass
     (state <s> ^name test-skew-binary-heap ^test-result-is false)
+-->
+    (pass)}
+
+}
+
+test "findMin(deleteMin(deleteMin(insert(Test(0), insert(Test(0), insert(Test(0), empty))))) should be 0" {
+
+sp {propose*empty
+    (state <s> ^name test-skew-binary-heap -^empty-heap-is)
+-->
+    (<s> ^operator <o> + =)
+    (<o> ^name empty-heap ^return-to empty-heap-is)}
+
+sp {propose*insert-heap*step-one
+    (state <s> ^name test-skew-binary-heap ^empty-heap-is <e> -^step-one-is)
+-->
+    (<s> ^operator <o>)
+    (<o> ^name insert-heap ^element <t0> ^heap <e> ^return-to step-one-is)
+    (<t0> ^test 0)}
+
+sp {propose*insert-heap*step-two
+    (state <s> ^name test-skew-binary-heap ^step-one-is <h1> -^step-two-is)
+-->
+    (<s> ^operator <o>)
+    (<o> ^name insert-heap ^element <t0> ^heap <h1> ^return-to step-two-is)
+    (<t0> ^test 0)}
+
+sp {propose*insert-heap*step-three
+    (state <s> ^name test-skew-binary-heap ^step-two-is <h2> -^step-three-is)
+-->
+    (<s> ^operator <o>)
+    (<o> ^name insert-heap ^element <t0> ^heap <h2> ^return-to step-three-is)
+    (<t0> ^test 0)}
+
+sp {propose*delete-min*step-four
+    (state <s> ^name test-skew-binary-heap ^step-three-is <h3> -^step-four-is)
+-->
+    (<s> ^operator <o>)
+    (<o> ^name delete-min ^heap <h3> ^return-to step-four-is)}
+
+sp {propose*delete-min*step-five
+    (state <s> ^name test-skew-binary-heap ^step-four-is <h2> -^step-five-is)
+-->
+    (<s> ^operator <o>)
+    (<o> ^name delete-min ^heap <h2> ^return-to step-five-is)}
+
+sp {propose*find-min*step-six
+    (state <s> ^name test-skew-binary-heap ^step-five-is <h1> -^step-six-is)
+-->
+    (<s> ^operator <o>)
+    (<o> ^name find-min ^heap <h1> ^return-to answer-is)}
+
+sp {pass
+    (state <s> ^name test-skew-binary-heap ^answer-is.test 0)
 -->
     (pass)}
 
