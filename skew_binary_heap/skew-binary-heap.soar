@@ -207,7 +207,7 @@ sp {link*apply*true-branch
     (<l> ^rank <rank> ^element <x1> ^elem-list <xs1> ^tree-list <c1>)
 -->
     (<ss> ^<return-to> <newnode>)
-    (<newnode> ^rank (+ <rank> 1) ^element <x1> ^elem-list <x1> ^tree-list <cons>)
+    (<newnode> ^rank (+ <rank> 1) ^element <x1> ^elem-list <xs1> ^tree-list <cons>)
     (<cons> ^first <r> ^rest <c1>)}
 
 ##link(Node(?r, ?x1, ?xs1, ?c1), Node(?ignored, ?x2, ?xs2, ?c2)) ==
@@ -249,40 +249,40 @@ sp {remove-min-tree*apply*base-case
     (<ss> ^<r> <p>)
     (<p> ^tree <x> ^tree-list nil)}
 
-#sp {remove-min-tree*propose*recurse
-#    (state <s> ^name remove-min-tree ^tree-list.rest <ts> -^recursive-result)
-#    (<ts> ^first <ts1> ^rest <tss>)
-#-->
-#    (<s> ^operator <o> +)
-#    (<o> ^name remove-min-tree ^tree-list <ts> ^return-to recursive-result)}
+sp {remove-min-tree*propose*recurse
+    (state <s> ^name remove-min-tree ^tree-list.rest <ts> -^recursive-result)
+    (<ts> ^first <ts1> ^rest <tss>)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name remove-min-tree ^tree-list <ts> ^return-to recursive-result)}
 
-## we've recursed, and now we're comparing the first of the list we started with to the min of the recursion
-#sp {remove-min-tree*propose*less-than
-#    (state <s> ^name remove-min-tree ^tree-list.first.element <rt> ^recursive-result.tree.element <rtprime>)
-#-->
-#    (<s> ^operator <o> +)
-#    (<o> ^name less-than ^left <rt> ^right <rtprime> ^return-to less-than-result)}
+# we've recursed, and now we're comparing the first of the list we started with to the min of the recursion
+sp {remove-min-tree*propose*less-than
+    (state <s> ^name remove-min-tree ^tree-list.first.element <rt> ^recursive-result.tree.element <rtprime>)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name less-than ^left <rt> ^right <rtprime> ^return-to less-than-result)}
 
 #sp {remove-min-tree*apply*true-branch
 #
 # TODO
 #
 
-## we've recursed and tested, but the best of the recursion is equal or better to ours
-## we return a pair consisting of the best of the recursion, and our tree consed onto the tree-list.
-#sp {remove-min-tree*apply*false-branch
-#    (state <s> ^name remove-min-tree
-#               ^recursive-result <rr>
-#               ^less-than-result false
-#               ^tree-list <ts1>
-#               ^superstate <ss>
-#               ^return-to <return-to>)
-#    (<ts> ^first <t> ^rest <ts2>)
-#    (<rr> ^tree <tprime> ^tree-list <tsprime>)
-#-->
-#    (<ss> ^<return-to> <pair>)
-#    (<pair> ^tree <tprime> ^tree-list <cons>)
-#    (<cons> ^first <t> ^rest <tsprime>)}
+# we've recursed and tested, but the best of the recursion is equal or better to ours
+# we return a pair consisting of the best of the recursion, and our tree consed onto the tree-list.
+sp {remove-min-tree*apply*false-branch
+    (state <s> ^name remove-min-tree
+               ^recursive-result <rr>
+               ^less-than-result false
+               ^tree-list <ts1>
+               ^superstate <ss>
+               ^return-to <return-to>)
+    (<ts> ^first <t> ^rest <ts2>)
+    (<rr> ^tree <tprime> ^tree-list <tsprime>)
+-->
+    (<ss> ^<return-to> <pair>)
+    (<pair> ^tree <tprime> ^tree-list <cons>)
+    (<cons> ^first <t> ^rest <tsprime>)}
 
 # if we're computing delete-min, and we have the remove-min-tree result,
 # then we need the reverse result, unless we have it already
@@ -423,14 +423,25 @@ sp {insert-all*initialize
 -->
     (<s> ^name insert-all ^elem-list <xs> ^heap <h> ^return-to <r>)}
 
-sp {insert-all*propose*done
-    (state <s> ^name insert-all ^elem-list nil)
+sp {insert-all*apply*base-case
+    (state <s> ^name insert-all ^elem-list nil ^superstate <ss> ^return-to <r> ^heap <h>)
+-->
+    (<ss> ^<r> <h>)}
+
+sp {insert-all*propose*recurse
+    (state <s> ^name insert-all ^elem-list.rest <xs> ^heap <h> -^recursion-result)
 -->
     (<s> ^operator <o> +)
-    (<o> ^name done)}
+    (<o> ^name insert-all ^elem-list <xs> ^heap <h> ^return-to recursion-result)}
 
-sp {insert-all*apply*done
-    (state <s> ^name insert-all ^operator.name done ^heap <h> ^return-to <r> ^superstate <ss>)
+sp {insert-all*propose*insert
+    (state <s> ^name insert-all ^elem-list.first <x> ^recursion-result <h> -^insert-result)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name insert-heap ^element <x> ^heap <h> ^return-to insert-result)}
+
+sp {insert-all*apply*recursive-case-done
+    (state <s> ^name insert-all ^superstate <ss> ^return-to <r> ^insert-result <h>)
 -->
     (<ss> ^<r> <h>)}
 

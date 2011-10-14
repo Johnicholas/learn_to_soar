@@ -28,16 +28,16 @@ sp {test-less-or-equal*equal
 #-->
 #    (<ss> ^<r> false)}
 
-#sp {test*less-than*initialize
-#    (state <s> ^superstate.operator <o>)
-#    (<o> ^name less-than ^left.test <n1> ^right.test <n2> ^return-to <r>)
-#-->
-#    (<s> ^name test-less-than ^left <n1> ^right <n2> ^min (min <n1> <n2>) ^return-to <r>)}
+sp {test*less-than*initialize
+    (state <s> ^superstate.operator <o>)
+    (<o> ^name less-than ^left.test <n1> ^right.test <n2> ^return-to <r>)
+-->
+    (<s> ^name test-less-than ^left <n1> ^right <n2> ^min (min <n1> <n2>) ^return-to <r>)}
 
-#sp {test-less-than*equal
-#    (state <s> ^name test-less-than ^left <n> ^right <n> ^superstate <ss> ^return-to <r>)
-#-->
-#    (<ss> ^<r> false)}
+sp {test-less-than*equal
+    (state <s> ^name test-less-than ^left <n> ^right <n> ^superstate <ss> ^return-to <r>)
+-->
+    (<ss> ^<r> false)}
 
 # TODO: less-than less
 # TODO: less-than greater
