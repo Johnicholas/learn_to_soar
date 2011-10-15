@@ -355,6 +355,22 @@ sp {pass
 
 }
 
+test "findMin(deleteMin(insert(Test(0), insert(Test(0), insert(Test(0), insert(Test(0), empty)))))) should be 0" {
+
+source four-inserts-one-delete-findmin.soar
+
+sp {apply*create-test-cases
+    (state <s> ^name test-skew-binomial-heap ^operator.name create-test-cases)
+-->
+    (<s> ^first-test.test 0 ^second-test.test 0 ^third-test.test 0 ^fourth-test.test 0)}
+
+sp {pass
+    (state <s> ^name test-skew-binomial-heap ^answer-is.test 0)
+-->
+    (pass)}
+
+}
+
 
 # TODO: "findMin(deleteMin(insert(Test(0), insert(Test(0), insert(Test(0), empty))))) should be 0"
 #"findMin(insert(Test(1), insert(Test(0), empty))) should be Test(0)"

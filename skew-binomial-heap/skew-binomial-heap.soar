@@ -296,8 +296,6 @@ sp {remove-min-tree*apply*false-branch
 
 # if we're computing delete-min, and we have the remove-min-tree result,
 # then we need the reverse result, unless we have it already
-# deleteMinHelper(Pair(Node(?ignored, ?x, ?xs, ?ts1), ?ts2)) ==
-#   insertAll(?xs, Heap(mergeHelper(reverse(?ts1), normalize(?ts2))))
 sp {delete-min*propose*reverse
     (state <s> ^name delete-min ^remove-min-tree-result.tree.tree-list <ts> -^reverse-result <r>)
 -->
@@ -374,7 +372,9 @@ sp {ins-tree*apply*base-case
     (<ss> ^<r> <cons>)
     (<cons> ^first <t> ^rest nil)}
 
-# TODO: ins-tree step
+# NOTE: ins-tree lesser rank is presumably necessary, for merge or non-single-threaded use?
+
+# NOTE: ins-tree recursive case is presumably necessary, for merge or non-single-threaded use?
 
 # if we're computing delete-min, and we have reverse-result and normalize-result
 # then we need merge-helper result, unless we have it already
@@ -400,8 +400,10 @@ sp {merge-helper*apply*left-is-nil
 -->
     (<ss> ^<r> <ts>)}
 
-# TODO: merge-helper neither is nil, first of left tree-list is lesser rank
-# TODO: merge-helper neither is nil, first of right tree-list is lesser rank
+# NOTE: merge-helper neither is nil, first of left tree-list is lesser rank is presumably necessary
+
+# NOTE: merge-helper neither is nil, first of right tree-list is lesser rank is presumably necessary
+
 # TODO: merge-helper neither is nil, left and right tree-lists are of equal rank
 
 # if we're computing delete-min, and we have merge-helper-result
