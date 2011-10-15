@@ -39,7 +39,7 @@ sp {propose*insert-heap*step-four
     (<o> ^name insert-heap ^element <t3> ^heap <h2> ^return-to step-four-is)}
 
 sp {propose*insert-heap*step-five
-    (state <s> ^name test-skew-binomial-heap ^step-four-is <h> ^fifth-test <t> -^step-three-is)
+    (state <s> ^name test-skew-binomial-heap ^step-four-is <h> ^fifth-test <t> -^step-five-is)
 -->
     (<s> ^operator <o>)
     (<o> ^name insert-heap ^element <t> ^heap <h> ^return-to step-five-is)}

@@ -1,4 +1,4 @@
-# This definitely does not work, there's a known TODO in ins-tree and another in insert, and it's not well tested.
+# This definitely does not work, there are several known TODOs; it is not well tested.
 #
 # This is derived from the SkewBinTree.hs implementation Graeme Moss used in his Auburn thesis.
 #
@@ -116,7 +116,16 @@ sp {insert-heap*propose*skew-link
     (<s> ^operator <o> +)
     (<o> ^name skew-link ^element <x> ^left <t1> ^right <t2> ^return-to skew-link-result)}
 
-# TODO: insert-heap unequal ranks
+sp {insert-heap*apply*unequal-ranks
+    (state <s> ^name insert-heap ^element <x> ^heap.Heap <ts1> ^superstate <ss> ^return-to <return-to>)
+    (<ts1> ^first <t1> ^rest <ts2>)
+    (<ts2> ^first <t2> ^rest <ts>)
+    (<t1> ^rank <r1>)
+    (<t2> ^rank <> <r1>)
+-->
+    (<ss> ^<return-to>.Heap <cons>)
+    (<cons> ^first <newnode> ^rest <ts1>)
+    (<newnode> ^rank 0 ^element <x> ^elem-list nil ^tree-list nil)}
 
 sp {insert-heap*apply*true-branch
     (state <s> ^name insert-heap
@@ -390,6 +399,10 @@ sp {merge-helper*apply*left-is-nil
     (state <s> ^name merge-helper ^left nil ^superstate <ss> ^return-to <r> ^right <ts>)
 -->
     (<ss> ^<r> <ts>)}
+
+# TODO: merge-helper neither is nil, first of left tree-list is lesser rank
+# TODO: merge-helper neither is nil, first of right tree-list is lesser rank
+# TODO: merge-helper neither is nil, left and right tree-lists are of equal rank
 
 # if we're computing delete-min, and we have merge-helper-result
 # then we need to convert it into a heap
