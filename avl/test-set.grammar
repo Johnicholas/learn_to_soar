@@ -1,0 +1,8 @@
+TEST ::= lookup( SET , THING ) .
+SET ::= emptySet .
+SET ::= insert( THING , SET ) .
+SET ::= delete( THING , SET ) .
+THING ::= Test( NUM ) .
+NUM ::= 0 .
+NUM ::= 1 + NUM .
+

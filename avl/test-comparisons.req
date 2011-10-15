@@ -1,0 +1,4 @@
+# we need to explain how to compare things
+# for testing purposes, we sort numbers
+lessThan(Test(?x), Test(?y)) == (?x < ?y)
+lessOrEqual(Test(?x), Test(?y)) == (?x <= ?y)

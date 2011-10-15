@@ -1,0 +1,78 @@
+# This is an attempt at implementing AVL trees in Soar.
+# It is based on avltree.pure, but probably bugs were introduced by Johnicholas
+#
+# ASSUMPTIONS
+#
+# less-than is an operator, provided by the client, that compares two elements
+#
+# PUBLIC 
+#
+# empty-set builds a new empty set
+#
+# insert takes an element <to-insert> and a set and builds a new set that includes <to-insert>.
+# if <to-insert> or something that (according to less-than) compares equal to <to-insert> is already in the set,
+# then the set doesn't change.
+#
+# delete takes an element <to-delete> and a set and builds a new set without <to-delete>
+# 
+# lookup takes an element <key> and a set and returns either nothing,
+# or ^just <x>, where <x> is the element from the set that compares equal to the key
+#
+# PRIVATE
+#
+# makenode - a smart constructor that takes a node, a left tree and a right tree,
+# and allocates a new node making sure to set its height field correctly.
+#
+# height - the height of an empty tree is zero; other trees have a height field that should be trusted.
+#
+# slope - the slope of an empty tree is zero;
+# otherwise its the difference between heights of the left and right subtrees
+#
+# avl - a smart constructor that takes a node, a left tree and a right tree,
+# and builds a new tree satisfying the AVL invariant.
+#
+# rebalance - takes a slightly-unbalanced tree and fixes it, by delegating to shiftleft or shiftright,
+# or returning the input if it isn't actually unbalanced.
+#
+# rollleft - an operator that takes apart a right-leaning tree and builds a more-balanced tree
+#
+# rollright - an operator that takes apart a left-leaning tree and builds a more-balanced tree
+#
+# shiftleft - an operator used by rebalance and delegating to rollleft and rollright to fix up a nearly-balanced tree
+#
+# shiftright - an operator used by rebalance and delegating to rollright to fix up a nearly-balanced tree
+#
+# join - an operator that takes a left avl tree and a right avl tree and builds a combination tree
+#
+# last - an operator used (by join) to find the last of an avl tree; you must call it with an element and a tree,
+# it will return the element you called it with, or the last of the avl tree.
+#
+# init - an operator used (by join) to find the initial segment of an avl tree; all but the last element.
+#
+# REPRESENTATION
+#
+# An avl set is always ^Avl <x>, where <x> is a tree
+# A tree is either nil or a node.
+# Nodes are augmented with ^height <h> where <h> is a number, ^element <e>, where <e> is whatever the client
+# is storing in this set, and both ^left <l> and ^right <r> where <l> and <r> are trees.
+#
+# The invariant maintained is simple: the heights are correct, and the subtrees differ in height by no more than 1.
+
+sp {empty-set*apply
+    (state <s> ^operator <o>)
+    (<o> ^name empty-set ^return-to <return-to>)
+-->
+    (<s> ^<return-to>.Avl nil)}
+
+sp {delete*apply*nil
+    (state <s> ^operator <o>)
+    (<o> ^name delete ^set.Avl nil ^return-to <r>)
+-->
+    (<s> ^<r>.Avl nil)}
+
+sp {lookup*apply*nil
+    (state <s> ^operator <o>)
+    (<o> ^name lookup ^set.Avl nil ^return-to <r>)
+-->
+    (<s> ^<r> nothing)}
+

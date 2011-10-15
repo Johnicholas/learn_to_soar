@@ -1,0 +1,162 @@
+# I need a persistent balanced-tree data structure.
+#
+# A red-black tree would almost certainly be better;
+# however, I've spent some time working on this implementation,
+# it will work fine, if a little inefficiently,
+# and if I do it right, I can swap in a better implementation of Set
+# later.
+# 
+# this AVL implementation (adapted from avltree.pure) might work:
+# AVL trees are a form of balanced tree with two constructor symbols, Nil for an
+# empty tree, and Bin(h, x, l, r), which represents a tree of height h, with x
+# stored at the root, and left and right subtrees l and r.
+# Setting the height correctly is annoying, so we use a helper
+# to do it for us. Assuming l and r are trees with correct height,
+# this constructs a new tree with correct height.
+
+makenode(?x, ?l, ?r) ==
+  Bin(max(height(?l), height(?r))+1, ?x, ?l, ?r)
+
+# In defining makenode, we used max, and height. Max demonstrates if,
+# which is a Req primitive.
+
+max(?x, ?y) ==
+  if ?x < ?y then
+    ?x else
+    ?y
+
+# Aside: We could define 'if' rather than having it be a primitive if we encoded
+# numbers as trees (Peano, or some other representation).
+# Height is simply an accessor. We can specify how it behaves
+# very simply by pattern patching on the left hand side.
+
+height(Nil) ==
+  0
+height(Bin(?h, ?x, ?l, ?r)) ==
+  ?h
+
+# The makenode is convenient, but it is possible to create unbalanced
+# trees with it. A smarter constructor would rebalance the tree
+# on construction.
+
+avl(?x, ?l, ?r) ==
+  rebalance(makenode(?x, ?l, ?r))
+
+# The notion of balanced that AVL trees maintain is that their "slope"
+# is either 0, 1, or -1. The slope of a tree is the difference
+# between the heights of its left and right subtrees.
+
+slope(Nil) ==
+  0
+slope(Bin(?h, ?x, ?l, ?r)) ==
+  height(?l) - height(?r)
+
+# If the inputs to makenode were AVL trees, then the output will be
+# "nearly" an AVL tree; it might have a slope of -2 or 2, instead
+# of just 0, 1, or -1. We will define functions to rebalance each
+# case.
+
+rebalance(?t) ==
+  if slope(?t) = ~2 then
+    shiftleft(?t) else (
+    if slope(?t) = 2 then
+      shiftright(?t) else
+      ?t)
+
+# Note: Req uses ~ for unary minus. It is one of the very few bits of syntax you
+# have to learn to use it.
+
+# In general, rebalancing is based on "rolling" trees left and right.
+
+rollleft(Bin(?h, ?x, ?l, Bin(?rh, ?rx, ?rl, ?rr))) ==
+  makenode(?rx, makenode(?x, ?l, ?rl), ?rr)
+rollright(Bin(?h, ?x, Bin(?lh, ?lx, ?ll, ?lr), ?r)) ==
+  makenode(?lx, ?ll, makenode(?x, ?lr, ?r))
+
+# Using rollleft and rollright, we can define shiftleft and shiftright.
+# This is a clever thing to do - if you had defined shiftleft and
+# shiftright like this (in 1962), your initials might be on the name,
+# rather than Adelson-Velskii and Landis.
+
+shiftleft(Bin(?h, ?x, ?l, ?r)) == rollleft( if slope(?r) = 1 then
+                                              makenode(?x, ?l, rollright(?r)) else
+                                              Bin(?h, ?x, ?l, ?r) )
+shiftright(Bin(?h, ?x, ?l, ?r)) == rollright( if slope(?r) = ~1 then
+                                                makenode(?x, ?l, rollright(?r)) else
+                                                Bin(?h, ?x, ?l, ?r) )
+
+# Aside: Remember, Req uses ~ for unary minus.
+
+# So now that we have avl defined, we can use it to balance an unbalanced tree.
+
+# An insert (at the sorted position) is quite easy.
+
+insert(?y, Nil) ==
+  Bin(1, ?y, Nil, Nil)
+insert(?y, Bin(?h, ?x, ?l, ?r)) ==
+  if lessThan(?x, ?y) then
+    avl(?x, insert(?y, ?l), ?r) else (
+    if lessThan(?y, ?x) then
+      avl(?x, ?l, insert(?y, ?r)) else
+      Bin(?h, ?x, ?l, ?r))
+
+# Delete (from a sorted AVL tree) seems like it would be easy, and two of the
+# cases are easy, but we need to be able to join two sorted AVL trees.
+
+delete(?y, Nil) ==
+  Nil
+delete(?y, Bin(?h, ?x, ?l, ?r)) ==
+  if lessThan(?x, ?y) then
+    avl(?x, delete(?y, ?l), ?r) else (
+    if lessThan(?y, ?x) then
+      avl(?x, ?l, delete(?y, ?r)) else
+      join(?l, ?r))
+
+# We can solve this by assuming we have one function that can pick out the last
+# element of a sorted AVL tree, and another function that can construct the
+# AVL tree minus the very last element. Then after applying those functions
+# to the left subtree, we have two subtrees and a middle, which we can
+# pass to the smart avl constructor.
+
+join(Nil, ?r) ==
+  ?r
+join(Bin(?lh, ?lx, ?ll, ?lr), ?r) ==
+  avl(last(?lx, ?lr), init(?lx, ?ll, ?lr), ?r)
+
+# 8. join nil
+# 9. join non-nil
+
+# To define last, we look at the right subtree. If the right subtree is empty,
+# then we have found the last element, otherwise we recurse.
+
+last(?x, Nil) ==
+  ?x
+last(?x, Bin(?rh, ?rx, ?rl, ?rr)) ==
+  last(?rx, ?rr)
+
+# To define init, we follow the same path, but build the answer up as we return
+# from that path using the avl smart constructor.
+
+init(?x, ?l, Nil) == 
+  ?l
+init(?x, ?l, Bin(?rh, ?rx, ?rl, ?rr)) ==
+  avl(?x, ?l, init(?rx, ?rl, ?rr))
+
+# Now we have all the tools defined to make join work,
+# and join was the only thing we needed to make delete work.
+
+# Finally, we can use ordinary sorted-binary-tree lookups,
+# with a logarithmic time guarantee because the tree is
+# always balanced.
+
+lookup(Nil, ?y) == Nothing
+lookup(Bin(?h, ?x, ?l, ?r), ?y) ==
+  if lessThan(?x, ?y) then
+    lookup(?l, ?y) else (
+    if lessThan(?y, ?x) then
+      lookup(?r, ?y) else
+      Just(?x))
+
+# emptySet builds a new empty set
+
+emptySet == Nil

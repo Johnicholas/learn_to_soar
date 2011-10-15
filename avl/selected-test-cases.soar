@@ -1,0 +1,64 @@
+setup {
+
+source avl.soar
+
+sp {initialize
+    (state <s> ^superstate nil)
+-->
+    (<s> ^name test-avl)}
+
+source test-comparisons.soar
+
+}
+
+test "lookup(delete(Test(0), emptySet), Test(0)) is Nothing" {
+
+source empty-op-lookup.soar
+
+sp {apply*create-test-plan
+    (state <s> ^name test-avl ^operator.name create-test-plan)
+-->
+    (<s> ^step1 <s1> ^to-lookup.test 0 ^answer-should-be nothing)
+    (<s1> ^name delete ^element.test 0)}
+
+}
+
+#"lookup(insert(Test(0), emptySet), Test(0)) is Just(Test(0))" (and the one from the insert, not the one from the lookup)
+#"lookup(insert(Test(0), emptySet), Test(1)) is Nothing"
+#"lookup(insert(Test(1), emptySet), Test(0)) is Nothing"
+#"lookup(delete(Test(0), insert(Test(0), emptySet)), Test(0)) is Nothing"
+#"lookup(delete(Test(0), insert(Test(1), emptySet)), Test(0)) is Nothing"
+#"lookup(delete(Test(0), insert(Test(1), emptySet)), Test(1)) is Just(Test(1))"
+#"lookup(delete(Test(1), insert(Test(0), emptySet)), Test(0)) is Just(Test(0))"
+#"lookup(insert(Test(0), insert(Test(0), emptySet)), Test(0)) is Just(Test(0))" (but which one?)
+#"lookup(insert(Test(0), insert(Test(1), emptySet)), Test(0)) is Just(Test(0))"
+#"lookup(insert(Test(1), insert(Test(0), emptySet)), Test(0)) is Just(Test(0))"
+
+# some ideas for additional test cases
+# height(Bin(4, 10, Nil, Nil)) = 4
+# makenode(4, makenode(5, Nil, Nil), makenode(3, Nil, Nil)) = Bin(2, 4, Bin(1, 5, Nil, Nil), Bin(1, 3, Nil, Nil))
+# leftleaning := makenode(2, makenode(1, Nil, Nil), Nil)
+# leftleaning = Bin(2, 2, Bin(1, 1, Nil, Nil), Nil)
+# rollright(leftleaning) = Bin(2, 1, Nil, Bin(1, 2, Nil, Nil))
+# example1234 := avl(1, avl(2, avl(3, avl(4, Nil, Nil), Nil), Nil), Nil)
+# example1234 = Bin(3, 3, Bin(1, 4, Nil, Nil), Bin(2, 1, Bin(1, 2, Nil, Nil), Nil))
+# Or leaning in the opposite direction:
+# example4321 := avl(4, Nil, avl(3, Nil, avl(2, Nil, avl(1, Nil, Nil))))
+# example4321 = Bin(3, 2, Bin(2, 4, Nil, Bin(1, 3, Nil, Nil)), Bin(1, 1, Nil, Nil))
+# last(0, example1234)
+# Note: The last is also the least, we are sorting descending.
+# init(3, Bin(1, 4, Nil, Nil), Bin(2, 1, Bin(1, 2, Nil, Nil), Nil)) = Bin(2, 3, Bin(1, 4, Nil, Nil), Bin(1, 2, Nil, Nil))
+# join(Bin(1, 1, Nil, Nil), Bin(1, 2, Nil, Nil)) = Bin(2, 1, Nil, Bin(1, 2, Nil, Nil))
+# join(Bin(1, 2, Nil, Nil), Bin(1, 1, Nil, Nil)) = Bin(2, 2, Nil, Bin(1, 1, Nil, Nil))
+# delete(example1234, 1) = Bin(2, 3, Bin(1, 4, Nil, Nil), Bin(1, 2, Nil, Nil))
+# delete(example1234, 2) = Bin(2, 3, Bin(1, 4, Nil, Nil), Bin(1, 1, Nil, Nil))
+# delete(example1234, 3) = Bin(2, 2, Bin(1, 4, Nil, Nil), Bin(1, 1, Nil, Nil))
+# delete(example1234, 4) = Bin(2, 2, Bin(1, 3, Nil, Nil), Bin(1, 1, Nil, Nil))
+# lookup(example1234, 0) = Nothing
+# lookup(example1234, 1) = Just(1)
+# lookup(example1234, 2) = Just(2)
+# lookup(example1234, 3) = Just(3)
+# lookup(example1234, 4) = Just(4)
+# lookup(example1234, 5) = Nothing
+
+
