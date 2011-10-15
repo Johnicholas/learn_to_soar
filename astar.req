@@ -45,167 +45,37 @@ graphsearchExpand(Nil, ?p, ?f, ?e, ?s) ==
 graphsearchExpand(Cons(?a, ?as), ?p, ?f, ?e, ?s) ==
     graphsearchExpand(?as, ?p, add(?f, PathNode(result(?s, last(?p), ?a), ?a, ?p)), ?e, ?s)
 
-
 # this is all very well, but we need some actual data structures,
 # and actual spaces to search.
-# I think Auburn has heaps, but I need a persistent balanced-tree data structure.
-# This AVL implementation (adapted from avltree.pure) might work:
-# AVL trees are a form of balanced tree with two constructor symbols, Nil for an
-# empty tree, and Bin(h, x, l, r), which represents a tree of height h, with x
-# stored at the root, and left and right subtrees l and r.
-# Setting the height correctly is annoying, so we use a helper
-# to do it for us. Assuming l and r are trees with correct height,
-# this constructs a new tree with correct height.
 
-makenode(?x, ?l, ?r) == Bin(max(height(?l), height(?r))+1, ?x, ?l, ?r)
 
-# In defining makenode, we used max, and height. Max demonstrates if,
-# which is a Req primitive.
+SussmanAnomaly := Problem(Cons(On(C, A), Cons(On(A, Table), Cons(On(B, Table), Cons(Clear(C), Cons(Clear(B), Cons(Clear(Table), Nil)))))), UcBlocksWorld)
 
-max(?x, ?y) == if ?x > ?y then ?x else ?y
+# goaltest(?space, ?state) -> True or False
+goaltest(UcBlocksWorld, ?state) == and(member(?state, On(B, C)), member(?state, On(A, B)))
+# actions(?space, ?state) -> List of Actions
+actions(UcBlocksWorld, ?state)
+# Puton(?x, ?y, ?z) is an action if they are all different, ?x is on ?z, and both ?x and ?y are clear
 
-# Aside: We could define 'if' rather than having it be a primitive if we encoded
-# numbers as trees (Peano, or some other representation).
-# Height is simply an accessor. We can specify how it behaves
-# very simply by pattern patching on the left hand side.
+clears(Nil) == Nil
+clears(Cons(On(?o1, ?o2), ?rest)) == clears(?rest)
+clears(Cons(Clear(?o), ?rest)) == Cons(?o, clears(?rest))
+crossproduct(?xs, ?ys) == crossproductHelper(?xs, mapToSingleton(?ys))
+crossproductHelper(Nil, ?ys) == mapToSingleton(?ys)
+crossproductHelper(Cons(?x, Nil), ?ys) == mapCons(?ys, ?x)
+crossproductHelper(Cons(?x, Cons(?xs1, ?xss)), ?ys) == 
+mapToSingleton(Nil) == Nil
+mapToSingleton(Cons(?x, ?xs)) == Cons(Cons(?x, Nil), mapToSingleton(?xs))
 
-height(Nil) == 0
-height(Bin(?h, ?x, ?l, ?r)) == ?h
+mapCons(Nil, ?x) == Nil
+mapCons(Cons(?y, ?ys), ?x) == Cons(Cons(?y, ?x), mapCons(?ys, ?x))
+allpossibles := crossproduct(abc, crossproduct(abc, 
+Triple(
 
-# Notice that it is not really measuring the height, it is merely
-# accessing the (possibly incorrect) stored height. The height of this
-# tree should be 1, but it is incorrectly stored as 4.
-height(Bin(4, 10, Nil, Nil)) = 4
-# So now that we have defined makenode and all the tools it needs,
-# we can test it:
-makenode(4, makenode(5, Nil, Nil), makenode(3, Nil, Nil)) = Bin(2, 4, Bin(1, 5, Nil, Nil), Bin(1, 3, Nil, Nil))
-# See how the first (height) field is set to 1 for each branch, but
-# 2 for the root?
-# The makenode is convenient, but it is possible to create unbalanced
-# trees with it. A smarter constructor would rebalance the tree
-# on construction.
+# result(?space, ?state, ?action) -> State
+result(UcBlocksWorld, ?state)
 
-avl(?x, ?l, ?r) == rebalance(makenode(?x, ?l, ?r))
+# problem ::= Problem(initialstate, statespace)
+# assume operators:
 
-# The notion of balanced that AVL trees maintain is that their "slope"
-# is either 0, 1, or -1. The slope of a tree is the difference
-# between the heights of its left and right subtrees.
 
-slope(Nil) == 0
-slope(Bin(?h, ?x, ?l, ?r)) == height(?l) - height(?r)
-
-# If the inputs to makenode were AVL trees, then the output will be
-# "nearly" an AVL tree; it might have a slope of -2 or 2, instead
-# of just 0, 1, or -1. We will define functions to rebalance each
-# case.
-
-rebalance(?t) == if slope(?t) = ~2 then shiftleft(?t) else (if slope(?t) = 2 then shiftright(?t) else ?t)
-
-# Note: Req uses ~ for unary minus. It is one of the very few bits of syntax you
-# have to learn to use it.
-
-# In general, rebalancing is based on "rolling" trees left and right.
-
-rollleft(Bin(?h, ?x, ?l, Bin(?rh, ?rx, ?rl, ?rr))) == makenode(?rx, makenode(?x, ?l, ?rl), ?rr)
-rollright(Bin(?h, ?x, Bin(?lh, ?lx, ?ll, ?lr), ?r)) == makenode(?lx, ?ll, makenode(?x, ?lr, ?r))
-
-# If we had a left-leaning tree, we could roll it right, to get a right-leaning
-# tree.
-
-leftleaning := makenode(2, makenode(1, Nil, Nil), Nil)
-
-# Note that ":=" is just like "==", except it rewrites the right
-# hand side first.
-
-leftleaning = Bin(2, 2, Bin(1, 1, Nil, Nil), Nil)
-rollright(leftleaning) = Bin(2, 1, Nil, Bin(1, 2, Nil, Nil))
-
-# Using rollleft and rollright, we can define shiftleft and shiftright.
-# This is a clever thing to do - if you had defined shiftleft and
-# shiftright like this (in 1962), your initials might be on the name,
-# rather than Adelson-Velskii and Landis.
-
-shiftleft(Bin(?h, ?x, ?l, ?r)) == rollleft( if slope(?r) = 1 then makenode(?x, ?l, rollright(?r)) else Bin(?h, ?x, ?l, ?r) )
-shiftright(Bin(?h, ?x, ?l, ?r)) == rollright( if slope(?r) = ~1 then makenode(?x, ?l, rollright(?r)) else Bin(?h, ?x, ?l, ?r) )
-
-# Aside: Remember, Req uses ~ for unary minus.
-
-# So now that we have avl defined, we can use it to balance an unbalanced tree.
-
-example1234 := avl(1, avl(2, avl(3, avl(4, Nil, Nil), Nil), Nil), Nil)
-
-example1234 = Bin(3, 3, Bin(1, 4, Nil, Nil), Bin(2, 1, Bin(1, 2, Nil, Nil), Nil))
-
-# Or leaning in the opposite direction:
-
-example4321 := avl(4, Nil, avl(3, Nil, avl(2, Nil, avl(1, Nil, Nil))))
-
-example4321 = Bin(3, 2, Bin(2, 4, Nil, Bin(1, 3, Nil, Nil)), Bin(1, 1, Nil, Nil))
-
-# An insert (at the sorted position) is quite easy.
-
-insert(Nil, ?y) == Bin(?y, 1, Nil, Nil)
-insert(Bin(?h, ?x, ?l, ?r), ?y) == if ?x < ?y then avl(?x, insert(?l, ?y), ?r) else avl(?x, ?l, insert(?r, ?y))
-
-# Delete (from a sorted AVL tree) seems like it would be easy, and two of the
-# cases are easy, but we need to be able to join two sorted AVL trees.
-
-delete(Nil, ?y) == Nil
-delete(Bin(?h, ?x, ?l, ?r), ?y) == if ?x < ?y then avl(?x, delete(?l, ?y), ?r) else (if ?x > ?y then avl(?x, ?l, delete(?r, ?y)) else join(?l, ?r))
-
-# We can solve this by assuming we have one function that can pick out the last
-# element of a sorted AVL tree, and another function that can construct the
-# AVL tree minus the very last element. Then after applying those functions
-# to the left subtree, we have two subtrees and a middle, which we can
-# pass to the smart avl constructor.
-
-join(Nil, ?r) == ?r
-join(Bin(?lh, ?lx, ?ll, ?lr), ?r) == avl(last(?lx, ?lr), init(?lx, ?ll, ?lr), ?r)
-
-# To define last, we look at the right subtree. If the right subtree is empty,
-# then we have found the last element, otherwise we recurse.
-
-last(?x, Nil) == ?x
-last(?x, Bin(?rh, ?rx, ?rl, ?rr)) == last(?rx, ?rr)
-
-# We can test on the previously constructed examples:
-
-last(0, example1234)
-
-# Note: The last is also the least, we are sorting descending.
-
-# To define init, we follow the same path, but build the answer up as we return
-# from that path using the avl smart constructor.
-
-init(?x, ?l, Nil) == ?l
-init(?x, ?l, Bin(?rh, ?rx, ?rl, ?rr)) == avl(?x, ?l, init(?rx, ?rl, ?rr))
-
-# And test:
-
-init(3, Bin(1, 4, Nil, Nil), Bin(2, 1, Bin(1, 2, Nil, Nil), Nil)) = Bin(2, 3, Bin(1, 4, Nil, Nil), Bin(1, 2, Nil, Nil))
-
-# Now we have all the tools defined to make join work:
-
-join(Bin(1, 1, Nil, Nil), Bin(1, 2, Nil, Nil)) = Bin(2, 1, Nil, Bin(1, 2, Nil, Nil))
-join(Bin(1, 2, Nil, Nil), Bin(1, 1, Nil, Nil)) = Bin(2, 2, Nil, Bin(1, 1, Nil, Nil))
-
-# And join was the only thing we needed to make delete work.
-
-delete(example1234, 1) = Bin(2, 3, Bin(1, 4, Nil, Nil), Bin(1, 2, Nil, Nil))
-delete(example1234, 2) = Bin(2, 3, Bin(1, 4, Nil, Nil), Bin(1, 1, Nil, Nil))
-delete(example1234, 3) = Bin(2, 2, Bin(1, 4, Nil, Nil), Bin(1, 1, Nil, Nil))
-delete(example1234, 4) = Bin(2, 2, Bin(1, 3, Nil, Nil), Bin(1, 1, Nil, Nil))
-
-# Finally, we can use ordinary sorted-binary-tree lookups,
-# with a logarithmic time guarantee because the tree is
-# always balanced.
-
-lookup(Nil, ?y) == Nothing
-lookup(Bin(?h, ?x, ?l, ?r), ?y) == if ?x < ?y then lookup(?l, ?y) else (if ?x > ?y then lookup(?r, ?y) else Just(?x))
-
-lookup(example1234, 0) = Nothing
-lookup(example1234, 1) = Just(1)
-lookup(example1234, 2) = Just(2)
-lookup(example1234, 3) = Just(3)
-lookup(example1234, 4) = Just(4)
-lookup(example1234, 5) = Nothing
