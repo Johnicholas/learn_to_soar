@@ -204,14 +204,14 @@ sp {link*apply*true-branch
     (<newnode> ^rank (+ <rank> 1) ^element <x1> ^elem-list <xs1> ^tree-list <cons>)
     (<cons> ^first <r> ^rest <c1>)}
 
-#sp {link*apply*false-branch
-#    (state <s> ^name link ^less-or-equal-result false ^left <l> ^right <r> ^superstate <ss> ^return-to <return-to>)
-#    (<l> ^rank <rank>)
-#    (<r> ^element <x2> ^elem-list <xs2> ^tree-list <c2>)
-#-->
-#    (<ss> ^<return-to> <newnode>)
-#    (<newnode> ^rank (+ <rank> 1) ^element <x2> ^elem-list <xs2> ^tree-list <cons>)
-#    (<cons> ^first <l> ^rest <c2>)}
+sp {link*apply*false-branch
+    (state <s> ^name link ^less-or-equal-result false ^left <l> ^right <r> ^superstate <ss> ^return-to <return-to>)
+    (<l> ^rank <rank>)
+    (<r> ^element <x2> ^elem-list <xs2> ^tree-list <c2>)
+-->
+    (<ss> ^<return-to> <newnode>)
+    (<newnode> ^rank (+ <rank> 1) ^element <x2> ^elem-list <xs2> ^tree-list <cons>)
+    (<cons> ^first <l> ^rest <c2>)}
 
 # we insist on an operator no-change impasse and subgoal state for delete-min
 sp {delete-min*initialize
@@ -255,19 +255,19 @@ sp {remove-min-tree*propose*less-than
     (<s> ^operator <o> +)
     (<o> ^name less-than ^left <rt> ^right <rtprime> ^return-to less-than-result)}
 
-## we've recursed and tested, but our tree is better than the best from the recursion
-## we return a pair consisting of our tree and the tail we started with,
-## ignoring the recursive result (now that we know we can do better) completely.
-#sp {remove-min-tree*apply*true-branch
-#    (state <s> ^name remove-min-tree
-#               ^less-than-result true
-#               ^tree <t>
-#               ^tree-list <ts>
-#               ^superstate <ss>
-#               ^return-to <return-to>)
-#-->
-#    (<ss> ^<return-to> <pair>)
-#    (<pair> ^tree <t> ^tree-list <ts>)}
+# we've recursed and tested, but our tree is better than the best from the recursion
+# we return a pair consisting of our tree and the tail we started with,
+# ignoring the recursive result (now that we know we can do better) completely.
+sp {remove-min-tree*apply*true-branch
+    (state <s> ^name remove-min-tree
+               ^less-than-result true
+               ^tree-list <ts1>
+               ^superstate <ss>
+               ^return-to <return-to>)
+     (<ts1> ^first <t> ^rest <ts>)
+-->
+    (<ss> ^<return-to> <pair>)
+    (<pair> ^tree <t> ^tree-list <ts>)}
 
 # we've recursed and tested, but the best of the recursion is equal or better to ours
 # we return a pair consisting of the best of the recursion, and our tree consed onto the tree-list.
@@ -323,8 +323,6 @@ sp {reverse*apply*step
 
 # if we're computing delete-min, and we remove-min-tree result,
 # then we need the normalize result, unless we have it already
-# deleteMinHelper(Pair(Node(?ignored, ?x, ?xs, ?ts1), ?ts2)) ==
-#   insertAll(?xs, Heap(mergeHelper(reverse(?ts1), normalize(?ts2))))
 sp {delete-min*propose*normalize
     (state <s> ^name delete-min ^remove-min-tree-result.tree-list <ts> -^normalize-result)
 -->
@@ -491,4 +489,12 @@ sp {find-min*apply*done
     (state <s> ^name find-min ^superstate <ss> ^return-to <r> ^find-min-tree-result.tree.element <x>)
 -->
     (<ss> ^<r> <x>)}
+
+
+
+
+
+
+
+
 
