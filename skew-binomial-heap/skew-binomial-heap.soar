@@ -1,4 +1,5 @@
-# This definitely does not work, there are several known TODOs; it is not well tested.
+# All tests are passing, but this isn't what you would call "well-tested".
+# There are several planned productions (marked with NOTE) that have not been necessary so far.
 #
 # This is derived from the SkewBinTree.hs implementation Graeme Moss used in his Auburn thesis.
 #
@@ -398,13 +399,39 @@ sp {merge-helper*apply*right-is-nil
 sp {merge-helper*apply*left-is-nil
     (state <s> ^name merge-helper ^left nil ^superstate <ss> ^return-to <r> ^right <ts>)
 -->
-    (<ss> ^<r> <ts>)}
+   (<ss> ^<r> <ts>)}
 
 # NOTE: merge-helper neither is nil, first of left tree-list is lesser rank is presumably necessary
 
 # NOTE: merge-helper neither is nil, first of right tree-list is lesser rank is presumably necessary
 
-# TODO: merge-helper neither is nil, left and right tree-lists are of equal rank
+# neither tree-list is empty, and the left and right trees at the front are of equal rank
+sp {merge-helper*equal-ranks*propose*recurse
+    (state <s> ^name merge-helper ^left <lts> ^right <rts> -^merge-helper-result)
+    (<lts> ^first.rank <rank> ^rest <ts1prime>)
+    (<rts> ^first.rank <rank> ^rest <ts2prime>)
+-->
+    (<s> ^operator <o> + =)
+    (<o> ^name merge-helper ^left <ts1prime> ^right <ts2prime> ^return-to merge-helper-result)}
+
+sp {merge-helper*equal-ranks*propose*link
+    (state <s> ^name merge-helper ^left.first <t1> ^right.first <t2> -^link-result)
+    (<t1> ^rank <rank>)
+    (<t2> ^rank <rank>)
+-->
+    (<s> ^operator <o> + =)
+    (<o> ^name link ^left <t1> ^right <t2> ^return-to link-result)}
+
+sp {merge-helper*equal-ranks*propose*ins-tree
+    (state <s> ^name merge-helper ^link-result <t> ^merge-helper-result <ts> -^ins-tree-result)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name ins-tree ^tree <t> ^tree-list <ts> ^return-to ins-tree-result)}
+
+sp {merge-helper*equal-ranks*done
+    (state <s> ^name merge-helper ^superstate <ss> ^return-to <return-to> ^ins-tree-result <answer>)
+-->
+    (<ss> ^<return-to> <answer>)}
 
 # if we're computing delete-min, and we have merge-helper-result
 # then we need to convert it into a heap
