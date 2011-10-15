@@ -1,11 +1,11 @@
 setup {
 
-source skew-binary-heap.soar
+source skew-binomial-heap.soar
 
 sp {initialize
     (state <s> ^superstate nil)
 -->
-    (<s> ^name test-skew-binary-heap)}
+    (<s> ^name test-skew-binomial-heap)}
 
 source test-comparisons.soar
 
@@ -15,32 +15,32 @@ source test-comparisons.soar
 test "isEmpty(deleteMin(insert(Test(0),empty))) should be true" {
 
 sp {propose*empty
-    (state <s> ^name test-skew-binary-heap -^empty-heap-is)
+    (state <s> ^name test-skew-binomial-heap -^empty-heap-is)
 -->
     (<s> ^operator <o>)
     (<o> ^name empty-heap ^return-to empty-heap-is)}
 
 sp {propose*insert-heap*test*zero
-    (state <s> ^name test-skew-binary-heap ^empty-heap-is <e> -^singleton-heap-is)
+    (state <s> ^name test-skew-binomial-heap ^empty-heap-is <e> -^singleton-heap-is)
 -->
     (<s> ^operator <o>)
     (<o> ^name insert-heap ^element <t0> ^heap <e> ^return-to singleton-heap-is)
     (<t0> ^test 0)}
 
 sp {propose*delete-min
-    (state <s> ^name test-skew-binary-heap ^singleton-heap-is <singleton> -^presume-empty-heap-is)
+    (state <s> ^name test-skew-binomial-heap ^singleton-heap-is <singleton> -^presume-empty-heap-is)
 -->
     (<s> ^operator <o>)
     (<o> ^name delete-min ^heap <singleton> ^return-to presume-empty-heap-is)}
 
 sp {propose*is-empty
-    (state <s> ^name test-skew-binary-heap ^presume-empty-heap-is <e> -^test-result-is)
+    (state <s> ^name test-skew-binomial-heap ^presume-empty-heap-is <e> -^test-result-is)
 -->
     (<s> ^operator <o>)
     (<o> ^name is-empty ^heap <e> ^return-to test-result-is)}
 
 sp {pass
-    (state <s> ^name test-skew-binary-heap ^test-result-is true)
+    (state <s> ^name test-skew-binomial-heap ^test-result-is true)
 -->
     (pass)}
 
@@ -49,26 +49,26 @@ sp {pass
 test "isEmpty(insert(Test(28), empty)) should be false" {
 
 sp {propose*empty
-    (state <s> ^name test-skew-binary-heap -^empty-heap-is)
+    (state <s> ^name test-skew-binomial-heap -^empty-heap-is)
 -->
     (<s> ^operator <o>)
     (<o> ^name empty-heap ^return-to empty-heap-is)}
 
 sp {propose*insert-heap*test*28
-    (state <s> ^name test-skew-binary-heap ^empty-heap-is <e> -^singleton-heap-is)
+    (state <s> ^name test-skew-binomial-heap ^empty-heap-is <e> -^singleton-heap-is)
 -->
     (<s> ^operator <o>)
     (<o> ^name insert-heap ^element <t28> ^heap <e> ^return-to singleton-heap-is)
     (<t28> ^test 28)}
 
 sp {propose*is-empty
-    (state <s> ^name test-skew-binary-heap ^singleton-heap-is <sing> -^test-result-is)
+    (state <s> ^name test-skew-binomial-heap ^singleton-heap-is <sing> -^test-result-is)
 -->
     (<s> ^operator <o>)
     (<o> ^name is-empty ^heap <sing> ^return-to test-result-is)}
 
 sp {pass
-    (state <s> ^name test-skew-binary-heap ^test-result-is false)
+    (state <s> ^name test-skew-binomial-heap ^test-result-is false)
 -->
     (pass)}
 
@@ -76,15 +76,15 @@ sp {pass
 
 test "findMin(deleteMin(deleteMin(insert(Test(0), insert(Test(0), insert(Test(0), empty))))) should be 0" {
 
-source reusable-testing-productions.soar
+source three-inserts-two-deletes-findmin.soar
 
 sp {apply*create-test-cases
-    (state <s> ^name test-skew-binary-heap ^operator.name create-test-cases)
+    (state <s> ^name test-skew-binomial-heap ^operator.name create-test-cases)
 -->
     (<s> ^first-test.test 0 ^second-test.test 0 ^third-test.test 0)}
 
 sp {pass
-    (state <s> ^name test-skew-binary-heap ^answer-is.test 0)
+    (state <s> ^name test-skew-binomial-heap ^answer-is.test 0)
 -->
     (pass)}
 
@@ -92,15 +92,15 @@ sp {pass
 
 test "findMin(deleteMin(deleteMin(insert(Test(0), insert(Test(0), insert(Test(1), empty)))))) should be Test(1)" {
 
-source reusable-testing-productions.soar
+source three-inserts-two-deletes-findmin.soar
 
 sp {apply*create-test-cases
-    (state <s> ^name test-skew-binary-heap ^operator.name create-test-cases)
+    (state <s> ^name test-skew-binomial-heap ^operator.name create-test-cases)
 -->
     (<s> ^first-test.test 0 ^second-test.test 0 ^third-test.test 1)}
 
 sp {pass
-    (state <s> ^name test-skew-binary-heap ^answer-is.test 1)
+    (state <s> ^name test-skew-binomial-heap ^answer-is.test 1)
 -->
     (pass)}
 
@@ -108,15 +108,15 @@ sp {pass
 
 test "findMin(deleteMin(deleteMin(insert(Test(0), insert(Test(1), insert(Test(0), empty)))))) should be Test(1)" {
 
-source reusable-testing-productions.soar
+source three-inserts-two-deletes-findmin.soar
 
 sp {apply*create-test-cases
-    (state <s> ^name test-skew-binary-heap ^operator.name create-test-cases)
+    (state <s> ^name test-skew-binomial-heap ^operator.name create-test-cases)
 -->
     (<s> ^first-test.test 0 ^second-test.test 1 ^third-test.test 0)}
 
 sp {pass
-    (state <s> ^name test-skew-binary-heap ^answer-is.test 1)
+    (state <s> ^name test-skew-binomial-heap ^answer-is.test 1)
 -->
     (pass)}
 
@@ -124,15 +124,15 @@ sp {pass
 
 test "findMin(deleteMin(deleteMin(insert(Test(1), insert(Test(0), insert(Test(0), empty)))))) should be Test(1)" {
 
-source reusable-testing-productions.soar
+source three-inserts-two-deletes-findmin.soar
 
 sp {apply*create-test-cases
-    (state <s> ^name test-skew-binary-heap ^operator.name create-test-cases)
+    (state <s> ^name test-skew-binomial-heap ^operator.name create-test-cases)
 -->
     (<s> ^first-test.test 1 ^second-test.test 0 ^third-test.test 0)}
 
 sp {pass
-    (state <s> ^name test-skew-binary-heap ^answer-is.test 1)
+    (state <s> ^name test-skew-binomial-heap ^answer-is.test 1)
 -->
     (pass)}
 
@@ -140,30 +140,30 @@ sp {pass
 
 test "findMin(deleteMin(deleteMin(insert(Test(0), insert(Test(0), insert(Test(2), empty)))))) should be Test(2)" {
 
-source reusable-testing-productions.soar
+source three-inserts-two-deletes-findmin.soar
 
 sp {apply*create-test-cases
-    (state <s> ^name test-skew-binary-heap ^operator.name create-test-cases)
+    (state <s> ^name test-skew-binomial-heap ^operator.name create-test-cases)
 -->
     (<s> ^first-test.test 0 ^second-test.test 0 ^third-test.test 2)}
 
 sp {pass
-    (state <s> ^name test-skew-binary-heap ^answer-is.test 2)
+    (state <s> ^name test-skew-binomial-heap ^answer-is.test 2)
 -->
     (pass)}
 
 }
 
 test "findMin(deleteMin(deleteMin(insert(Test(0), insert(Test(1), insert(Test(1), empty)))))) should be Test(1)" {
-source reusable-testing-productions.soar
+source three-inserts-two-deletes-findmin.soar
 
 sp {apply*create-test-cases
-    (state <s> ^name test-skew-binary-heap ^operator.name create-test-cases)
+    (state <s> ^name test-skew-binomial-heap ^operator.name create-test-cases)
 -->
     (<s> ^first-test.test 0 ^second-test.test 1 ^third-test.test 1)}
 
 sp {pass
-    (state <s> ^name test-skew-binary-heap ^answer-is.test 1)
+    (state <s> ^name test-skew-binomial-heap ^answer-is.test 1)
 -->
     (pass)}
 
@@ -172,15 +172,15 @@ sp {pass
 
 test "findMin(deleteMin(deleteMin(insert(Test(0), insert(Test(2), insert(Test(0), empty)))))) should be Test(2)" {
 
-source reusable-testing-productions.soar
+source three-inserts-two-deletes-findmin.soar
 
 sp {apply*create-test-cases
-    (state <s> ^name test-skew-binary-heap ^operator.name create-test-cases)
+    (state <s> ^name test-skew-binomial-heap ^operator.name create-test-cases)
 -->
     (<s> ^first-test.test 0 ^second-test.test 2 ^third-test.test 0)}
 
 sp {pass
-    (state <s> ^name test-skew-binary-heap ^answer-is.test 2)
+    (state <s> ^name test-skew-binomial-heap ^answer-is.test 2)
 -->
     (pass)}
 
@@ -189,15 +189,15 @@ sp {pass
 
 test "findMin(deleteMin(deleteMin(insert(Test(1), insert(Test(0), insert(Test(1), empty)))))) should be Test(1)" {
 
-source reusable-testing-productions.soar
+source three-inserts-two-deletes-findmin.soar
 
 sp {apply*create-test-cases
-    (state <s> ^name test-skew-binary-heap ^operator.name create-test-cases)
+    (state <s> ^name test-skew-binomial-heap ^operator.name create-test-cases)
 -->
     (<s> ^first-test.test 1 ^second-test.test 0 ^third-test.test 1)}
 
 sp {pass
-    (state <s> ^name test-skew-binary-heap ^answer-is.test 1)
+    (state <s> ^name test-skew-binomial-heap ^answer-is.test 1)
 -->
     (pass)}
 
@@ -206,15 +206,15 @@ sp {pass
 
 test "findMin(deleteMin(deleteMin(insert(Test(1), insert(Test(1), insert(Test(0), empty)))))) should be Test(1)" {
 
-source reusable-testing-productions.soar
+source three-inserts-two-deletes-findmin.soar
 
 sp {apply*create-test-cases
-    (state <s> ^name test-skew-binary-heap ^operator.name create-test-cases)
+    (state <s> ^name test-skew-binomial-heap ^operator.name create-test-cases)
 -->
     (<s> ^first-test.test 1 ^second-test.test 1 ^third-test.test 0)}
 
 sp {pass
-    (state <s> ^name test-skew-binary-heap ^answer-is.test 1)
+    (state <s> ^name test-skew-binomial-heap ^answer-is.test 1)
 -->
     (pass)}
 
@@ -223,15 +223,15 @@ sp {pass
 
 test "findMin(deleteMin(deleteMin(insert(Test(2), insert(Test(0), insert(Test(0), empty)))))) should be Test(2)" {
 
-source reusable-testing-productions.soar
+source three-inserts-two-deletes-findmin.soar
 
 sp {apply*create-test-cases
-    (state <s> ^name test-skew-binary-heap ^operator.name create-test-cases)
+    (state <s> ^name test-skew-binomial-heap ^operator.name create-test-cases)
 -->
     (<s> ^first-test.test 2 ^second-test.test 0 ^third-test.test 0)}
 
 sp {pass
-    (state <s> ^name test-skew-binary-heap ^answer-is.test 2)
+    (state <s> ^name test-skew-binomial-heap ^answer-is.test 2)
 -->
     (pass)}
 
@@ -240,15 +240,15 @@ sp {pass
 
 test "findMin(deleteMin(deleteMin(insert(Test(0), insert(Test(1), insert(Test(2), empty)))))) should be Test(2)" {
 
-source reusable-testing-productions.soar
+source three-inserts-two-deletes-findmin.soar
 
 sp {apply*create-test-cases
-    (state <s> ^name test-skew-binary-heap ^operator.name create-test-cases)
+    (state <s> ^name test-skew-binomial-heap ^operator.name create-test-cases)
 -->
     (<s> ^first-test.test 0 ^second-test.test 1 ^third-test.test 2)}
 
 sp {pass
-    (state <s> ^name test-skew-binary-heap ^answer-is.test 2)
+    (state <s> ^name test-skew-binomial-heap ^answer-is.test 2)
 -->
     (pass)}
 
@@ -257,15 +257,15 @@ sp {pass
 
 test "findMin(deleteMin(deleteMin(insert(Test(1), insert(Test(0), insert(Test(2), empty)))))) should be Test(2)" {
 
-source reusable-testing-productions.soar
+source three-inserts-two-deletes-findmin.soar
 
 sp {apply*create-test-cases
-    (state <s> ^name test-skew-binary-heap ^operator.name create-test-cases)
+    (state <s> ^name test-skew-binomial-heap ^operator.name create-test-cases)
 -->
     (<s> ^first-test.test 1 ^second-test.test 0 ^third-test.test 2)}
 
 sp {pass
-    (state <s> ^name test-skew-binary-heap ^answer-is.test 2)
+    (state <s> ^name test-skew-binomial-heap ^answer-is.test 2)
 -->
     (pass)}
 
@@ -274,15 +274,15 @@ sp {pass
 
 test "findMin(deleteMin(deleteMin(insert(Test(1), insert(Test(2), insert(Test(0), empty)))))) should be Test(2)" {
 
-source reusable-testing-productions.soar
+source three-inserts-two-deletes-findmin.soar
 
 sp {apply*create-test-cases
-    (state <s> ^name test-skew-binary-heap ^operator.name create-test-cases)
+    (state <s> ^name test-skew-binomial-heap ^operator.name create-test-cases)
 -->
     (<s> ^first-test.test 1 ^second-test.test 2 ^third-test.test 0)}
 
 sp {pass
-    (state <s> ^name test-skew-binary-heap ^answer-is.test 2)
+    (state <s> ^name test-skew-binomial-heap ^answer-is.test 2)
 -->
     (pass)}
 
@@ -291,15 +291,15 @@ sp {pass
 
 test "findMin(deleteMin(deleteMin(insert(Test(2), insert(Test(1), insert(Test(0), empty)))))) should be Test(2)" {
 
-source reusable-testing-productions.soar
+source three-inserts-two-deletes-findmin.soar
 
 sp {apply*create-test-cases
-    (state <s> ^name test-skew-binary-heap ^operator.name create-test-cases)
+    (state <s> ^name test-skew-binomial-heap ^operator.name create-test-cases)
 -->
     (<s> ^first-test.test 2 ^second-test.test 1 ^third-test.test 0)}
 
 sp {pass
-    (state <s> ^name test-skew-binary-heap ^answer-is.test 2)
+    (state <s> ^name test-skew-binomial-heap ^answer-is.test 2)
 -->
     (pass)}
 
@@ -308,15 +308,15 @@ sp {pass
 
 test "findMin(deleteMin(deleteMin(insert(Test(2), insert(Test(0), insert(Test(1), empty)))))) should be Test(2)" {
 
-source reusable-testing-productions.soar
+source three-inserts-two-deletes-findmin.soar
 
 sp {apply*create-test-cases
-    (state <s> ^name test-skew-binary-heap ^operator.name create-test-cases)
+    (state <s> ^name test-skew-binomial-heap ^operator.name create-test-cases)
 -->
     (<s> ^first-test.test 2 ^second-test.test 0 ^third-test.test 1)}
 
 sp {pass
-    (state <s> ^name test-skew-binary-heap ^answer-is.test 2)
+    (state <s> ^name test-skew-binomial-heap ^answer-is.test 2)
 -->
     (pass)}
 
@@ -325,19 +325,36 @@ sp {pass
 
 test "findMin(deleteMin(deleteMin(insert(Test(0), insert(Test(2), insert(Test(1), empty)))))) should be Test(2)" {
 
-source reusable-testing-productions.soar
+source three-inserts-two-deletes-findmin.soar
 
 sp {apply*create-test-cases
-    (state <s> ^name test-skew-binary-heap ^operator.name create-test-cases)
+    (state <s> ^name test-skew-binomial-heap ^operator.name create-test-cases)
 -->
     (<s> ^first-test.test 0 ^second-test.test 2 ^third-test.test 1)}
 
 sp {pass
-    (state <s> ^name test-skew-binary-heap ^answer-is.test 2)
+    (state <s> ^name test-skew-binomial-heap ^answer-is.test 2)
 -->
     (pass)}
 
 }
+
+test "insert(Test(0), insert(Test(0), insert(Test(0), insert(Test(0), insert(Test(0), empty))))) should be a heap" {
+
+source five-inserts.soar
+
+sp {apply*create-test-cases
+    (state <s> ^name test-skew-binomial-heap ^operator.name create-test-cases)
+-->
+    (<s> ^first-test.test 0 ^second-test.test 0 ^third-test.test 0 ^fourth-test.test 0 ^fifth-test.test 0)}
+
+sp {pass
+    (state <s> ^name test-skew-binomial-heap ^step-five-is.Heap)
+-->
+    (pass)}
+
+}
+
 
 # TODO: "findMin(deleteMin(insert(Test(0), insert(Test(0), insert(Test(0), empty))))) should be 0"
 #"findMin(insert(Test(1), insert(Test(0), empty))) should be Test(0)"

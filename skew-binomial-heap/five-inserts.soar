@@ -1,0 +1,46 @@
+
+# TODO: edit this into a sequence that builds five inserts
+
+
+sp {propose*empty
+    (state <s> ^name test-skew-binomial-heap -^empty-heap-is)
+-->
+    (<s> ^operator <o> + =)
+    (<o> ^name empty-heap ^return-to empty-heap-is)}
+
+sp {propose*create-test-cases
+    (state <s> ^name test-skew-binomial-heap -^first-test)
+-->
+    (<s> ^operator <o> + =)
+    (<o> ^name create-test-cases)}
+
+sp {propose*insert-heap*step-one
+    (state <s> ^name test-skew-binomial-heap ^empty-heap-is <e> ^first-test <t1> -^step-one-is)
+-->
+    (<s> ^operator <o>)
+    (<o> ^name insert-heap ^element <t1> ^heap <e> ^return-to step-one-is)}
+
+sp {propose*insert-heap*step-two
+    (state <s> ^name test-skew-binomial-heap ^step-one-is <h1> ^second-test <t2> -^step-two-is)
+-->
+    (<s> ^operator <o>)
+    (<o> ^name insert-heap ^element <t2> ^heap <h1> ^return-to step-two-is)}
+
+sp {propose*insert-heap*step-three
+    (state <s> ^name test-skew-binomial-heap ^step-two-is <h2> ^third-test <t3> -^step-three-is)
+-->
+    (<s> ^operator <o>)
+    (<o> ^name insert-heap ^element <t3> ^heap <h2> ^return-to step-three-is)}
+
+sp {propose*insert-heap*step-four
+    (state <s> ^name test-skew-binomial-heap ^step-three-is <h2> ^fourth-test <t3> -^step-four-is)
+-->
+    (<s> ^operator <o>)
+    (<o> ^name insert-heap ^element <t3> ^heap <h2> ^return-to step-four-is)}
+
+sp {propose*insert-heap*step-five
+    (state <s> ^name test-skew-binomial-heap ^step-four-is <h> ^fifth-test <t> -^step-three-is)
+-->
+    (<s> ^operator <o>)
+    (<o> ^name insert-heap ^element <t> ^heap <h> ^return-to step-five-is)}
+
