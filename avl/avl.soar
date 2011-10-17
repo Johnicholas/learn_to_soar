@@ -97,7 +97,7 @@ sp {lookup*propose*check-right
     (state <s> ^name lookup ^check-left-result false ^tree.element <x> ^element <y> -^check-right-result)
 -->
     (<s> ^operator <o> +)
-    (<o> ^name less-than ^left <y> ^right <y> ^return-to check-right-result)}
+    (<o> ^name less-than ^left <y> ^right <x> ^return-to check-right-result)}
 
 sp {lookup*propose*recurse-left
     (state <s> ^name lookup ^check-left-result true ^tree.left <t> ^element <y> -^recursion-result)
