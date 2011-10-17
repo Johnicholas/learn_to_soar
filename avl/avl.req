@@ -149,14 +149,27 @@ init(?x, ?l, Bin(?rh, ?rx, ?rl, ?rr)) ==
 # with a logarithmic time guarantee because the tree is
 # always balanced.
 
-lookup(Nil, ?y) == Nothing
-lookup(Bin(?h, ?x, ?l, ?r), ?y) ==
+lookupUnchecked(Nil, ?y) == Nothing
+lookupUnchecked(Bin(?h, ?x, ?l, ?r), ?y) ==
   if lessThan(?x, ?y) then
-    lookup(?l, ?y) else (
+    lookupUnchecked(?l, ?y) else (
     if lessThan(?y, ?x) then
-      lookup(?r, ?y) else
+      lookupUnchecked(?r, ?y) else
       Just(?x))
+
+lookup(?tree, ?element) == lookupHelper(checkInvariant(?tree), ?tree, ?element)
+lookupHelper(Ok(?h), ?tree, ?element) == lookupUnchecked(?tree, ?element)
 
 # emptySet builds a new empty set
 
 emptySet == Nil
+
+# These are just double checking
+
+checkInvariant(Nil) == Ok(0)
+checkInvariant(Bin(?h, ?x, ?l, ?r)) == checkHelper1(checkInvariant(?l), checkInvariant(?r), ?h)
+checkHelper1(Ok(?lh), Ok(?rh), ?h) == checkhelper2(?lh - ?rh, max(?lh, ?rh) + 1, ?h)
+checkHelper2(1, ?h, ?h) == Ok(?h)
+checkHelper2(0, ?h, ?h) == Ok(?h)
+checkHelper2(~1, ?h, ?h) == Ok(?h)
+
