@@ -114,10 +114,12 @@ sp {delete-tree*propose*recurse-left
     (<s> ^operator <o> +)
     (<o> ^name delete-tree ^tree <t> ^element <y> ^return-to recurse-left-result)}
 
-#sp {delete-tree*recurse-left-done*propose*avl
-#    (state <s> ^name delete-tree ^superstate <ss> ^return-to <r> ^recurse-left-result <a>)
-#-->
-# TODO
+sp {delete-tree*recurse-left-done*propose*avl
+    (state <s> ^name delete-tree ^tree <t> ^recurse-left-result <a> -^avl-result)
+    (<t> ^element <x> ^right <r>)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name avl ^element <x> ^left <a> ^right <r> ^return-to answer)}
 
 sp {delete-tree*propose*recurse-right
     (state <s> ^name delete-tree ^check-right-result true ^tree.right <t> ^element <y> -^recurse-right-result)
