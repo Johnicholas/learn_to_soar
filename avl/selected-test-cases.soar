@@ -94,8 +94,33 @@ sp {apply*create-test-plan
 
 }
 
-#"lookup(delete(Test(0), insert(Test(1), emptySet)), Test(1)) is Just(Test(1))"
-#"lookup(delete(Test(1), insert(Test(0), emptySet)), Test(0)) is Just(Test(0))"
+test "lookup(delete(Test(0), insert(Test(1), emptySet)), Test(1)) is Just(Test(1))" {
+
+source empty-two-ops-lookup.soar
+
+sp {apply*create-test-plan
+    (state <s> ^name test-avl ^operator.name create-test-plan)
+-->
+    (<s> ^step1 <s1> ^step2 <s2> ^to-lookup.test 1 ^answer-should-be 1)
+    (<s1> ^name insert ^element.test 1)
+    (<s2> ^name delete ^element.test 0)}
+
+}
+
+
+test "lookup(delete(Test(1), insert(Test(0), emptySet)), Test(0)) is Just(Test(0))" {
+
+source empty-two-ops-lookup.soar
+
+sp {apply*create-test-plan
+    (state <s> ^name test-avl ^operator.name create-test-plan)
+-->
+    (<s> ^step1 <s1> ^step2 <s2> ^to-lookup.test 0 ^answer-should-be 0)
+    (<s1> ^name insert ^element.test 0)
+    (<s2> ^name delete ^element.test 1)}
+
+}
+
 #"lookup(insert(Test(0), insert(Test(0), emptySet)), Test(0)) is Just(Test(0))" (but which one?)
 #"lookup(insert(Test(0), insert(Test(1), emptySet)), Test(0)) is Just(Test(0))"
 #"lookup(insert(Test(1), insert(Test(0), emptySet)), Test(0)) is Just(Test(0))"
