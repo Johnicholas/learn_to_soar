@@ -276,7 +276,7 @@ sp {join*base-case
 -->
     (<ss> ^<return-to> <r>)}
 
-# TODO: last recursive case
+# TODO: join non-nil case
 
 ########################################################################################### avl
 
@@ -316,6 +316,7 @@ sp {make-node*elaborate*left-height*nil
 -->
     (<s> ^left-height 0)}
 
+# TODO
 #sp {make-node*elaborate*left-height*non-nil
 #    (state <s> ^name make-node ^left.height <h>)
 #-->
@@ -326,6 +327,7 @@ sp {make-node*elaborate*right-height*nil
 -->
     (<s> ^right-height 0)}
 
+# TODO
 #sp {make-node*elaborate*right-height*non-nil
 #    (state <s> ^name make-node ^right.height <h>)
 #-->
@@ -357,6 +359,7 @@ sp {rebalance*elaborate*left-height*nil
 -->
     (<s> ^left-height 0)}
 
+# TODO
 #sp {rebalance*elaborate*left-height*non-nil
 #    (state <s> ^name rebalance ^tree.left.height <h>)
 #-->
@@ -367,6 +370,7 @@ sp {rebalance*elaborate*right-height*nil
 -->
     (<s> ^right-height 0)}
 
+# TODO
 #sp {rebalance*elaborate*right-height*non-nil
 #    (state <s> ^name rebalance ^tree.right.height <h>)
 #-->
@@ -377,12 +381,14 @@ sp {rebalance*elaborate*slope
 -->
     (<s> ^slope (- <lheight> <rheight>))}
 
+# TODO
 #sp {rebalance*propose*shift-left
 #    (state <s> ^slope -2 ^tree <t> -^shift-result)
 #-->
 #    (<s> ^operator <o> +)
 #    (<o> ^name shift-left ^tree <t> ^return-to shift-result)}
 
+# TODO 
 #sp {rebalance*propose*shift-right
 #    (state <s> ^slope 2 ^tree <t> -^shift-result)
 #-->
@@ -394,6 +400,7 @@ sp {rebalance*slope-okay
 -->
     (<ss> ^<r> <a>)}
 
+# TODO
 #sp {rebalance*shift-done*copy-upward
 #    (state <s> ^superstate <ss> ^return-to <r> ^shift-result <a>)
 #-->
@@ -401,5 +408,7 @@ sp {rebalance*slope-okay
 
 # TODO: shift-left
 # TODO: shift-right
-
-
+# TODO: roll-left
+# TODO: roll-right
+# TODO: last
+# TODO: init
