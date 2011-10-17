@@ -1,0 +1,31 @@
+sp {propose*empty
+    (state <s> ^name test-avl -^empty-set-is)
+-->
+    (<s> ^operator <o> + =)
+    (<o> ^name empty-set ^return-to empty-set-is)}
+
+sp {propose*create-test-plan
+    (state <s> ^name test-avl -^step1)
+-->
+    (<s> ^operator <o> + =)
+    (<o> ^name create-test-plan)}
+
+sp {propose*step-one
+    (state <s> ^name test-avl ^empty-set-is <e> ^step1 <x> -^step1-is)
+    (<x> ^name <xname> ^element <xelement>)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name <xname> ^element <xelement> ^set <e> ^return-to step1-is)}
+
+sp {propose*step-two
+    (state <s> ^name test-avl ^step1-is <s1> ^step2 <x> -^step2-is)
+    (<x> ^name <xname> ^element <xelement>)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name <xname> ^element <xelement> ^set <s1> ^return-to step2-is)}
+
+sp {propose*lookup
+    (state <s> ^name test-avl ^step2-is <set> ^to-lookup <key> -^answer-is)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name lookup ^element <key> ^set <set> ^return-to answer-is)}

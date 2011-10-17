@@ -72,55 +72,68 @@ sp {delete*initialize*initially
 -->
     (<s> ^name delete ^element <e> ^tree <t> ^return-to <r>)}
 
-sp {delete*initialize*recursively
+sp {delete*propose*delete-tree
+    (state <s> ^name delete ^element <e> ^tree <t> -^delete-tree-result)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name delete-tree ^element <e> ^tree <t> ^return-to delete-tree-result)}
+
+sp {delete*copy*upward
+    (state <s> ^name delete ^superstate <ss> ^return-to <return-to> ^delete-tree-result <answer>)
+-->
+    (<ss> ^<return-to>.Avl <answer>)}
+
+########################################## delete-tree
+
+sp {delete-tree*initialize
     (state <s> ^superstate.operator <o>)
-    (<o> ^name delete ^element <e> ^tree <t> ^return-to <r>)
+    (<o> ^name delete-tree ^element <e> ^tree <t> ^return-to <r>)
 -->
-    (<s> ^name delete ^element <e> ^tree <t> ^return-to <r>)}
+    (<s> ^name delete-tree ^element <e> ^tree <t> ^return-to <r>)}
 
-sp {delete*apply*nil
-    (state <s> ^name delete ^tree nil ^superstate <ss> ^return-to <r>)
+sp {delete-tree*apply*nil
+    (state <s> ^name delete-tree ^tree nil ^superstate <ss> ^return-to <r>)
 -->
-    (<ss> ^<r>.Avl nil)}
+    (<ss> ^<r> nil)}
 
-
-sp {delete*propose*check-left
-    (state <s> ^name delete ^tree.element <x> ^element <y> -^check-left-result)
+sp {delete-tree*propose*check-left
+    (state <s> ^name delete-tree ^tree.element <x> ^element <y> -^check-left-result)
 -->
     (<s> ^operator <o> +)
     (<o> ^name less-than ^left <x> ^right <y> ^return-to check-left-result)}
 
-sp {delete*propose*check-right
-    (state <s> ^name delete ^check-left-result false ^tree.element <x> ^element <y> -^check-right-result)
+sp {delete-tree*propose*check-right
+    (state <s> ^name delete-tree ^check-left-result false ^tree.element <x> ^element <y> -^check-right-result)
 -->
     (<s> ^operator <o> +)
     (<o> ^name less-than ^left <y> ^right <x> ^return-to check-right-result)}
 
-sp {delete*propose*recurse-left
-    (state <s> ^name delete ^check-left-result true ^tree.left <t> ^element <y> -^recurse-left-result)
+sp {delete-tree*propose*recurse-left
+    (state <s> ^name delete-tree ^check-left-result true ^tree.left <t> ^element <y> -^recurse-left-result)
 -->
     (<s> ^operator <o> +)
-    (<o> ^name delete ^tree <t> ^element <y> ^return-to recurse-left-result)}
+    (<o> ^name delete-tree ^tree <t> ^element <y> ^return-to recurse-left-result)}
 
-#sp {delete*recurse-left-done*propose*avl
-#    (state <s> ^name delete ^superstate <ss> ^return-to <r> ^recurse-left-result <a>)
+#sp {delete-tree*recurse-left-done*propose*avl
+#    (state <s> ^name delete-tree ^superstate <ss> ^return-to <r> ^recurse-left-result <a>)
 #-->
 # TODO
 
-sp {delete*propose*recurse-right
-    (state <s> ^name delete ^check-right-result true ^tree.right <t> ^element <y> -^recurse-right-result)
+sp {delete-tree*propose*recurse-right
+    (state <s> ^name delete-tree ^check-right-result true ^tree.right <t> ^element <y> -^recurse-right-result)
 -->
     (<s> ^operator <o> +)
-    (<o> ^name delete ^tree <t> ^element <y> ^return-to recurse-right-result)}
+    (<o> ^name delete-tree ^tree <t> ^element <y> ^return-to recurse-right-result)}
 
-#sp {delete*recurse-right-done*propose*avl
-#    (state <s> ^name delete ^recurse-right-result <a>)
-#-->
-# TODO
+sp {delete-tree*recurse-right-done*propose*avl
+    (state <s> ^name delete-tree ^tree <t> ^recurse-right-result <a> -^avl-result)
+    (<t> ^element <x> ^left <l>)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name avl ^element <x> ^left <l> ^right <a> ^return-to answer)}
 
-
-sp {delete*found-here*propose*join
-    (state <s> ^name delete
+sp {delete-tree*found-here*propose*join
+    (state <s> ^name delete-tree
                ^check-left-result false
                ^check-right-result false
                ^tree <t>
@@ -128,12 +141,12 @@ sp {delete*found-here*propose*join
     (<t> ^left <l> ^right <r>)
 -->
     (<s> ^operator <o> +)
-    (<o> ^name join ^left <l> ^right <r> ^return-to join-result)}
+    (<o> ^name join ^left <l> ^right <r> ^return-to answer)}
 
-sp {delete*copy*join-result*up
-    (state <s> ^name delete ^superstate <ss> ^return-to <r> ^join-result <a>)
+sp {delete-tree*copy-answer-upward
+    (state <s> ^name delete-tree ^superstate <ss> ^return-to <r> ^answer <a>)
 -->
-    (<ss> ^<r>.Avl <a>)}
+    (<ss> ^<r> <a>)}
 
 ##################### lookup
 
@@ -214,3 +227,129 @@ sp {join*base-case
     (<ss> ^<return-to> <r>)}
 
 # TODO: last recursive case
+
+########################################################################################### avl
+
+sp {avl*initialize
+    (state <s> ^superstate.operator <o>)
+    (<o> ^name avl ^element <x> ^left <l> ^right <r> ^return-to <return-to>)
+-->
+    (<s> ^name avl ^element <x> ^left <l> ^right <r> ^return-to <return-to>)}
+
+sp {avl*propose*make-node
+    (state <s> ^name avl ^element <x> ^left <l> ^right <r> -^make-node-result)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name make-node ^element <x> ^left <l> ^right <r> ^return-to make-node-result)}
+
+sp {avl*propose*rebalance
+    (state <s> ^name avl ^make-node-result <t> -^rebalance-result)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name rebalance ^tree <t> ^return-to rebalance-result)}
+
+sp {avl*copy*upward
+    (state <s> ^name avl ^superstate <ss> ^return-to <r> ^rebalance-result <a>)
+-->
+    (<ss> ^<r> <a>)}
+
+############################################################################################ make-node
+
+sp {make-node*initialize
+    (state <s> ^superstate.operator <o>)
+    (<o> ^name make-node ^element <x> ^left <l> ^right <r> ^return-to <return-to>)
+-->
+    (<s> ^name make-node ^element <x> ^left <l> ^right <r> ^return-to <return-to>)}
+
+sp {make-node*elaborate*left-height*nil
+    (state <s> ^name make-node ^left nil)
+-->
+    (<s> ^left-height 0)}
+
+sp {make-node*elaborate*left-height*non-nil
+    (state <s> ^name make-node ^left.height <h>)
+-->
+    (<s> ^left-height <h>)}
+
+sp {make-node*elaborate*right-height*nil
+    (state <s> ^name make-node ^right nil)
+-->
+    (<s> ^right-height 0)}
+
+sp {make-node*elaborate*right-height*non-nil
+    (state <s> ^name make-node ^right.height <h>)
+-->
+    (<s> ^right-height <h>)}
+
+sp {make-node*apply
+    (state <s> ^name make-node
+               ^superstate <ss>
+               ^return-to <return-to>
+               ^left-height <lheight>
+               ^right-height <rheight>
+               ^element <x>
+               ^left <l>
+               ^right <r>)
+-->
+    (<ss> ^<return-to> <newnode>)
+    (<newnode> ^height (+ 1 (max <lheight> <rheight>)) ^element <x> ^left <l> ^right <r>)}
+
+############################################################################################## rebalance
+
+sp {rebalance*initialize
+    (state <s> ^superstate.operator <o>)
+    (<o> ^name rebalance ^tree <t> ^return-to <r>)
+-->
+    (<s> ^name rebalance ^tree <t> ^return-to <r>)}
+
+sp {rebalance*elaborate*left-height*nil
+    (state <s> ^name rebalance ^tree.left nil)
+-->
+    (<s> ^left-height 0)}
+
+sp {rebalance*elaborate*left-height*non-nil
+    (state <s> ^name rebalance ^tree.left.height <h>)
+-->
+    (<s> ^left-height <h>)}
+
+sp {rebalance*elaborate*right-height*nil
+    (state <s> ^name rebalance ^tree.right nil)
+-->
+    (<s> ^right-height 0)}
+
+sp {rebalance*elaborate*right-height*non-nil
+    (state <s> ^name rebalance ^tree.right.height <h>)
+-->
+    (<s> ^right-height <h>)}
+
+sp {rebalance*elaborate*slope
+    (state <s> ^left-height <lheight> ^right-height <rheight>)
+-->
+    (<s> ^slope (- <lheight> <rheight>))}
+
+sp {rebalance*propose*shift-left
+    (state <s> ^slope -2 ^tree <t> -^shift-result)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name shift-left ^tree <t> ^return-to shift-result)}
+
+sp {rebalance*shift-done*copy-upward
+    (state <s> ^superstate <ss> ^return-to <r> ^shift-result <a>)
+-->
+    (<ss> ^<r> <a>)}
+
+sp {rebalance*propose*shift-right
+    (state <s> ^slope 2 ^tree <t> -^shift-result)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name shift-right ^tree <t> ^return-to shift-result)}
+
+sp {rebalance*slope-okay
+    (state <s> ^slope << -1 0 1 >> ^superstate <ss> ^return-to <r> ^tree <a>)
+-->
+    (<ss> ^<r> <a>)}
+
+# TODO: shift-left
+# TODO: shift-right
+
+
