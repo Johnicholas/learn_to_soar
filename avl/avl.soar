@@ -207,13 +207,61 @@ sp {lookup*apply*found-here
 
 ##################################### insert
 
-sp {insert*apply*nil
-    (state <s> ^operator <o>)
-    (<o> ^name insert ^element <e> ^set.Avl nil ^return-to <r>)
+sp {insert*initialize
+    (state <s> ^superstate.operator <o>)
+     (<o> ^name insert ^element <e> ^set.Avl <t> ^return-to <r>)
 -->
-    (<s> ^<r>.Avl <tree>)
-    (<tree> ^height 1 ^element <e> ^left nil ^right nil)}
+    (<s> ^name insert ^element <e> ^tree <t> ^return-to <r>)}
 
+sp {insert*propose*insert-tree
+    (state <s> ^name insert ^element <e> ^tree <t> -^insert-tree-result)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name insert-tree ^element <e> ^tree <t> ^return-to insert-tree-result)}
+
+sp {insert*copy*upward
+    (state <s> ^name insert ^superstate <ss> ^return-to <r> ^insert-tree-result <a>)
+-->
+    (<ss> ^<r>.Avl <a>)}
+
+########################## insert-tree
+
+sp {insert-tree*initialize
+    (state <s> ^superstate.operator <o>)
+    (<o> ^name insert-tree ^element <e> ^tree <t> ^return-to <r>)
+-->
+    (<s> ^name insert-tree ^element <e> ^tree <t> ^return-to <r>)}
+
+sp {insert-tree*nil
+    (state <s> ^name insert-tree ^element <y> ^tree nil ^superstate <ss> ^return-to <r>)
+-->
+    (<ss> ^<r> <newnode>)
+    (<newnode> ^height 1 ^element <y> ^left nil ^right nil)}
+
+sp {insert-tree*propose*check-left
+    (state <s> ^name insert-tree ^element <y> ^tree <t> -^check-left-result)
+    (<t> ^element <x>)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name less-than ^left <x> ^right <y> ^return-to check-left-result)}
+
+sp {insert-tree*propose*check-right
+    (state <s> ^name insert-tree ^element <y> ^tree <t> ^check-left-result false -^check-right-result)
+    (<t> ^element <x>)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name less-than ^left <y> ^right <x> ^return-to check-right-result)}
+
+sp {insert-tree*apply*equal
+    (state <s> ^name insert-tree
+               ^check-left-result false
+               ^check-right-result false
+               ^superstate <ss> ^return-to <r> ^tree <a>)
+-->
+    (<ss> ^<r> <a>)}
+
+# TODO: check-left-result true
+# TODO: check-right-result true
 
 ################################ join 
 
