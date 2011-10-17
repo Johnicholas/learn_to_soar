@@ -1,0 +1,27 @@
+
+source avl.soar
+
+sp {initialize
+    (state <s> ^superstate nil)
+-->
+    (<s> ^name test-avl)}
+
+source test-comparisons.soar
+
+source empty-op-lookup.soar
+
+sp {apply*create-test-plan
+    (state <s> ^name test-avl ^operator.name create-test-plan)
+-->
+    (<s> ^step1 <s1> ^to-lookup.test 1 ^answer-should-be nothing)
+    (<s1> ^name insert ^element.test 0)}
+
+sp {pass*nothing
+    (state <s> ^name test-avl ^answer-should-be nothing ^answer-is nothing)
+-->
+    (write (crlf) |pass|) (halt)}
+
+sp {pass*not*nothing
+    (state <s> ^name test-avl ^answer-should-be <n> ^answer-is.just.test <n>)
+-->
+    (write (crlf) |pass|) (halt)}

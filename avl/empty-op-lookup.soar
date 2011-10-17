@@ -23,14 +23,5 @@ sp {propose*lookup
     (<s> ^operator <o> +)
     (<o> ^name lookup ^element <key> ^set <set> ^return-to answer-is)}
 
-sp {pass*nothing
-    (state <s> ^name test-avl ^answer-should-be nothing ^answer-is nothing)
--->
-    (pass)}
-
-sp {pass*not*nothing
-    (state <s> ^name test-avl ^answer-should-be <n> ^answer-is.just.test <n>)
--->
-    (pass)}
 
 

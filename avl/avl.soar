@@ -70,17 +70,22 @@ sp {delete*apply*nil
 -->
     (<s> ^<r>.Avl nil)}
 
-sp {lookup*apply*nil
-    (state <s> ^operator <o>)
-    (<o> ^name lookup ^set.Avl nil ^return-to <r>)
--->
-    (<s> ^<r> nothing)}
-
-sp {lookup*initialize
+sp {lookup*initialize*initially
     (state <s> ^superstate.operator <o>)
     (<o> ^name lookup ^element <e> ^set.Avl <t> ^return-to <r>)
 -->
     (<s> ^name lookup ^element <e> ^tree <t> ^return-to <r>)}
+
+sp {lookup*initialize*recursively
+    (state <s> ^superstate.operator <o>)
+    (<o> ^name lookup ^element <e> ^tree <t> ^return-to <r>)
+-->
+    (<s> ^name lookup ^element <e> ^tree <t> ^return-to <r>)}
+
+sp {lookup*apply*nil
+    (state <s> ^name lookup ^tree nil ^superstate <ss> ^return-to <r>)
+-->
+    (<ss> ^<r> nothing)}
 
 sp {lookup*propose*check-left
     (state <s> ^name lookup ^tree.element <x> ^element <y> -^check-left-result)
@@ -89,15 +94,27 @@ sp {lookup*propose*check-left
     (<o> ^name less-than ^left <x> ^right <y> ^return-to check-left-result)}
 
 sp {lookup*propose*check-right
-    (state <s> ^name lookup ^tree.element <x> ^element <y> ^check-left-result false -^check-right-result)
+    (state <s> ^name lookup ^check-left-result false ^tree.element <x> ^element <y> -^check-right-result)
 -->
     (<s> ^operator <o> +)
     (<o> ^name less-than ^left <y> ^right <y> ^return-to check-right-result)}
 
-# TODO: suppose check-left-result comes back true - then we need to propose recursing leftward
-# TODO: suppose the left recursion comes back with an answer - then we need to copy it upward
-# TODO: suppose check-right-result comes back true - then we need to propose recursing rightward
-# TODO: suppose the right recursion comes back with an answer - then we need to copy it upward
+sp {lookup*propose*recurse-left
+    (state <s> ^name lookup ^check-left-result true ^tree.left <t> ^element <y> -^recursion-result)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name lookup ^tree <t> ^element <y> ^return-to recursion-result)}
+
+sp {lookup*apply*recursion-done
+    (state <s> ^name lookup ^superstate <ss> ^return-to <r> ^recursion-result <a>)
+-->
+    (<ss> ^<r> <a>)}
+
+sp {lookup*propose*recurse-right
+    (state <s> ^name lookup ^check-right-result true ^tree.right <t> ^element <y> -^recursion-result)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name lookup ^tree <t> ^element <y> ^return-to recursion-result)}
 
 sp {lookup*apply*found-here
     (state <s> ^name lookup ^check-left-result false ^check-right-result false
