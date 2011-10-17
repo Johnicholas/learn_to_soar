@@ -56,7 +56,18 @@ sp {apply*create-test-plan
 
 }
 
-#"lookup(insert(Test(1), emptySet), Test(0)) is Nothing"
+test "lookup(insert(Test(1), emptySet), Test(0)) is Nothing" {
+
+source empty-op-lookup.soar
+
+sp {apply*create-test-plan
+    (state <s> ^name test-avl ^operator.name create-test-plan)
+-->
+    (<s> ^step1 <s1> ^to-lookup.test 0 ^answer-should-be nothing)
+    (<s1> ^name insert ^element.test 1)}
+
+}
+
 #"lookup(delete(Test(0), insert(Test(0), emptySet)), Test(0)) is Nothing"
 #"lookup(delete(Test(0), insert(Test(1), emptySet)), Test(0)) is Nothing"
 #"lookup(delete(Test(0), insert(Test(1), emptySet)), Test(1)) is Just(Test(1))"
