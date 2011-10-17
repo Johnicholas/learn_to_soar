@@ -123,9 +123,6 @@ join(Nil, ?r) ==
 join(Bin(?lh, ?lx, ?ll, ?lr), ?r) ==
   avl(last(?lx, ?lr), init(?lx, ?ll, ?lr), ?r)
 
-# 8. join nil
-# 9. join non-nil
-
 # To define last, we look at the right subtree. If the right subtree is empty,
 # then we have found the last element, otherwise we recurse.
 

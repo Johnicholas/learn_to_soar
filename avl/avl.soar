@@ -64,11 +64,79 @@ sp {empty-set*apply
 -->
     (<s> ^<return-to>.Avl nil)}
 
-sp {delete*apply*nil
-    (state <s> ^operator <o>)
-    (<o> ^name delete ^set.Avl nil ^return-to <r>)
+######################################### delete
+
+sp {delete*initialize*initially
+    (state <s> ^superstate.operator <o>)
+    (<o> ^name delete ^element <e> ^set.Avl <t> ^return-to <r>)
 -->
-    (<s> ^<r>.Avl nil)}
+    (<s> ^name delete ^element <e> ^tree <t> ^return-to <r>)}
+
+sp {delete*initialize*recursively
+    (state <s> ^superstate.operator <o>)
+    (<o> ^name delete ^element <e> ^tree <t> ^return-to <r>)
+-->
+    (<s> ^name delete ^element <e> ^tree <t> ^return-to <r>)}
+
+sp {delete*apply*nil
+    (state <s> ^name delete ^tree nil ^superstate <ss> ^return-to <r>)
+-->
+    (<ss> ^<r>.Avl nil)}
+
+
+sp {delete*propose*check-left
+    (state <s> ^name delete ^tree.element <x> ^element <y> -^check-left-result)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name less-than ^left <x> ^right <y> ^return-to check-left-result)}
+
+sp {delete*propose*check-right
+    (state <s> ^name delete ^check-left-result false ^tree.element <x> ^element <y> -^check-right-result)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name less-than ^left <y> ^right <x> ^return-to check-right-result)}
+
+sp {delete*propose*recurse-left
+    (state <s> ^name delete ^check-left-result true ^tree.left <t> ^element <y> -^recurse-left-result)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name delete ^tree <t> ^element <y> ^return-to recurse-left-result)}
+
+#sp {delete*recurse-left-done*propose*avl
+#    (state <s> ^name delete ^superstate <ss> ^return-to <r> ^recurse-left-result <a>)
+#-->
+# TODO
+
+sp {delete*propose*recurse-right
+    (state <s> ^name delete ^check-right-result true ^tree.right <t> ^element <y> -^recurse-right-result)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name delete ^tree <t> ^element <y> ^return-to recurse-right-result)}
+
+#sp {delete*recurse-right-done*propose*avl
+#    (state <s> ^name delete ^recurse-right-result <a>)
+#-->
+# TODO
+
+
+sp {delete*found-here*propose*join
+    (state <s> ^name delete
+               ^check-left-result false
+               ^check-right-result false
+               ^tree <t>
+              -^join-result)
+    (<t> ^left <l> ^right <r>)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name join ^left <l> ^right <r> ^return-to join-result)}
+
+sp {delete*copy*join-result*up
+    (state <s> ^name delete ^superstate <ss> ^return-to <r> ^join-result <a>)
+-->
+    (<ss> ^<r>.Avl <a>)}
+
+##################### lookup
+
 
 sp {lookup*initialize*initially
     (state <s> ^superstate.operator <o>)
@@ -122,9 +190,27 @@ sp {lookup*apply*found-here
 -->
     (<ss> ^<r>.just <x>)}
 
+##################################### insert
+
 sp {insert*apply*nil
     (state <s> ^operator <o>)
     (<o> ^name insert ^element <e> ^set.Avl nil ^return-to <r>)
 -->
     (<s> ^<r>.Avl <tree>)
     (<tree> ^height 1 ^element <e> ^left nil ^right nil)}
+
+
+################################ join 
+
+sp {join*initialize
+    (state <s> ^superstate.operator <o>)
+    (<o> ^name join ^left <l> ^right <r> ^return-to <return-to>)
+-->
+    (<s> ^name join ^left <l> ^right <r> ^return-to <return-to>)}
+
+sp {join*base-case
+    (state <s> ^name join ^left nil ^superstate <ss> ^return-to <return-to> ^right <r>)
+-->
+    (<ss> ^<return-to> <r>)}
+
+# TODO: last recursive case

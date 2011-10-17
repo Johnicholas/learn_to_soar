@@ -8,8 +8,6 @@ sp {initialize
 
 source test-comparisons.soar
 
-source empty-op-lookup.soar
-
 sp {pass*nothing
     (state <s> ^name test-avl ^answer-should-be nothing ^answer-is nothing)
 -->
@@ -23,9 +21,12 @@ sp {pass*not*nothing
 
 
 
+source empty-two-ops-lookup.soar
+
 sp {apply*create-test-plan
     (state <s> ^name test-avl ^operator.name create-test-plan)
 -->
-    (<s> ^step1 <s1> ^to-lookup.test 0 ^answer-should-be nothing)
-    (<s1> ^name insert ^element.test 1)}
+    (<s> ^step1 <s1> ^step2 <s2> ^to-lookup.test 0 ^answer-should-be nothing)
+    (<s1> ^name insert ^element.test 0)
+    (<s2> ^name delete ^element.test 0)}
 
