@@ -1,0 +1,27 @@
+sp {create*example
+    (state <s> ^name test-avl)
+-->
+    (<s> ^example1234-is.Avl <b1>)
+    (<b1> ^height 3 ^element.test 3 ^left <b2> ^right <b3>)
+    (<b2> ^height 1 ^element.test 4 ^left nil ^right nil)
+    (<b3> ^height 2 ^element.test 1 ^left <b4> ^right nil)
+    (<b4> ^height 1 ^element.test 2 ^left nil ^right nil)}
+
+sp {propose*create-test-plan
+    (state <s> ^name test-avl -^step1)
+-->
+    (<s> ^operator <o> + =)
+    (<o> ^name create-test-plan)}
+
+sp {propose*step-one
+    (state <s> ^name test-avl ^example-is <e> ^step1 <x> -^step1-is)
+    (<x> ^name <xname> ^element <xelement>)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name <xname> ^element <xelement> ^set <e> ^return-to step1-is)}
+
+sp {propose*lookup
+    (state <s> ^name test-avl ^step1-is <set> ^to-lookup <key> -^answer-is)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name lookup ^element <key> ^set <set> ^return-to answer-is)}

@@ -17,13 +17,7 @@
 makenode(?x, ?l, ?r) ==
   Bin(max(height(?l), height(?r))+1, ?x, ?l, ?r)
 
-# In defining makenode, we used max, and height. Max demonstrates if,
-# which is a Req primitive.
-
-max(?x, ?y) ==
-  if ?x < ?y then
-    ?x else
-    ?y
+# max and + are defined by req (or reqrc?)
 
 # Aside: We could define 'if' rather than having it be a primitive if we encoded
 # numbers as trees (Peano, or some other representation).

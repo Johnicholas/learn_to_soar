@@ -1,0 +1,23 @@
+#example1234 := avl(Test(1), avl(Test(2), avl(Test(3), avl(Test(4), Nil, Nil), Nil), Nil), Nil)
+
+
+checkInvariant(example1234)
+
+checkInvariant(delete(Test(1), example1234))
+checkInvariant(delete(Test(2), example1234))
+checkInvariant(delete(Test(3), example1234))
+checkInvariant(delete(Test(4), example1234))
+
+lookup(example1234, Test(0))
+lookup(example1234, Test(1))
+lookup(example1234, Test(2))
+lookup(example1234, Test(3))
+lookup(example1234, Test(4))
+lookup(example1234, Test(5))
+
+checkInvariant(insert(Test(0), example1234))
+checkInvariant(insert(Test(1), example1234))
+checkInvariant(insert(Test(2), example1234))
+checkInvariant(insert(Test(3), example1234))
+checkInvariant(insert(Test(4), example1234))
+checkInvariant(insert(Test(5), example1234))
