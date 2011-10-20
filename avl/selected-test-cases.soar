@@ -225,7 +225,7 @@ source example1234-op-lookup.soar
 sp {apply*create-test-plan
     (state <s> ^name test-avl ^operator.name create-test-plan)
 -->
-    (<s> ^step1 <s1> ^to-lookup.test 2 ^answer-should-be nothing)
+    (<s> ^step1 <s1> ^to-lookup.test 5 ^answer-should-be nothing)
     (<s1> ^name delete ^element.test 0)}
 
 }
