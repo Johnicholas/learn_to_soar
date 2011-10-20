@@ -316,22 +316,20 @@ sp {make-node*elaborate*left-height*nil
 -->
     (<s> ^left-height 0)}
 
-# TODO
-#sp {make-node*elaborate*left-height*non-nil
-#    (state <s> ^name make-node ^left.height <h>)
-#-->
-#    (<s> ^left-height <h>)}
+sp {make-node*elaborate*left-height*non-nil
+    (state <s> ^name make-node ^left.height <h>)
+-->
+    (<s> ^left-height <h>)}
 
 sp {make-node*elaborate*right-height*nil
     (state <s> ^name make-node ^right nil)
 -->
     (<s> ^right-height 0)}
 
-# TODO
-#sp {make-node*elaborate*right-height*non-nil
-#    (state <s> ^name make-node ^right.height <h>)
-#-->
-#    (<s> ^right-height <h>)}
+sp {make-node*elaborate*right-height*non-nil
+    (state <s> ^name make-node ^right.height <h>)
+-->
+    (<s> ^right-height <h>)}
 
 sp {make-node*apply
     (state <s> ^name make-node
@@ -359,22 +357,20 @@ sp {rebalance*elaborate*left-height*nil
 -->
     (<s> ^left-height 0)}
 
-# TODO
-#sp {rebalance*elaborate*left-height*non-nil
-#    (state <s> ^name rebalance ^tree.left.height <h>)
-#-->
-#    (<s> ^left-height <h>)}
+sp {rebalance*elaborate*left-height*non-nil
+    (state <s> ^name rebalance ^tree.left.height <h>)
+-->
+    (<s> ^left-height <h>)}
 
 sp {rebalance*elaborate*right-height*nil
     (state <s> ^name rebalance ^tree.right nil)
 -->
     (<s> ^right-height 0)}
 
-# TODO
-#sp {rebalance*elaborate*right-height*non-nil
-#    (state <s> ^name rebalance ^tree.right.height <h>)
-#-->
-#    (<s> ^right-height <h>)}
+sp {rebalance*elaborate*right-height*non-nil
+    (state <s> ^name rebalance ^tree.right.height <h>)
+-->
+    (<s> ^right-height <h>)}
 
 sp {rebalance*elaborate*slope
     (state <s> ^left-height <lheight> ^right-height <rheight>)
