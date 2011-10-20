@@ -1,5 +1,4 @@
-#example1234 := avl(Test(1), avl(Test(2), avl(Test(3), avl(Test(4), Nil, Nil), Nil), Nil), Nil)
-
+example1234 := avl(Test(1), avl(Test(2), avl(Test(3), avl(Test(4), Nil, Nil), Nil), Nil), Nil)
 
 checkInvariant(example1234)
 
