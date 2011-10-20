@@ -302,74 +302,74 @@ sp {apply*create-test-plan
 
 }
 
-test "lookup(delete(Test(0), example1234), Test(0)) is Test(0)" {
+test "lookup(delete(Test(0), example1234), Test(0)) is nothing" {
 
 source example1234-op-lookup.soar
 
 sp {apply*create-test-plan
     (state <s> ^name test-avl ^operator.name create-test-plan)
 -->
-    (<s> ^step1 <s1> ^to-lookup.test 0 ^answer-should-be 0)
+    (<s> ^step1 <s1> ^to-lookup.test 0 ^answer-should-be nothing)
     (<s1> ^name delete ^element.test 0)}
 
 }
 
-test "lookup(delete(Test(1), example1234), Test(1)) is Test(1)" {
+test "lookup(delete(Test(1), example1234), Test(1)) is nothing" {
 
 source example1234-op-lookup.soar
 
 sp {apply*create-test-plan
     (state <s> ^name test-avl ^operator.name create-test-plan)
 -->
-    (<s> ^step1 <s1> ^to-lookup.test 1 ^answer-should-be 1)
+    (<s> ^step1 <s1> ^to-lookup.test 1 ^answer-should-be nothing)
     (<s1> ^name delete ^element.test 1)}
 
 }
 
-test "lookup(delete(Test(2), example1234), Test(2)) is Test(2)" {
+test "lookup(delete(Test(2), example1234), Test(2)) is nothing" {
 
 source example1234-op-lookup.soar
 
 sp {apply*create-test-plan
     (state <s> ^name test-avl ^operator.name create-test-plan)
 -->
-    (<s> ^step1 <s1> ^to-lookup.test 2 ^answer-should-be 2)
+    (<s> ^step1 <s1> ^to-lookup.test 2 ^answer-should-be nothing)
     (<s1> ^name delete ^element.test 2)}
 
 }
 
-test "lookup(delete(Test(3), example1234), Test(3)) is Test(3)" {
+test "lookup(delete(Test(3), example1234), Test(3)) is nothing" {
 
 source example1234-op-lookup.soar
 
 sp {apply*create-test-plan
     (state <s> ^name test-avl ^operator.name create-test-plan)
 -->
-    (<s> ^step1 <s1> ^to-lookup.test 3 ^answer-should-be 3)
+    (<s> ^step1 <s1> ^to-lookup.test 3 ^answer-should-be nothing)
     (<s1> ^name delete ^element.test 3)}
 
 }
 
-test "lookup(delete(Test(4), example1234), Test(4)) is Test(4)" {
+test "lookup(delete(Test(4), example1234), Test(4)) is nothing" {
 
 source example1234-op-lookup.soar
 
 sp {apply*create-test-plan
     (state <s> ^name test-avl ^operator.name create-test-plan)
 -->
-    (<s> ^step1 <s1> ^to-lookup.test 4 ^answer-should-be 4)
+    (<s> ^step1 <s1> ^to-lookup.test 4 ^answer-should-be nothing)
     (<s1> ^name delete ^element.test 4)}
 
 }
 
-test "lookup(delete(Test(5), example1234), Test(5)) is Test(5)" {
+test "lookup(delete(Test(5), example1234), Test(5)) is nothing" {
 
 source example1234-op-lookup.soar
 
 sp {apply*create-test-plan
     (state <s> ^name test-avl ^operator.name create-test-plan)
 -->
-    (<s> ^step1 <s1> ^to-lookup.test 5 ^answer-should-be 5)
+    (<s> ^step1 <s1> ^to-lookup.test 5 ^answer-should-be nothing)
     (<s1> ^name delete ^element.test 5)}
 
 }
