@@ -14,7 +14,7 @@ sp {propose*create-test-plan
     (<o> ^name create-test-plan)}
 
 sp {propose*step-one
-    (state <s> ^name test-avl ^example-is <e> ^step1 <x> -^step1-is)
+    (state <s> ^name test-avl ^example1234-is <e> ^step1 <x> -^step1-is)
     (<x> ^name <xname> ^element <xelement>)
 -->
     (<s> ^operator <o> +)
