@@ -260,8 +260,37 @@ sp {insert-tree*apply*equal
 -->
     (<ss> ^<r> <a>)}
 
-# TODO: check-left-result true
-# TODO: check-right-result true
+sp {insert-tree*propose*insert-right
+    (state <s> ^name insert-tree ^element <y> ^tree.right <r> ^check-right-result true -^insert-right-result)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name insert-tree ^element <y> ^tree <r> ^return-to insert-right-result)}
+
+sp {insert-tree*insert-right-done*propose*avl
+    (state <s> ^name insert-tree ^element <y> ^tree.left <l> ^insert-right-result <i> -^answer)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name avl ^element <y> ^left <l> ^right <i> ^return-to answer)}
+
+sp {insert-tree*propose*insert-left
+    (state <s> ^name insert-tree ^element <y> ^tree.left <l> ^check-left-result true -^insert-left-result)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name insert-tree ^element <y> ^tree <l> ^return-to insert-left-result)}
+
+sp {insert-tree*insert-left-done*propose*avl
+    (state <s> ^name insert-tree ^element <y> ^insert-left-result <i> ^tree.right <r> -^answer)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name avl ^element <y> ^left <i> ^right <r> ^return-to answer)}
+
+sp {insert-tree*done
+    (state <s> ^name insert-tree ^superstate <ss> ^return-to <r> ^answer <a>)
+-->
+    (<ss> ^<r> <a>)}
+
+
+
 
 ################################ join 
 
