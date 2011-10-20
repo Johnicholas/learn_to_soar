@@ -1,0 +1,91 @@
+# This is an illustration  of Soar syntax, emphasizing the parallel to Prolog.
+
+# In prolog, this would be something like:
+# myappend(X, Y, Out) :-
+#   myappend(X, Y, done, Out).
+sp {append*initialize
+    (state <s> ^superstate.operator <o>)
+    (<o> ^name append
+         ^left <l>
+         ^right <r>
+         ^return-to <return-to>)
+-->
+    (<s> ^name append
+         ^left <l>
+         ^right <r>
+         ^todo done
+         ^return-to <return-to>)}
+
+# In prolog, this propose production would be
+# the first half or this clause, up to the cut.
+# myappend(cons(Hd, Tl), Y, K, Out) :-
+#   !, myappend(Tl, Y, Newtodo, Out), Newtodo = todo(Hd, K).
+sp {append*propose*step1
+    (state <s> ^name append
+               ^left <l>)
+    (<l> ^first <hd>
+         ^rest <tl>)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name step1)}
+
+# In prolog, this apply production would be
+# the the second half or this clause, after the cut.
+# myappend(cons(Hd, Tl), Y, K, Out) :-
+#   !, myappend(Tl, Y, Newtodo, Out), Newtodo = todo(Hd, K).
+sp {append*apply*step1
+    (state <s> ^name append
+               ^operator.name step1
+               ^left <l>
+               ^todo <k>)
+    (<l> ^first <hd> 
+         ^rest <tl>)
+-->
+    (<s> ^left <l> - <tl>
+         ^todo <k> - <newtodo>)
+    (<newtodo> ^head <hd>
+               ^todo <k>)}
+
+# In prolog, this propose production would be
+# the first half or this clause, up to the cut.
+# myappend(nil, Y, todo(Hd, K), Out) :-
+#     !, myappend(nil, Cons, K, Out), Cons = cons(Hd, Y).
+sp {append*propose*step2
+    (state <s> ^name append
+               ^left nil
+               ^todo <k1>)
+    (<k1> ^head <hd>
+          ^todo <k2>)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name step2)}
+
+# In prolog, this apply production would be
+# the the second half or this clause, after the cut.
+# myappend(nil, Y, todo(Hd, K), Out) :-
+#     !, myappend(nil, Cons, K, Out), Cons = cons(Hd, Y).
+sp {append*apply*step2
+    (state <s> ^name append
+               ^operator.name step2
+               ^right <r>
+               ^todo <k1>)
+    (<k1> ^head <hd>
+          ^todo <k2>)
+-->
+    (<s> ^right <r> - <cons>
+         ^todo <k1> - <k2>)
+    (<cons> ^first <hd>
+            ^rest <r>)}
+
+# In prolog, this would be something like:
+# myappend(nil, Y, done, Out) :-
+#   Out = Y.
+sp {append*done
+    (state <s> ^name append
+               ^left nil
+               ^todo done
+               ^superstate <ss>
+               ^return-to <return-to>
+               ^right <r>)
+-->
+    (<ss> ^<return-to> <r>)}
