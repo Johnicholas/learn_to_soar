@@ -1,4 +1,10 @@
-example1234 := avl(Test(1), avl(Test(2), avl(Test(3), avl(Test(4), Nil, Nil), Nil), Nil), Nil)
+through(?i, ?n) == if ?i <= ?n then insert(Test(?i), through(?i + 1, ?n)) else Nil
+
+# example1234 := through(1,4)
+example1234 := Bin(3, Test(3),
+                      Bin(1, Test(4), Nil, Nil),
+                      Bin(2, Test(2), Nil,
+                                      Bin(1, Test(1), Nil, Nil)))
 
 checkInvariant(example1234)
 
@@ -20,3 +26,36 @@ checkInvariant(insert(Test(2), example1234))
 checkInvariant(insert(Test(3), example1234))
 checkInvariant(insert(Test(4), example1234))
 checkInvariant(insert(Test(5), example1234))
+
+
+#example1through10 := through(1, 10)
+example1through10 :=
+		  B1(4, Test(7),
+		    B2(2, Test(9),
+		      B3(1, Test(10), Nil, Nil),
+		      B4(1, Test(8), Nil, Nil)),
+		    B5(3, Test(3),
+		      B6(2, Test(5),
+		        B7(1, Test(6), Nil, Nil),
+		        B8(1, Test(4), Nil, Nil)),
+		      B9(2, Test(2), Nil,
+		        B10(1, Test(1), Nil, Nil))))
+
+checkInvariant(example1through10)
+
+lookup(delete(Test(3), example1through10), Test(3))
+
+mapOp(?op, ?arg, ?i, ?n) ==
+  if ?i <= ?n then
+    Cons(lookup(?op(Test(?i), ?arg), Test(?i)), mapOp(?op, ?arg, ?i + 1, ?n)) else
+    Nil
+mapOp(delete, example1through10, 0, 11)
+mapOp(insert, example1through10, 0, 11)
+
+
+backDown(?op, ?arg, ?i, ?n) ==
+  if ?i <= ?n then
+    ?op(Test(?i), backDown(?op, ?arg, ?i + 1, ?n)) else
+    ?arg
+
+backDown(delete, example1through10, 1, 11)

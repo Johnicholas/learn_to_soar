@@ -529,8 +529,8 @@ sp {shift-left*elaborate*left-height*nil
     (<s> ^left-height 0)}
 
 # TODO
-#sp {shift-right*elaborate*right-height*nil
-#    (state <s> ^name shift-right ^tree.right nil)
+#sp {shift-left*elaborate*right-height*nil
+#    (state <s> ^name shift-left ^tree.right nil)
 #-->
 #    (<s> ^right-height 0)}
 

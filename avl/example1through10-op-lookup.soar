@@ -1,0 +1,33 @@
+sp {create*example
+    (state <s> ^name test-avl)
+-->
+    (<s> ^example1through10-is.Avl <t1>)
+    (<t1> ^height 4 ^element.test 7 ^left <t2> ^right <t5>)
+    (<t2> ^height 2 ^element.test 9 ^left <t3> ^right <t4>)
+    (<t3> ^height 1 ^element.test 10 ^left nil ^right nil)
+    (<t4> ^height 1 ^element.test 8 ^left nil ^right nil)
+    (<t5> ^height 3 ^element.test 3 ^left <t6> ^right <t9>)
+    (<t6> ^height 2 ^element.test 5 ^left <t7> ^right <t8>)
+    (<t7> ^height 1 ^element.test 6 ^left nil ^right nil)
+    (<t8> ^height 1 ^element.test 4 ^left nil ^right nil)
+    (<t9> ^height 2 ^element.test 2 ^left nil ^right <t10>)
+    (<t10> ^height 1 ^element.test 1 ^left nil ^right nil)}
+
+sp {propose*create-test-plan
+    (state <s> ^name test-avl -^step1)
+-->
+    (<s> ^operator <o> + =)
+    (<o> ^name create-test-plan)}
+
+sp {propose*step-one
+    (state <s> ^name test-avl ^example1throug10-is <e> ^step1 <x> -^step1-is)
+    (<x> ^name <xname> ^element <xelement>)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name <xname> ^element <xelement> ^set <e> ^return-to step1-is)}
+
+sp {propose*lookup
+    (state <s> ^name test-avl ^step1-is <set> ^to-lookup <key> -^answer-is)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name lookup ^element <key> ^set <set> ^return-to answer-is)}

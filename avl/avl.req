@@ -54,6 +54,7 @@ rebalance(?t) ==
   if slope(?t) = ~2 then
     shiftleft(?t) else (
     if slope(?t) = 2 then
+#      ERROR else # how do I design a test that drives control flow here?
       shiftright(?t) else
       ?t)
 
@@ -72,12 +73,12 @@ rollright(Bin(?h, ?x, Bin(?lh, ?lx, ?ll, ?lr), ?r)) ==
 # shiftright like this (in 1962), your initials might be on the name,
 # rather than Adelson-Velskii and Landis.
 
-shiftleft(Bin(?h, ?x, ?l, ?r)) == rollleft( if slope(?r) = 1 then
+shiftleft(Bin(?h, ?x, ?l, ?r)) == rollleft( if slope(?r) = 1 then # SHIFTLEFTERROR else # how do I drive control flow here?
                                               makenode(?x, ?l, rollright(?r)) else
                                               Bin(?h, ?x, ?l, ?r) )
-shiftright(Bin(?h, ?x, ?l, ?r)) == rollright( if slope(?r) = ~1 then
-                                                makenode(?x, ?l, rollright(?r)) else
-                                                Bin(?h, ?x, ?l, ?r) )
+#shiftright(Bin(?h, ?x, ?l, ?r)) == rollright( if slope(?r) = ~1 then
+#                                                makenode(?x, ?l, rollright(?r)) else
+#                                                Bin(?h, ?x, ?l, ?r) )
 
 # Aside: Remember, Req uses ~ for unary minus.
 
@@ -122,8 +123,9 @@ join(Bin(?lh, ?lx, ?ll, ?lr), ?r) ==
 
 last(?x, Nil) ==
   ?x
-last(?x, Bin(?rh, ?rx, ?rl, ?rr)) ==
+last(?x, Bin(?rh, ?rx, ?rl, ?rr)) == 
   last(?rx, ?rr)
+   
 
 # To define init, we follow the same path, but build the answer up as we return
 # from that path using the avl smart constructor.
@@ -159,8 +161,7 @@ emptySet == Nil
 
 checkInvariant(Nil) == Ok(0)
 checkInvariant(Bin(?h, ?x, ?l, ?r)) == checkHelper1(checkInvariant(?l), checkInvariant(?r), ?h)
-checkHelper1(Ok(?lh), Ok(?rh), ?h) == checkhelper2(?lh - ?rh, max(?lh, ?rh) + 1, ?h)
-checkHelper2(1, ?h, ?h) == Ok(?h)
-checkHelper2(0, ?h, ?h) == Ok(?h)
-checkHelper2(~1, ?h, ?h) == Ok(?h)
+checkHelper1(Ok(?lh), Ok(?rh), ?h) == checkHelper2(?lh - ?rh, max(?lh, ?rh) + 1, ?h)
+checkHelper2(?x, ?h, ?h) == if ?x >= ~1 then (if ?x <= 1 then Ok(?h) else NotOkSlope(?x)) else NotOkSlope(?x)
+
 
