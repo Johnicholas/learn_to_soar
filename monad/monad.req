@@ -1,0 +1,85 @@
+# This is based on an example in
+# Fischer, Kisleyov, and Shan's "Purely Functional Lazy Non-deterministic Programming"
+
+# part of the point of this is modularity.
+# we assume that there are, somewhere else, rules for:
+#   return
+#   bind
+#   mzero
+#   mplus
+
+# perm is supposed to take a list and (depending on the monadplus)
+# generate all the permutations of that list,
+# or find at most one permutation of that list,
+# or something like that.
+
+# the set of permutations of the empty list
+# is the empty set
+perm(Nil) == return(Nil)
+
+# to describe the set of permutations of a nonempty list,
+# first assume that we have the set of permutations of the tail
+# then insert the remaining element at every point.
+#
+# in haskell do-notation:
+#
+#  do
+#    ys <- perm(xs)
+#    zs <- insert(x, ys)
+#    return zs
+#
+# desugared:
+#
+#   bind(perm(xs), \ys -> bind(insert(x, ys), \zs -> return zs))
+#
+# closure converted:
+#
+apply(BindHelper2, ?zs) == return(?zs)
+apply(BindHelper1(?x), ?ys) == bind(insert(?x, ?ys), BindHelper2)
+perm(Cons(?x, ?xs)) == bind(perm(?xs), BindHelper1(?x))
+
+# to insert an element into a list at all locations
+# is to either put it at the front,
+# or somewhere in the tail
+insert(?x, ?xs) == mplus(return(Cons(?x, ?xs)), insertWithin(?x, ?xs))
+
+# to insert something within the tail just fails if the tail is empty
+insertWithin(?x, Nil) == mzero()
+
+# but if it's nonempty, then we can recurse
+#
+# in Haskell:
+#
+# do zs <- insert x ys 
+#    return (y:zs)
+#
+# desugared:
+#
+# bind(insert(x, ys), \zs -> return (y:zs)
+#
+# closure converted:
+#
+insertWithin(?x, Cons(?y, ?ys)) == bind(insert(?x, ?ys), InsertWithinHelper(?y))
+apply(InsertWithinHelper(?y), ?zs) == return(Cons(?y, ?zs))
+
+
+# here are the rules for the list monadplus
+mzero() == LolNil
+return(?x) == LolCons(?x, LolNil)
+mplus(LolNil, ?ys) == ?ys
+mplus(LolCons(?x, ?xs), ?ys) == LolCons(?x, mplus(?xs, ?ys))
+bind(LolNil, ?f) == LolNil
+bind(LolCons(?x, ?xs), ?f) == mplus(apply(?f, ?x), bind(?xs, ?f))
+# note that bind uses apply, but doesn't define it - that's for the client of the monad to do.
+
+## from Sebastian Fischer's "Reinventing Haskell Backtracking"
+#anyof(Nil) == mzero
+#anyof(Cons(?x, ?xs)) == mplus(return(?x), anyof(?xs))
+#
+## a test
+#anyof(Cons(foo, Cons(bar, Cons(baz, Nil))))
+
+# a test
+perm(Cons(foo, Cons(bar, Cons(baz, Nil))))
+
+
