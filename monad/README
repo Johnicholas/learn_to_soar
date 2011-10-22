@@ -1,0 +1,9 @@
+This is me trying to learn to transliterate Haskell to C++.
+
+In particular, it's based on an example in 
+Fischer, Kiselyov, and Shan's "Purely Functional Lazy Non-deterministic Programming".
+
+It completely neglects all the non-strict / sharing aspects of the Haskell code.
+
+
+

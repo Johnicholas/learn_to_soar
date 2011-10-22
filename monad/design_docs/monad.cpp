@@ -12,7 +12,7 @@ protected:
 class List {
 public:
   virtual ListOfLists insertWithin(Element x)= 0;
-  virtual ListOfLists perm()= 0;
+  virtual ListOfLists perms()= 0;
 
   // Destructor.
   virtual ~List() {}
@@ -39,9 +39,9 @@ public:
   }
 
   // From List.
-  // There is only one permutation of the empty list - the empty list.
-  // perm(Nil) == return(Nil)
-  ListOfLists perm() {
+  // There is only one permsutation of the empty list - the empty list.
+  // perms(Nil) == return(Nil)
+  ListOfLists perms() {
     List nil= new Nil();
     return mreturn(nil);
   }
@@ -81,8 +81,8 @@ public:
     return recursive_result->bind(and_then);
   }
 
-  // perm(Cons(?x, ?xs)) == bind(perm(?xs), BindCallback1(?x))
-  ListOfLists perm() {
+  // perms(Cons(?x, ?xs)) == bind(perms(?xs), BindCallback1(?x))
+  ListOfLists perms() {
 
     // apply(BindCallback1(?x), ?ys) == bind(insert(?x, ?ys), BindCallback2)
     class BindCallback1 : public Closure {
@@ -110,7 +110,7 @@ public:
       Element x;
     } step_two;
 
-    return xs.perm()->bind(step_two);
+    return xs.perms()->bind(step_two);
   }
 
 private:
@@ -194,10 +194,5 @@ private:
 
 
 
-// here are the rules for the list monadplus
-
-
-# a test
-perm(Cons(foo, Cons(bar, Cons(baz, Nil))))
 
 
