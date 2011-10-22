@@ -1,0 +1,16 @@
+This is me trying to learn to transliterate a particular elegant functional-programming
+algorithm for enumerating all permutations into Soar.
+
+The example is from
+Fischer, Kiselyov, and Shan's "Purely Functional Lazy Non-deterministic Programming".
+
+I'm not trying to model the call-by-need aspects of the Haskell code at all.
+
+To convince myself that that it was working,
+I ran debug.soar under jsoar for 347 decisions,
+and then inspected S1 with:
+print --depth 10 S1
+
+The answer is a list-of-lists containing all permutations of "foo bar baz".
+
+TODO: a better convince-me-its-working procedure

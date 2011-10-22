@@ -1,0 +1,18 @@
+
+source perms.soar
+
+sp {initialize
+    (state <s> ^superstate nil)
+-->
+    (<s> ^name test-perms ^foo-bar-baz <foobarbaz>)
+    (<foobarbaz> ^first foo ^rest <barbaz>)
+    (<barbaz> ^first bar ^rest <baz>)
+    (<baz> ^first baz ^rest nil)}
+
+sp {propose*perms
+    (state <s> ^name test-perms ^foo-bar-baz <l> -^answer)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name perms ^list <l> ^return-to answer)}
+
+# TODO: some test for passing?
