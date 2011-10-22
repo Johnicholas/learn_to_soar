@@ -3,7 +3,12 @@ This is me trying to learn to transliterate Haskell to C++.
 In particular, it's based on an example in 
 Fischer, Kiselyov, and Shan's "Purely Functional Lazy Non-deterministic Programming".
 
-It completely neglects all the non-strict / sharing aspects of the Haskell code.
+It completely neglects all the call-by-need aspects of the Haskell code,
+which is a substantial aspect, and it doesn't use templates at all,
+though templates might be able to capture a significant fraction of what's going on in
+the Haskell type system.
+
+
 
 
 
