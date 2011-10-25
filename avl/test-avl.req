@@ -27,19 +27,18 @@ checkInvariant(insert(Test(3), example1234))
 checkInvariant(insert(Test(4), example1234))
 checkInvariant(insert(Test(5), example1234))
 
-
 #example1through10 := through(1, 10)
 example1through10 :=
-		  B1(4, Test(7),
-		    B2(2, Test(9),
-		      B3(1, Test(10), Nil, Nil),
-		      B4(1, Test(8), Nil, Nil)),
-		    B5(3, Test(3),
-		      B6(2, Test(5),
-		        B7(1, Test(6), Nil, Nil),
-		        B8(1, Test(4), Nil, Nil)),
-		      B9(2, Test(2), Nil,
-		        B10(1, Test(1), Nil, Nil))))
+		  Bin(4, Test(7),
+		    Bin(2, Test(9),
+		      Bin(1, Test(10), Nil, Nil),
+		      Bin(1, Test(8), Nil, Nil)),
+		    Bin(3, Test(3),
+		      Bin(2, Test(5),
+		        Bin(1, Test(6), Nil, Nil),
+		        Bin(1, Test(4), Nil, Nil)),
+		      Bin(2, Test(2), Nil,
+		        Bin(1, Test(1), Nil, Nil))))
 
 checkInvariant(example1through10)
 
@@ -59,3 +58,42 @@ backDown(?op, ?arg, ?i, ?n) ==
     ?arg
 
 backDown(delete, example1through10, 1, 11)
+
+# Perms is based on the first example in
+# Fischer, Kisleyov, and Shan's "Purely Functional Lazy Non-deterministic Programming"
+
+perm(Nil) == return(Nil)
+perm(Cons(?x, ?xs)) == bind(perm(?xs), BindHelper1(?x))
+apply(BindHelper1(?x), ?ys) == bind(permInsert(?x, ?ys), BindHelper2)
+apply(BindHelper2, ?zs) == return(?zs)
+
+permInsert(?x, ?xs) == mplus(return(Cons(?x, ?xs)), permInsertWithin(?x, ?xs))
+permInsertWithin(?x, Nil) == mzero()
+permInsertWithin(?x, Cons(?y, ?ys)) == bind(permInsert(?x, ?ys), PermInsertWithinHelper(?y))
+apply(PermInsertWithinHelper(?y), ?zs) == return(Cons(?y, ?zs))
+
+mzero() == LolNil
+return(?x) == LolCons(?x, LolNil)
+mplus(LolNil, ?ys) == ?ys
+mplus(LolCons(?x, ?xs), ?ys) == LolCons(?x, mplus(?xs, ?ys))
+bind(LolNil, ?f) == LolNil
+bind(LolCons(?x, ?xs), ?f) == mplus(apply(?f, ?x), bind(?xs, ?f))
+# note that bind uses apply, but doesn't define it - that's for the client of the monad to do.
+
+# a test
+perm(Cons(foo, Cons(bar, Cons(baz, Nil))))
+
+listToSet(Nil) == emptySet
+listToSet(Cons(?x, ?xs)) == insert(?x, listToSet(?xs))
+apply(CheckListToSet, ?x) == return(checkInvariant(listToSet(?x)))
+
+inputs : perm(Cons(Test(1), Cons(Test(2), Cons(Test(3), Nil))))
+
+outputs : bind(perm(Cons(Test(1), Cons(Test(2), Cons(Test(3), Nil)))), CheckListToSet)
+
+# this is the buggy one
+checkInvariant(listToSet(Cons(Test(2), Cons(Test(3), Cons(Test(1), Nil)))))
+
+# trace(listToSet(Cons(Test(2), Cons(Test(3), Cons(Test(1), Nil)))))
+
+

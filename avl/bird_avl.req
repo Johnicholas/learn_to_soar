@@ -34,7 +34,7 @@ height(Bin(?h, ?x, ?l, ?r)) ==
 # on construction.
 
 avl(?x, ?l, ?r) ==
-  rebalance(makenode(?x, ?l, ?r))
+  rebalance(?x, ?l, ?r)
 
 # The notion of balanced that AVL trees maintain is that their "slope"
 # is either 0, 1, or -1. The slope of a tree is the difference
@@ -50,12 +50,16 @@ slope(Bin(?h, ?x, ?l, ?r)) ==
 # of just 0, 1, or -1. We will define functions to rebalance each
 # case.
 
-rebalance(?t) ==
-  if slope(?t) = ~2 then
-    shiftleft(?t) else (
-    if slope(?t) = 2 then
-      shiftright(?t) else
-      ?t)
+rebalance(?x, ?l, ?r) == rebalanceHelper(?x, ?l, ?r, height(?l), height(?r))
+rebalanceHelper(?x, ?l, ?r, ?hl, ?hr) ==
+  if (?hr + 1) < ?hl then (
+     rollright( if slope(?l) < 0 then makenode(?x, rollleft(?l), ?r) else
+                                      makenode(?x, ?l, ?r))
+  ) else (if (?hl + 1) < ?hr then (
+      rollleft( if 0 < slope(?r) then makenode(?x, ?l, rollright(?r)) else
+                                      makenode(?x, ?l, ?r))
+    ) else makenode(?x, ?l, ?r)
+  )
 
 # Note: Req uses ~ for unary minus. It is one of the very few bits of syntax you
 # have to learn to use it.
@@ -66,20 +70,6 @@ rollleft(Bin(?h, ?x, ?l, Bin(?rh, ?rx, ?rl, ?rr))) ==
   makenode(?rx, makenode(?x, ?l, ?rl), ?rr)
 rollright(Bin(?h, ?x, Bin(?lh, ?lx, ?ll, ?lr), ?r)) ==
   makenode(?lx, ?ll, makenode(?x, ?lr, ?r))
-
-# Using rollleft and rollright, we can define shiftleft and shiftright.
-# This is a clever thing to do - if you had defined shiftleft and
-# shiftright like this (in 1962), your initials might be on the name,
-# rather than Adelson-Velskii and Landis.
-
-shiftright(Bin(?h, ?x, ?l, ?r)) == rollright( if slope(?l) = ~1 then
-                                              makenode(?x, rollleft(?l), ?r) else
-                                              Bin(?h, ?x, ?l, ?r) )
-shiftleft(Bin(?h, ?x, ?l, ?r)) == rollleft( if slope(?r) = 1 then
-                                                makenode(?x, ?l, rollright(?r)) else
-                                                Bin(?h, ?x, ?l, ?r) )
-
-# Aside: Remember, Req uses ~ for unary minus.
 
 # So now that we have avl defined, we can use it to balance an unbalanced tree.
 
