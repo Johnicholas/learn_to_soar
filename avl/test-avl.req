@@ -91,9 +91,10 @@ inputs : perm(Cons(Test(1), Cons(Test(2), Cons(Test(3), Nil))))
 
 outputs : bind(perm(Cons(Test(1), Cons(Test(2), Cons(Test(3), Nil)))), CheckListToSet)
 
-# this is the buggy one
+# this was the buggy one
 checkInvariant(listToSet(Cons(Test(2), Cons(Test(3), Cons(Test(1), Nil)))))
 
 # trace(listToSet(Cons(Test(2), Cons(Test(3), Cons(Test(1), Nil)))))
 
-
+listThrough(?i, ?n) == if ?i <= ?n then Cons(Test(?i), listThrough(?i + 1, ?n)) else Nil
+bind(perm(listThrough(1,7)), CheckListToSet)
