@@ -73,12 +73,12 @@ rollright(Bin(?h, ?x, Bin(?lh, ?lx, ?ll, ?lr), ?r)) ==
 # shiftright like this (in 1962), your initials might be on the name,
 # rather than Adelson-Velskii and Landis.
 
-shiftleft(Bin(?h, ?x, ?l, ?r)) == rollleft( if slope(?r) = 1 then # SHIFTLEFTERROR else # how do I drive control flow here?
-                                              makenode(?x, ?l, rollright(?r)) else
+shiftright(Bin(?h, ?x, ?l, ?r)) == rollright( if slope(?l) = ~1 then
+                                              makenode(?x, rollleft(?l), ?r) else
                                               Bin(?h, ?x, ?l, ?r) )
-#shiftright(Bin(?h, ?x, ?l, ?r)) == rollright( if slope(?r) = ~1 then
-#                                                makenode(?x, ?l, rollright(?r)) else
-#                                                Bin(?h, ?x, ?l, ?r) )
+shiftleft(Bin(?h, ?x, ?l, ?r)) == rollleft( if slope(?r) = 1 then
+                                                makenode(?x, ?l, rollright(?r)) else
+                                                Bin(?h, ?x, ?l, ?r) )
 
 # Aside: Remember, Req uses ~ for unary minus.
 
