@@ -1,0 +1,358 @@
+# This is based on the first example in
+# Fischer, Kisleyov, and Shan's
+# "Purely Functional Lazy Non-deterministic Programming"
+
+# perms is an operator that takes a list and returns a list-of-lists, all the permutations of the input.
+sp {perms*initialize
+   (state <s> ^superstate.operator <o>)
+   (<o> ^name perms ^list <l> ^return-to <r>)
+-->
+  (<s> ^name perms ^list <l> ^return-to <r>)}
+
+# in the perms state,
+# if the list is nil,
+# then propose the return operator
+# perms(Nil) == return(Nil)
+sp {perms*nil*propose*return
+    (state <s> ^name perms ^list nil)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name return ^list nil ^return-to answer)}
+
+# in the perms state,
+# if the list is non-nil,
+# and the recursion has not been done,
+# then propose recursing on the tail
+# perms(Cons(?x, ?xs)) == bind(perms(?xs), BindHelper1(?x))
+sp {perms*non-nil*propose*bind
+    (state <s> ^name perms ^list.rest <xs> -^perms-result)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name perms ^list <xs> ^return-to perms-result)}
+
+# in the perms state,
+# if the recursion has completed,
+# then propose binding the result
+# perms(Cons(?x, ?xs)) == bind(perms(?xs), BindHelper1(?x))
+sp {perms*propose*bind
+    (state <s> ^name perms ^list.first <x> ^perms-result <r> -^answer)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name bind ^lol <r> ^closure.bind-helper-1 <x> ^return-to answer)}
+
+# in the perms state,
+# if the bind has completed,
+# copy the result to the superstate
+sp {perms*done
+    (state <s> ^name perms ^superstate <ss> ^return-to <r> ^answer <a>)
+-->
+    (<ss> ^<r> <a>)}
+
+# apply is an operator that takes a closure and a list, and returns a list-of-lists
+sp {apply*initialize
+    (state <s> ^superstate.operator <o>)
+    (<o> ^name apply ^closure <c> ^list <l> ^return-to <r>)
+-->
+    (<s> ^name apply ^closure <c> ^list <l> ^return-to <r>)}
+
+# in the apply state,
+# if the closure is bind-helper-1,
+# and the perms-insert is not done
+# then propose the perms-insert operator
+# apply(BindHelper1(?x), ?ys) == bind(perms-insert(?x, ?ys), BindHelper2)
+sp {apply*bind-helper-1*propose*perms-insert
+    (state <s> ^name apply ^closure.bind-helper-1 <x> ^list <ys> -^perms-insert-result)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name perms-insert ^element <x> ^list <ys> ^return-to perms-insert-result)}
+
+# in the apply state,
+# if the perms-insert is done,
+# but the bind is not done,
+# then propose the bind operator
+# apply(BindHelper1(?x), ?ys) == bind(perms-insert(?x, ?ys), BindHelper2)
+sp {apply*bind-helper-1*propose*bind
+    (state <s> ^name apply ^closure.bind-helper-1 ^perms-insert-result <ir> -^answer)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name bind ^lol <ir> ^closure bind-helper-2 ^return-to answer)}
+
+# in the apply state,
+# if the closure is bind-helper-2,
+# and the return operator is not done
+# then propose the return operator
+# apply(BindHelper2, ?zs) == return(?zs)
+sp {apply*bind-helper-2*propose*return
+    (state <s> ^name apply ^closure bind-helper-2 ^list <zs> -^answer)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name return ^list <zs> ^return-to answer)}
+
+# in the apply state,
+# if the closure is perms-insert-within-helper,
+# and the return operator is not done
+# then propose the return operator
+# apply(Perms-InsertWithinHelper(?y), ?zs) == return(Cons(?y, ?zs))
+sp {apply*perms-insert-within-helper*propose*return
+    (state <s> ^name apply ^closure.perms-insert-within-helper <y> ^list <zs> -^answer)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name return ^list <qons> ^return-to answer)
+    (<qons> ^first <y> ^rest <zs>)}
+
+# in the apply state,
+# once we have the answer,
+# copy the result to the superstate
+sp {apply*done
+    (state <s> ^name apply ^superstate <ss> ^return-to <r> ^answer <a>)
+-->
+    (<ss> ^<r> <a>)}
+
+# perms-insert is an operator that takes an element and a list and returns a list-of-lists
+sp {perms-insert*initialize
+    (state <s> ^superstate.operator <o>)
+    (<o> ^name perms-insert ^element <e> ^list <l> ^return-to <r>)
+-->
+    (<s> ^name perms-insert ^element <e> ^list <l> ^return-to <r>)}
+
+# in the perms-insert state,
+# if the return has not been done,
+# then propose the return operator (indifferent preference)
+# perms-insert(?x, ?xs) == mplus(return(Cons(?x, ?xs)), perms-insertWithin(?x, ?xs))
+
+## THIS DOES NOT WORK, DUE TO SOME O-SUPPORT NONSENSE MAYBE?
+#sp {perms-insert*propose*return
+#    (state <s> ^name perms-insert ^element <x> ^list <xs> -^return-result)
+#-->
+#    (<s> ^operator <o> + =)
+#    (<o> ^name return ^list <cons> ^return-to return-result)
+#    (<cons> ^first <x> ^rest <xs>)} 
+
+sp {perms-insert*propose*cons
+    (state <s> ^name perms-insert ^element <x> ^list <xs> -^cons-result)
+-->
+    (<s> ^operator <o> + =)
+    (<o> ^name cons)}
+
+sp {perms-insert*apply*cons
+    (state <s> ^name perms-insert ^operator.name cons ^element <x> ^list <xs>)
+-->
+    (<s> ^cons-result <cons>)
+    (<cons> ^first <x> ^rest <xs>)}
+
+sp {perms-insert*propose*return
+    (state <s> ^name perms-insert ^cons-result <c> -^return-result)
+-->
+    (<s> ^operator <o> + =)
+    (<o> ^name return ^list <c> ^return-to return-result)}
+
+# in the perms-insert state,
+# if the perms-insert-within has not been done
+# then propose the perms-insert-within operator (indifferent preference)
+# perms-insert(?x, ?xs) == mplus(return(Cons(?x, ?xs)), perms-insertWithin(?x, ?xs))
+sp {perms-insert*propose*perms-insert-within
+    (state <s> ^name perms-insert ^element <x> ^list <xs> -^perms-insert-within-result)
+-->
+    (<s> ^operator <o> + =)
+    (<o> ^name perms-insert-within ^element <x> ^list <xs> ^return-to perms-insert-within-result)}
+
+# in the perms-insert state,
+# if the return and the perms-insert-within have been done
+# but the mplus has not been done
+# then propose the mplus operator
+# perms-insert(?x, ?xs) == mplus(return(Cons(?x, ?xs)), perms-insertWithin(?x, ?xs))
+sp {perms-insert*propose*mplus
+    (state <s> ^name perms-insert ^return-result <l> ^perms-insert-within-result <r> -^answer)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name mplus ^left <l> ^right <r> ^return-to answer)}
+
+# in the perms-insert state,
+# if the mplus operator is done,
+# copy the result to the superstate
+sp {perms-insert*done
+    (state <s> ^name perms-insert ^superstate <ss> ^return-to <r> ^answer <a>)
+-->
+    (<ss> ^<r> <a>)}
+
+# perms-insert-within is an operator that takes an element and a list and returns a list-of-lists
+sp {perms-insert-within*initialize
+    (state <s> ^superstate.operator <o>)
+    (<o> ^name perms-insert-within ^element <e> ^list <l> ^return-to <r>)
+-->
+    (<s> ^name perms-insert-within ^element <e> ^list <l> ^return-to <r>)}
+
+# in the perms-insert-within state,
+# if the list is nil,
+# and the mzero operator is not done,
+# then propose the mzero operator
+# perms-insertWithin(?x, Nil) == mzero()
+sp {perms-insert-within*propose*mzero
+    (state <s> ^name perms-insert-within ^list nil -^answer)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name mzero ^return-to answer)}
+
+# in the perms-insert-within-state,
+# if the list is not nil,
+# and the recursive perms-insert is not done
+# then propose the perms-insert operator
+# perms-insertWithin(?x, Cons(?y, ?ys)) == bind(perms-insert(?x, ?ys), Perms-InsertWithinHelper(?y))
+sp {perms-insert-within*propose*perms-insert
+    (state <s> ^name perms-insert-within ^element <x> ^list.rest <ys> -^perms-insert-result)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name perms-insert ^element <x> ^list <ys> ^return-to perms-insert-result)}
+
+# in the perms-insert-within state,
+# if the list is not nil,
+# and the recursive perms-insert is done,
+# then propose the bind operator
+# perms-insertWithin(?x, Cons(?y, ?ys)) == bind(perms-insert(?x, ?ys), Perms-InsertWithinHelper(?y))
+sp {perms-insert-within*propose*bind
+    (state <s> ^name perms-insert-within ^element <x> ^list.first <y> ^perms-insert-result <ir> -^answer)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name bind ^lol <ir> ^closure.perms-insert-within-helper <y> ^return-to answer)}
+
+# in the perms-insert-within state,
+# if we have the answer,
+# copy the result to the superstate
+sp {perms-insert-within*done
+    (state <s> ^name perms-insert-within ^superstate <ss> ^return-to <r> ^answer <a>)
+-->
+    (<ss> ^<r> <a>)}
+
+# To implement the mzero operator,
+# build a lol-nil node
+# mzero() == LolNil
+sp {mzero*apply
+    (state <s> ^operator <o>)
+    (<o> ^name mzero ^return-to <r>)
+-->
+    (<s> ^<r> nil)}
+
+# to implement the return operator,
+# build a singleton list-of-lists 
+# return(?x) == LolCons(?x, LolNil)
+sp {return*apply
+    (state <s> ^operator <o>)
+    (<o> ^name return ^list <l> ^return-to <r>)
+-->
+    (<s> ^<r> <lolcons>)
+    (<lolcons> ^first <l> ^rest nil)}
+
+# mplus is an operator that takes two lists-of-lists and returns a list-of-lists
+sp {mplus*initialize
+    (state <s> ^superstate.operator <o>)
+    (<o> ^name mplus ^left <l> ^right <r> ^return-to <return-to>)
+-->
+    (<s> ^name mplus ^left <l> ^right <r> ^return-to <return-to>)}
+
+
+# in the mplus state
+# if the left lol is a lol_nil
+# then the answer is the right lol
+# mplus(LolNil, ?ys) == ?ys
+sp {mplus*nil
+   (state <s> ^name mplus ^left nil ^right <ys>)
+-->
+   (<s> ^answer <ys>)}
+
+# in the mplus state
+# if the left lol is a lol_cons
+# and the recursive mplus is not yet done
+# then propose the recursive mplus operator
+# mplus(LolCons(?x, ?xs), ?ys) == LolCons(?x, mplus(?xs, ?ys))
+sp {mplus*non-nil*propose*mplus
+    (state <s> ^name mplus ^left.rest <xs> ^right <ys> -^mplus-result)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name mplus ^left <xs> ^right <ys> ^return-to mplus-result)}
+
+# in the mplus state
+# if the recursive mplus is done
+# but the lol cons is not yet built
+# then propose building the lol cons
+# mplus(LolCons(?x, ?xs), ?ys) == LolCons(?x, mplus(?xs, ?ys))
+sp {mplus*non-nil*propose*cons
+    (state <s> ^name mplus ^left.first <x> ^mplus-result <mr> -^answer)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name cons)}
+
+sp {mplus*non-nil*apply*cons
+    (state <s> ^name mplus ^operator.name cons ^left.first <x> ^mplus-result <xs>)
+-->
+    (<s> ^answer <cons>)
+    (<cons> ^first <x> ^rest <xs>)}
+
+# in the mplus state
+# once we know the answer
+# copy the answer up to the superstate
+sp {mplus*done
+    (state <s> ^name mplus ^superstate <ss> ^return-to <r> ^answer <a>)
+-->
+    (<ss> ^<r> <a>)}
+
+# bind is an operator that takes a list of lists and a closure
+sp {bind*initialize
+    (state <s> ^superstate.operator <o>)
+    (<o> ^name bind ^lol <l> ^closure <c> ^return-to <r>)
+-->
+    (<s> ^name bind ^lol <l> ^closure <c> ^return-to <r>)}
+
+# in the bind state,
+# if the list of lists is lol nil
+# then the answer is also (lol) nil
+# bind(LolNil, ?f) == LolNil
+sp {bind*nil
+    (state <s> ^name bind ^lol nil)
+-->
+    (<s> ^answer nil)}
+
+# in the bind state
+# if the lists of lists is a lol cons
+# and we do not have the result of the apply operator
+# then propose the apply operator (indifferent)
+# bind(LolCons(?x, ?xs), ?f) == mplus(apply(?f, ?x), bind(?xs, ?f))
+sp {bind*non-nil*propose*apply
+    (state <s> ^name bind ^lol.first <x> ^closure <q> -^apply-result)
+-->
+    (<s> ^operator <o> + =)
+    (<o> ^name apply ^closure <q> ^list <x> ^return-to apply-result)}
+
+# in the bind state
+# if the list of lists is a lol bind
+# and we do not have the result of the bind operator
+# then propose the bind operator (indifferent)
+# bind(LolCons(?x, ?xs), ?f) == mplus(apply(?f, ?x), bind(?xs, ?f))
+sp {bind*non-nil*propose*bind
+    (state <s> ^name bind ^lol.rest <xs> ^closure <q> -^bind-result)
+-->
+    (<s> ^operator <o> + =)
+    (<o> ^name bind ^closure <q> ^lol <xs> ^return-to bind-result)}
+
+# in the bind state,
+# if we have the result of the apply operator
+# and the result of the bind operator
+# then propose the mplus operator
+# bind(LolCons(?x, ?xs), ?f) == mplus(apply(?f, ?x), bind(?xs, ?f))
+sp {bind*non-nil*propose*mplus
+    (state <s> ^name bind ^apply-result <ar> ^bind-result <br> -^answer)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name mplus ^left <ar> ^right <br> ^return-to answer)}
+
+# in the bind state,
+# once we have the answer
+# copy the answer up to the superstate
+sp {bind*done
+    (state <s> ^name bind ^superstate <ss> ^return-to <r> ^answer <a>)
+-->
+    (<ss> ^<r> <a>)}
+
+
+
+
+
