@@ -88,17 +88,30 @@ sp {apply*bind-helper-2*propose*return
     (<s> ^operator <o> +)
     (<o> ^name return ^list <zs> ^return-to answer)}
 
-# in the apply state,
-# if the closure is perms-insert-within-helper,
-# and the return operator is not done
-# then propose the return operator
+
+## in the apply state,
+## if the closure is perms-insert-within-helper,
+## and the return operator is not done
+## then propose consing the y with the zs operator
 # apply(Perms-InsertWithinHelper(?y), ?zs) == return(Cons(?y, ?zs))
-sp {apply*perms-insert-within-helper*propose*return
-    (state <s> ^name apply ^closure.perms-insert-within-helper <y> ^list <zs> -^answer)
+sp {apply*perms-insert-within-helper*propose*cons
+    (state <s> ^name apply ^closure.perms-insert-within-helper <y> ^list <zs> -^cons-result)
 -->
     (<s> ^operator <o> +)
-    (<o> ^name return ^list <qons> ^return-to answer)
-    (<qons> ^first <y> ^rest <zs>)}
+    (<o> ^name cons ^element <y> ^list <zs> ^return-to cons-result)}
+
+sp {apply*perms-insert-within-helper*apply*cons
+    (state <s> ^name apply ^operator <o>)
+    (<o> ^name cons ^element <y> ^list <zs> ^return-to <r>)
+-->
+    (<s> ^<r> <cons>)
+    (<cons> ^first <y> ^rest <zs>)}
+
+sp {apply*perms-insert-within-helper*propose*return
+    (state <s> ^name apply ^cons-result <cr> -^answer)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name return ^list <cr> ^return-to answer)}
 
 # in the apply state,
 # once we have the answer,

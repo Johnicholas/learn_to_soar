@@ -623,12 +623,17 @@ sp {shift-right*elaborate*left-left-height*non-nil
 sp {shift-right*elaborate*left-right-height*nil
     (state <s> ^name shift-right ^tree.left.right nil)
 -->
-    (<s> ^right-right-height 0)}
+    (<s> ^left-right-height 0)}
 
 sp {shift-right*elaborate*left-right-height*non-nil
     (state <s> ^name shift-right ^tree.left.right.height <h>)
 -->
     (<s> ^left-right-height <h>)}
+
+sp {shift-right*elaborate*slope
+    (state <s> ^name shift-right ^left-left-height <llh> ^left-right-height <lrh>)
+-->
+    (<s> ^slope (- <llh> <lrh>))}
 
 # what to do if slope isn't negative one?
 # simply roll the tree right
@@ -648,4 +653,31 @@ sp {shift-right*done
 -->
     (<ss> ^<r> <a>)}
 
-# TODO: roll-right
+##################### roll-right
+
+sp {roll-right*initialize
+    (state <s> ^superstate.operator <o>)
+    (<o> ^name roll-right ^tree <t> ^return-to <r>)
+-->
+    (<s> ^name roll-right ^tree <t> ^return-to <r>)}
+
+sp {roll-right*propose*make-node-one
+    (state <s> ^name roll-right ^tree <t> -^node-one)
+    (<t> ^element <x> ^left <l> ^right <r>)
+    (<l> ^element <lx> ^left <ll> ^left <lr>)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name make-node ^element <x> ^left <lr> ^right <r> ^return-to node-one)}
+
+sp {roll-right*propose*make-answer
+    (state <s> ^name roll-right ^tree.left <l> ^node-one <n> -^answer)
+    (<l> ^element <lx> ^left <ll>)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name make-node ^element <lx> ^left <ll> ^right <n> ^return-to answer)}
+
+sp {roll-right*done
+    (state <s> ^name roll-right ^superstate <ss> ^return-to <r> ^answer <a>)
+-->
+    (<ss> ^<r> <a>)}
+

@@ -21,11 +21,72 @@ sp {pass*not*nothing
 
 
 
-source example1through10-op-lookup.soar
+source perms.soar
 
-sp {apply*create-test-plan
-    (state <s> ^name test-avl ^operator.name create-test-plan)
+sp {initialize*onetwothree
+    (state <s> ^name test-avl)
 -->
-    (<s> ^step1 <s1> ^to-lookup.test 3 ^answer-should-be nothing)
-    (<s1> ^name delete ^element.test 3)}
+    (<s> ^onetwothree <onetwothree>)
+    (<onetwothree> ^first.test 1 ^rest <twothree>)
+    (<twothree> ^first.test 2 ^rest <three>)
+    (<three> ^first.test 3 ^rest nil)}
+
+sp {propose*perms
+    (state <s> ^name test-avl ^onetwothree <l> -^perms)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name perms ^list <l> ^return-to perms)}
+
+sp {propose*bind
+    (state <s> ^name test-avl ^perms <p> -^bound)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name bind ^lol <p> ^closure list-to-set ^return-to bound)}
+
+sp {apply*list-to-set*propose*list-to-set
+    (state <s> ^name apply ^closure list-to-set ^list <ys> -^answer)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name list-to-set ^list <ys> ^return-to answer)}
+
+sp {list-to-set*initialize
+    (state <s> ^superstate.operator <o>)
+    (<o> ^name list-to-set ^list <xs> ^return-to <r>)
+-->
+    (<s> ^name list-to-set ^list <xs> ^return-to <r>)}
+
+sp {list-to-set*propose*empty-set
+    (state <s> ^name list-to-set -^accumulator)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name empty-set ^return-to accumulator)}
+
+sp {list-to-set*propose*insert
+    (state <s> ^name list-to-set ^list.first <x> ^accumulator <a> -^insert-result)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name insert ^element <x> ^set <a> ^return-to insert-result)}
+
+sp {list-to-set*propose*step
+    (state <s> ^name list-to-set ^list.first <x> ^accumulator <a> ^insert-result <ir>)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name step)}
+
+sp {list-to-set*apply*step
+    (state <s> ^name list-to-set ^operator.name step ^list <l> ^accumulator <a> ^insert-result <ir>)
+    (<l> ^first <x> ^rest <xs>)
+-->
+    (<s> ^list <l> - <xs> ^accumulator <a> - <ir> ^insert-result <ir> -)}
+
+sp {list-to-set*propose*return
+   (state <s> ^name list-to-set ^list nil ^accumulator <a> -^answer)
+-->
+   (<s> ^operator <o> +)
+   (<o> ^name return ^list <a> ^return-to answer)}
+
+sp {list-to-set*done
+   (state <s> ^name list-to-set ^superstate <ss> ^return-to <r> ^answer <a>)
+-->
+   (<ss> ^<r> <a>)}
 

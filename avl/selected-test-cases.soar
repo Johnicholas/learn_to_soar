@@ -457,6 +457,11 @@ sp {list-to-set*done
 -->
    (<ss> ^<r> <a>)}
 
+sp {pass
+    (state <s> ^name test-avl ^bound)
+-->
+    (pass)}
+
 }
 
 
