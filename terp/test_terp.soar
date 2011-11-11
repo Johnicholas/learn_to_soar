@@ -1,0 +1,49 @@
+setup {
+
+source terp.soar
+
+sp {initialize
+    (state <s> ^superstate nil)
+-->
+    (<s> ^name test-terp)}
+
+source terp-numbers.soar
+
+}
+
+#succ := Lam(X, Succ(Var(X)))
+#k := Lam(X, Lam(Y, Var(X)))
+#trace(start(App(succ, App(App(k, Lit(1)), Lit(23)))))
+
+test "start(App(succ, App(App(k, Lit(1)), Lit(23)))) should be 2" {
+
+sp {test-terp*propose*create-term
+    (state <s> ^name test-terp -^term)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name create-term)}
+
+sp {test-terp*apply*create-term
+    (state <s> ^name test-terp ^operator.name create-term)
+-->
+    (<s> ^term.app <a1>)
+    (<a1> ^major.lam <l2> ^minor.app <a3>)
+    (<l2> ^name <x1> ^body.succ.var <x1>)
+    (<a3> ^major.app <a4> ^minor.lit 23)
+    (<a4> ^major.lam <l5> ^minor.lit 1)
+    (<l5> ^name <x2> ^body.lam <l6>)
+    (<l6> ^name <y> ^body.var <x2>)}
+
+sp {test-terp*propose*start
+    (state <s> ^name test-terp ^term <t> -^to-test)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name start ^exp <t> ^return-to to-test)}
+
+sp {test-terp*pass
+    (state <s> ^name test-terp ^to-test 2)
+-->
+    (pass)}
+
+}
+

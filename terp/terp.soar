@@ -1,0 +1,218 @@
+# This is a little lambda-calculus interpreter,
+# basically the first interpreter in Reynolds' Definitional Interpreters paper,
+# but only the var/app/lam pices, not const/cond/letrec.
+#
+# ASSUMPTIONS
+#
+# To do any useful work, the eval operator has to be extended to handle
+# primitives - e.g. numbers, lists, or some other kind of values.
+#
+# PUBLIC
+#
+# start is an operator that takes a lambda term and where to put the result
+# (the name of an augmentation)
+#
+# PRIVATE
+#
+# eval is an operator that takes a lambda term, an environment, and where
+# to put the result. It evaluates that lambda term in that environment,
+# and returns a value.
+#
+# apply is an operator that takes a closure and a value and runs the closure
+# on the value
+#
+# lookup is an operator that takes an environment and a name,
+# and looks up the name in the environment.
+#
+# REPRESENTATION
+#
+# a lambda term is either a ^var, an ^app, or a ^lam.
+# a var has an augmentation ^name leading to a name
+# an app has two augmentations ^major and ^minor leading to lambda terms
+# a lam has two augmentations ^name and ^body leading to a name
+# and a body respectively
+#
+# a environment is either ^empty or ^extend.
+# a nonempty environment has three augmentations ^name, ^value, ^env
+# leading to a name, a lambda term and an environment respectively
+#
+# a ^closure has three augmentations, ^name, ^body, ^env
+
+#################### eval
+
+sp {eval*initialize
+    (state <s> ^superstate.operator <o>)
+    (<o> ^name eval ^term <t> ^env <e> ^return-to <r>)
+-->
+    (<s> ^name eval ^term <t> ^env <e> ^return-to <r>)}
+
+# in prolog, this would be something like:
+# eval(var(Name), Env, Out) :- !,
+#   lookup(Env, Name, Out).
+sp {eval*var*propose*lookup
+    (state <s> ^name eval ^term.var <name> ^env <e> -^answer)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name lookup ^env <e> ^symname <name> ^return-to answer)}
+
+# in prolog, this would be like part of:
+# eval(app(Major, Minor), Env, Out) :- !,
+#   eval(Major, Env, RecurseMajor), % <----- this part
+#   eval(Minor, Env, RecurseMinor),
+#   apply(RecurseMajor, RecurseMinor, Out).
+sp {eval*app*propose*eval*major
+    (state <s> ^name eval ^term.app.major <major> ^env <e> -^major-result)
+-->
+    (<s> ^operator <o> + =)
+    (<o> ^name eval ^term <major> ^env <e> ^return-to major-result)}
+
+# in prolog, this would be like part of:
+# eval(app(Major, Minor), Env, Out) :- !,
+#   eval(Major, Env, RecurseMajor),
+#   eval(Minor, Env, RecurseMinor), % <------ this part
+#   apply(RecurseMajor, RecurseMinor, Out).
+sp {eval*app*propose*eval*minor
+    (state <s> ^name eval ^term.app.minor <minor> ^env <e> -^minor-result)
+-->
+    (<s> ^operator <o> + =)
+    (<o> ^name eval ^term <minor> ^env <e> ^return-to minor-result)}
+
+# in prolog, this would be like part of:
+# eval(app(Major, Minor), Env, Out) :- !,
+#   eval(Major, Env, RecurseMajor),
+#   eval(Minor, Env, RecurseMinor), 
+#   apply(RecurseMajor, RecurseMinor, Out). % <------ this part
+sp {eval*app*propose*apply
+    (state <s> ^name eval ^major-result <c> ^minor-result <v> -^answer)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name apply ^closure <c> ^value <v> ^return-to answer)}
+
+# in prolog, this would be something like the first half of:
+# eval(lam(Name, Body), Env, Out) :- !,
+#   Out = closure(Name, Body, Env).
+sp {eval*lam*propose*make-closure
+    (state <s> ^name eval ^term.lam -^answer)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name make-closure)}
+
+# in prolog, this would be something like the second half of:
+# eval(lam(Name, Body), Env, Out) :- !,
+#   Out = closure(Name, Body, Env).
+sp {eval*lam*apply*make-closure
+    (state <s> ^name eval ^operator.name make-closure ^term.lam <l> ^env <e>)
+    (<l> ^name <n> ^body <b>)
+-->
+    (<s> ^answer.closure <c>)
+    (<c> ^name <n> ^body <b> ^env <e>)}
+
+sp {eval*done
+    (state <s> ^name eval ^superstate <ss> ^return-to <r> ^answer <a>)
+-->
+    (<ss> ^<r> <a>)}
+
+##################### apply
+
+# apply is an operator that takes a closure and a value and runs the closure
+# on the value
+sp {apply*initialize
+    (state <s> ^superstate.operator <o>)
+    (<o> ^name apply ^closure <c> ^value <v> ^return-to <r>)
+-->
+    (<s> ^name apply ^closure <c> ^value <v> ^return-to <r>)}
+
+# in Prolog, this would be something like part of:
+# apply(closure(Name, Body, Env), Value, Out) :- !,
+#   Extended = extend(Name, Value, Env), % <----- this part
+#   eval(Body, Extended, Out).
+sp {apply*propose*make-extend
+    (state <s> ^name apply ^closure.closure <c> ^value <v> -^extended)
+    (<c> ^name <n> ^body <b> ^env <e>)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name make-extend)}
+
+# in Prolog, this would be something like part of:
+# apply(closure(Name, Body, Env), Value, Out) :- !,
+#   Extended = extend(Name, Value, Env), % <----- this part
+#   eval(Body, Extended, Out).
+sp {apply*apply*make-extend
+    (state <s> ^name apply ^operator.name make-extend
+               ^closure.closure <c> ^value <v>)
+    (<c> ^name <n> ^body <b> ^env <env>)
+-->
+    (<s> ^extended.extend <ext>)
+    (<ext> ^name <n> ^value <v> ^env <env>)}
+
+# in Prolog, this would be something like part of:
+# apply(closure(Name, Body, Env), Value, Out) :- !,
+#   Extended = extend(Name, Value, Env),
+#   eval(Body, Extended, Out). % <----- this part
+sp {apply*propose*eval
+    (state <s> ^name apply ^closure.closure.body <b> ^extended <e> -^answer)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name eval ^term <b> ^env <e> ^return-to answer)}
+
+sp {apply*done
+    (state <s> ^name apply ^superstate <ss> ^return-to <r> ^answer <a>)
+-->
+    (<ss> ^<r> <a>)}
+
+###################### lookup
+
+# lookup is an operator that takes an environment and a name,
+# and looks up the name in the environment.
+
+sp {lookup*initialize
+    (state <s> ^superstate.operator <o>)
+    (<o> ^name lookup ^env <e> ^symname <n> ^return-to <r>)
+-->
+    (<s> ^name lookup ^env <e> ^symname <n> ^return-to <r>)}
+
+# In prolog, this would be something like this:
+# lookup(extend(N1, Body, Env), N2, Out) :- N1 = N2, !,
+#   Out = Body.
+sp {lookup*found
+    (state <s> ^name lookup ^env.extend <e> ^symname <n> -^answer)
+    (<e> ^name <n> ^value <v>)
+-->
+    (<s> ^answer <v>)}
+
+# In Prolog, this would be something like this:
+# lookup(extend(N1, Body, Env), N2, Out) :- N1 \= N2, !,
+#   lookup(Env, N2, Out).
+sp {lookup*propose*recurse
+    (state <s> ^name lookup ^env.extend <e1> ^symname <n2> -^answer)
+    (<e1> ^name <n1> <> <n2> ^env <e2>)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name lookup ^env <e2> ^symname <n2> ^return-to answer)}
+
+sp {lookup*done
+    (state <s> ^name lookup ^superstate <ss> ^return-to <r> ^answer <a>)
+-->
+    (<ss> ^<r> <a>)}
+
+##################### start
+
+sp {start*initialize
+    (state <s> ^superstate.operator <o>)
+    (<o> ^name start ^exp <e> ^return-to <r>)
+-->
+    (<s> ^name start ^exp <e> ^return-to <r>)}
+
+# in prolog, this would be something like this:
+# start(Exp, Out) :- !,
+#   eval(Exp, empty, Out).
+sp {start*propose*eval
+    (state <s> ^name start ^exp <exp>)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name eval ^term <exp> ^env empty ^return-to answer)}
+
+sp {start*done
+    (state <s> ^name start ^superstate <ss> ^return-to <r> ^answer <a>)
+-->
+    (<ss> ^<r> <a>)}

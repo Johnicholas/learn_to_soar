@@ -1,0 +1,38 @@
+# This is an extension of the lambda calculus interpreter to add primitive numbers,
+# for testability.
+
+# in prolog this would be something like this:
+# eval(lit(N), Env, Out) :- !,
+#   Out = N.
+sp {eval*lit*propose*make-lit
+    (state <s> ^name eval ^term.lit <n> -^answer)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name make-lit)}
+
+sp {eval*lit*apply*make-lit
+    (state <s> ^name eval ^operator.name make-lit ^term.lit <n>)
+-->
+    (<s> ^answer <n>)}
+
+# In Prolog, this would be something like this:
+# eval(succ(Exp), Env, Out) :- !,
+#   eval(Exp, Env, Recurse), % <-------------- this part
+#   Out is Recurse + 1.
+sp {eval*succ*propose*recurse
+    (state <s> ^name eval ^term.succ <exp> ^env <env> -^succ-result)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name eval ^term <exp> ^env <env> ^return-to succ-result)}
+
+sp {eval*succ*propose*add-one
+    (state <s> ^name eval ^succ-result <r> -^answer)
+-->
+    (<s> ^operator <o> +)
+    (<o> ^name add-one)}
+
+sp {eval*succ*apply*add-one
+    (state <s> ^name eval ^operator.name add-one ^succ-result <r>)
+-->
+    (<s> ^answer (+ <r> 1))}
+   
