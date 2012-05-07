@@ -1,20 +1,45 @@
-# This is a register machine ish interpreter,
+# This is a register machine-ish interpreter,
 # for a lambda calculus with shift and reset,
 # based on reading several papers, but particularly
 # Oleg Kiselyov and Chung-chih Shan's papers.
 #
 # This is probably terrible Soar style.
-
-# registers:
+#
+# Registers:
 #   name -- stores the name of the current state of the machine
 #   exp -- stores the current expression
 #   env -- stores the current environment (an association list)
 #   cont -- stores the current continuation
-#   value -- stores the current value
+#   value -- stores the current value when we're continuing
 #   key -- stores the name we're looking up when we're looking up
 #
-# operators:
+# Operators:
 #   run -- run an expression. returns a value in ^run-done
+#
+# Grammar:
+#   exp can be (<exp> ^int 123) (where 123 could be any number)
+#   exp can be (<exp> ^var <x>) (where <x> could be any variable)
+#   exp can be (<exp> ^reset <exp>)
+#   exp can be (<exp> ^lam <lambda>) 
+#   exp can be (<exp> ^shift <shift>)
+#   exp can be (<exp> ^app <app>)
+#   lambda can be (<lambda> ^name <x> ^exp <exp>)
+#   app can be (<app> ^major <exp> ^minor <exp>) 
+#     (major and minor are by analogy with modus ponens)
+#   shift can be (<shift> ^name <x> ^exp <exp>)
+#   continuations can be hole
+#   continuations can be (<cont> ^appK1 <appK1>)
+#   appK1 can be (<appK1> ^exp <exp> ^env <env> ^cont <cont>)
+#   continuations can be (<cont> ^succK <cont>)
+#   continuations can be (<cont> ^appK2 <appK2>)
+#   appK2 can be (<appK2 ^value <value> ^cont <cont>)
+#   values can be (<value> ^cap <cont>)
+#   values can be (<value> ^clo <clo>)
+#   values can be 123
+#   closures can be (<clo> ^key <x> ^exp <exp> ^env <env>)
+#   envs can be empty
+#   envs can be (<env> ^bind <bind>)
+#   binds can be (<bind> ^key <x> ^value <value> ^env <env>)
 
 #################################### run
 sp {run*initialize
@@ -30,10 +55,6 @@ sp {run*initialize
 #   (keep exp the same and)
 #   set env to empty and
 #   set cont to hole
-#
-# go(run, Exp, _Env, _Cont, _Value, _Key, Out) :- !,
-#   % print('run'), nl, backtrace(5),
-#   go(step, Exp, empty, hole, _, _, Out). # tail call
 sp {run*propose*start
   (state <s> ^name run)
 -->
@@ -55,10 +76,6 @@ sp {run*apply*start
 #   reject env and
 #   (keep cont the same and)
 #   set value to int's body
-#
-# go(step, int(N), _Env, Cont, _Value, _Key, Out) :- !,
-#   % print('step*int'), nl, backtrace(5),
-#   go(cont, _, _, Cont, N, _, Out). # tail call
 sp {step*propose*stepint
   (state <s> ^name step ^exp.int)
 -->
@@ -80,10 +97,6 @@ sp {step*apply*stepint
 #   (keep env the same and)
 #   (keep cont the same and)
 #   set key to var's body
-#
-# go(step, var(K), Env, Cont, _Value, _Key, Out) :- !,
-#   % print('step*var'), nl, backtrace(5),
-#   go(lookup, _, Env, Cont, _, K, Out). # tail call
 sp {step*propose*stepvar
   (state <s> ^name step ^exp.var)
 -->
@@ -105,10 +118,6 @@ sp {step*apply*stepvar
 #   reject env and
 #   (keep cont the same and)
 #   set value to a newly built closure of lam's key, lam's exp, and env
-#
-# go(step, lam(X, Exp), Env, Cont, _Value, _Key, Out) :- !,
-#   % print('step*lam'), nl, backtrace(5),
-#   go(cont, _, _, Cont, clo(X, Exp, Env), _, Out). # tail call
 sp {step*propose*steplam
   (state <s> ^name step ^exp.lam)
 -->
@@ -130,10 +139,6 @@ sp {step*apply*steplam
 #   change exp to app's major and
 #   (keep env the same and)
 #   change cont to a newly built appK1 of app's minor, env, and cont
-#
-# go(step, app(Major, Minor), Env, Cont, _Value, _Key, Out) :- !,
-#   % print('step*app'), nl, backtrace(5),
-#   go(step, Major, Env, appK1(Minor, Env, Cont), _, _, Out). # tail call
 sp {step*propose*stepapp
   (state <s> ^name step ^exp.app)
 -->
@@ -155,9 +160,6 @@ sp {step*apply*stepapp
 # then
 #   change exp to succ's exp
 #   change cont to a newly built succK of cont
-# go(step, succ(Exp), Env, Cont, _Value, _Key, Out) :- !,
-#   % print('step*succ'), nl, backtrace(5),
-#   go(step, Exp, Env, succK(Cont), _, _, Out). # tail call
 sp {step*propose*stepsucc
   (state <s> ^name step ^exp.succ)
 -->
@@ -166,10 +168,10 @@ sp {step*propose*stepsucc
 
 sp {step*apply*stepsucc
   (state <s> ^name step ^operator.name stepsucc ^exp <exp> ^cont <k>)
-  (<exp> ^succ.exp <newexp>)
+  (<exp> ^succ <newexp>)
 -->
   (<s> ^exp <exp> - <newexp> ^cont <k> - <newk>)
-  (<newk> ^succK.cont <k>)}
+  (<newk> ^succK <k>)}
 
 # if
 #   name is step and
@@ -178,9 +180,6 @@ sp {step*apply*stepsucc
 #   change exp to shift's exp
 #   change cont to hole
 #   change env to a newly built bind of shift's key, a newly built cap of cont, and env
-# go(step, shift(K, Exp), Env, Cont, _Value, _Key, Out) :- !,
-#   % print('step*shift'), nl, backtrace(5),
-#   go(step, Exp, bind(K, cap(Cont), Env), hole, _, _, Out). # tail call
 sp {step*propose*stepshift
   (state <s> ^name step ^exp.shift)
 -->
@@ -206,12 +205,8 @@ sp {step*apply*stepshift
 #     reject exp and
 #     reject env and
 #     set value to Temp
-# go(step, reset(Exp), Env, Cont, _Value, _Key, Out) :- !,
-#   % print('step*reset'), nl, backtrace(5),
-#   go(step, Exp, Env, hole, _, _, Temp), # not a tail call, pushes onto stack
-#   go(cont, _, _, Cont, Temp, _, Out). # tail call
 sp {step*propose*run
-  (state <s> ^name step ^exp.reset.exp <exp> -^run-done)
+  (state <s> ^name step ^exp.reset <exp> -^run-done)
 -->
   (<s> ^operator <o> +)
   (<o> ^name run ^exp <exp> ^return-to <s>)}
@@ -243,10 +238,6 @@ sp {step*apply*stepreset2
 #   reject env
 #   reject key
 #   set value to bind's value
-#
-# go(lookup, _Exp, bind(K, V, _Env), Cont, _Value, K, Out) :- !,
-#   % print('lookup*found'), nl, backtrace(5),
-#   go(cont, _, _, Cont, V, _, Out). # tail call
 sp {lookup*propose*lookupfound
   (state <s> ^name lookup ^env.bind.key <k> ^key <k>)
 -->
@@ -265,10 +256,6 @@ sp {lookup*apply*lookupfound
 #   key doesn't match bind's key
 # then
 #   change env to bind's Env
-#
-# go(lookup, _Exp, bind(K1, _V, Env), Cont, _Value, K2, Out) :- K1 \= K2, !,
-#   % print('lookup*not-found'), nl, backtrace(5),
-#   go(lookup, _, Env, Cont, _, K2, Out). # tail call
 sp {lookup*propose*lookupnotfound
   (state <s> ^name lookup ^env.bind.key <k1> ^key <k2> <> <k1>)
 -->
@@ -286,10 +273,6 @@ sp {lookup*apply*lookupnotfound
 #   cont is hole
 # then
 #   return value
-#
-# go(cont, _Exp, _Env, hole, Value, _Key, Out) :- !,
-#   % print('cont*hole'), nl, backtrace(5),
-#   Out = Value. # return, reducing size of stack
 sp {cont*propose*conthole
   (state <s> ^name cont ^cont hole)
 -->
@@ -310,10 +293,6 @@ sp {cont*apply*conthole
 #   set exp to appK1's exp
 #   set env to appK1's env
 #   change cont to a newly built appK2 with value and cont
-#
-# go(cont, _Exp, _Env, appK1(Exp, Env, Cont), Value, _Key, Out) :- !,
-#   % print('cont*appK1'), nl, backtrace(5),
-#   go(step, Exp, Env, appK2(Value, Cont), _, _, Out). # tail call
 sp {cont*propose*contappK1
   (state <s> ^name cont ^cont.appK1)
 -->
@@ -338,10 +317,6 @@ sp {cont*apply*contappK1
 #   reject value
 #   set env to a newly built bind with appK2's closure's key, value, and appK2's closure's env
 #   change cont to appK2's cont
-#
-# go(cont, _Exp, _Env, appK2(clo(X, Exp, Env), Cont), Value, _Key, Out) :- !,
-#   % print('cont*appK2*clo'), nl, backtrace(5),
-#   go(step, Exp, bind(X, Value, Env), Cont, _, _, Out). # tail call
 sp {cont*propose*contappK2clo
   (state <s> ^name cont ^cont.appK2.value.clo)
 -->
@@ -365,11 +340,6 @@ sp {cont*apply*contappK2clo
 #   then
 #     change cont to the appK2's cont and
 #     change value to the result of temp
-#
-# go(cont, _Exp, _Env, appK2(cap(ContPrime), Cont), Value, _Key, Out) :- !,
-#   % print('cont*appK2*cap'), nl, backtrace(5),
-#   go(cont, _, _, ContPrime, Value, _, Temp), # not a tail call, pushes onto the Prolog architectural stack
-#   go(cont, _, _, Cont, Temp, _, Out). # tail call
 sp {cont*appK2*propose*cont
   (state <s> ^name cont ^cont.appK2.value.cap <k> -^run-done ^value <v>)
 -->
@@ -400,11 +370,6 @@ sp {cont*apply*contappK2cap
 # then
 #   increment value
 #   set cont to succK's cont
-#
-# go(cont, _Exp, _Env, succK(Cont), N, _Key, Out) :- !,
-#   % print('cont*succK'), nl, backtrace(5),
-#   M is N + 1,
-#   go(cont, _, _, Cont, M, _, Out). # tail call
 sp {cont*propose*contsuccK
   (state <s> ^name cont ^cont.succK)
 -->
@@ -413,7 +378,7 @@ sp {cont*propose*contsuccK
 
 sp {cont*apply*contsuccK
   (state <s> ^name cont ^operator.name contsuccK ^value <N> ^cont <k>)
-  (<k> ^succK.cont <newk>)
+  (<k> ^succK <newk>)
 -->
   (<s> ^value <N> - (+ <N> 1) ^cont <k> - <newk>)}
 

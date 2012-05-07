@@ -48,7 +48,7 @@ sp {shift-reset-3-test*propose*create-exp
 sp {shift-reset-3-test*apply*create-exp
   (state <s> ^name shift-reset-3-test ^operator.name create-exp)
 -->
-  (<s> ^exp.succ.exp.int 123)}
+  (<s> ^exp.succ.int 123)}
 
 sp {shift-reset-3-test*propose*run
   (state <s> ^name shift-reset-3-test ^exp <e> -^run-done)
@@ -76,8 +76,8 @@ sp {shift-reset-3-test*apply*create-exp
   (state <s> ^name shift-reset-3-test ^operator.name create-exp)
 -->
   (<s> ^exp.reset <e1>)
-  (<e1> ^exp.shift <s2>)
-  (<s2> ^key k ^exp <e3>)
+  (<e1> ^shift <s2>)
+  (<s2> ^key <k> ^exp <e3>)
   (<e3> ^int 123)}
 
 sp {shift-reset-3-test*propose*run
@@ -105,10 +105,10 @@ sp {shift-reset-3-test*propose*create-exp
 sp {shift-reset-3-test*apply*create-exp
   (state <s> ^name shift-reset-3-test ^operator.name create-exp)
 -->
-  (<s> ^exp.reset <e1>)
-  (<e1> ^exp.shift <s2>)
-  (<s2> ^key k ^exp.app <a3>)
-  (<a3> ^major.var k ^minor.int 123)}
+  (<s> ^exp.reset <s1>)
+  (<s1> ^shift <s2>)
+  (<s2> ^key <k> ^exp.app <a3>)
+  (<a3> ^major.var <k> ^minor.int 123)}
 
 sp {shift-reset-3-test*propose*run
   (state <s> ^name shift-reset-3-test ^exp <e> -^run-done)
@@ -135,11 +135,11 @@ sp {shift-reset-3-test*propose*create-exp
 sp {shift-reset-3-test*apply*create-exp
   (state <s> ^name shift-reset-3-test ^operator.name create-exp)
 -->
-  (<s> ^exp.reset <e1>)
-  (<e1> ^exp.shift <s2>)
-  (<s2> ^key k ^exp.app <a3>)
-  (<a3> ^major.var k ^minor.app <a4>)
-  (<a4> ^major.var k ^minor.int 123)}
+  (<s> ^exp.reset <s1>)
+  (<s1> ^shift <s2>)
+  (<s2> ^key <k> ^exp.app <a3>)
+  (<a3> ^major.var <k> ^minor.app <a4>)
+  (<a4> ^major.var <k> ^minor.int 123)}
 
 sp {shift-reset-3-test*propose*run
   (state <s> ^name shift-reset-3-test ^exp <e> -^run-done)
@@ -166,7 +166,7 @@ sp {shift-reset-3-test*propose*create-exp
 sp {shift-reset-3-test*apply*create-exp
   (state <s> ^name shift-reset-3-test ^operator.name create-exp)
 -->
-  (<s> ^exp.reset.exp.succ.exp.shift <s1>)
+  (<s> ^exp.reset.succ.shift <s1>)
   (<s1> ^key k ^exp.int 123)}
 
 sp {shift-reset-3-test*propose*run
@@ -194,9 +194,9 @@ sp {shift-reset-3-test*propose*create-exp
 sp {shift-reset-3-test*apply*create-exp
   (state <s> ^name shift-reset-3-test ^operator.name create-exp)
 -->
-  (<s> ^exp.reset.exp.succ.exp.shift <s1>)
-  (<s1> ^key k ^exp.app <a2>)
-  (<a2> ^major.var k ^minor.int 123)}
+  (<s> ^exp.reset.succ.shift <s1>)
+  (<s1> ^key <k> ^exp.app <a2>)
+  (<a2> ^major.var <k> ^minor.int 123)}
 
 sp {shift-reset-3-test*propose*run
   (state <s> ^name shift-reset-3-test ^exp <e> -^run-done)
@@ -223,11 +223,11 @@ sp {shift-reset-3-test*propose*create-exp
 sp {shift-reset-3-test*apply*create-exp
   (state <s> ^name shift-reset-3-test ^operator.name create-exp)
 -->
-  (<s> ^exp.reset.exp.succ <e1>)
-  (<e1> ^exp.shift <s2>)
-  (<s2> ^key k ^exp.app <a3>)
-  (<a3> ^major.var k ^minor.app <a4>)
-  (<a4> ^major.var k ^minor.int 123)}
+  (<s> ^exp.reset.succ <e1>)
+  (<e1> ^shift <s2>)
+  (<s2> ^key <k> ^exp.app <a3>)
+  (<a3> ^major.var <k> ^minor.app <a4>)
+  (<a4> ^major.var <k> ^minor.int 123)}
 
 sp {shift-reset-3-test*propose*run
   (state <s> ^name shift-reset-3-test ^exp <e> -^run-done)
@@ -256,7 +256,7 @@ sp {shift-reset-3-test*apply*create-exp
 -->
   (<s> ^exp.app <a1>)
   (<a1> ^major.lam <l2> ^minor.int 123)
-  (<l2> ^key x ^exp.var x)}
+  (<l2> ^key <x> ^exp.var <x>)}
 
 sp {shift-reset-3-test*propose*run
   (state <s> ^name shift-reset-3-test ^exp <e> -^run-done)
@@ -286,8 +286,8 @@ sp {shift-reset-3-test*apply*create-exp
   (<s> ^exp.app <a1>)
   (<a1> ^major.app <a2> ^minor.int 456)
   (<a2> ^major.lam <l3> ^minor.int 123)
-  (<l3> ^key x ^exp.lam <l4>)
-  (<l4> ^key y ^exp.var x)}
+  (<l3> ^key <x> ^exp.lam <l4>)
+  (<l4> ^key <y> ^exp.var <x>)}
 
 sp {shift-reset-3-test*propose*run
   (state <s> ^name shift-reset-3-test ^exp <e> -^run-done)
