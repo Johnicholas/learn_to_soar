@@ -40,6 +40,17 @@
 #   envs can be empty
 #   envs can be (<env> ^bind <bind>)
 #   binds can be (<bind> ^key <x> ^value <value> ^env <env>)
+#
+# and an extension:
+#   exp can be (<exp> ^ifzero <ifzero>)
+#   ifzero can be (<ifzero> ^test <exp> ^true <exp> ^false <exp>)
+#   continuations can be (<cont> ^ifzeroK <ifzeroK>)
+#   ifzeroK can be (<ifzeroK> ^true <exp> ^false <exp> ^env <env> ^cont <cont>)
+#
+# another extension:
+#   exp can be (<exp> ^pred <exp>)
+#   continuations can be (<cont> ^predK <cont>)
+
 
 #################################### run
 sp {run*initialize
@@ -230,6 +241,46 @@ sp {step*apply*stepreset2
     ^value <Temp>)}
 
 # if
+#   name is step and
+#   exp is an ifzero
+# then
+#   change exp to ifzero's test
+#   change cont to a newly built ifzeroK of cont
+sp {step*propose*stepifzero
+  (state <s> ^name step ^exp.ifzero)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name stepifzero)}
+
+sp {step*apply*stepifzero
+  (state <s> ^name step ^operator.name stepifzero ^exp <exp> ^cont <k> ^env <env>)
+  (<exp> ^ifzero <ifzero>)
+  (<ifzero> ^test <test> ^true <true> ^false <false>)
+-->
+  (<s> ^exp <exp> - <test> ^cont <k> - <newk>)
+  (<newk> ^ifzeroK <ifzeroK>)
+  (<ifzeroK> ^true <true> ^false <false> ^env <env> ^cont <k>)}
+
+# if
+#   name is step and
+#   exp is a pred
+# then
+#   change exp to pred's exp
+#   change cont to a newly built predK of cont
+sp {step*propose*steppred
+  (state <s> ^name step ^exp.pred)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name steppred)}
+
+sp {step*apply*steppred
+  (state <s> ^name step ^operator.name steppred ^exp <exp> ^cont <k>)
+  (<exp> ^pred <newexp>)
+-->
+  (<s> ^exp <exp> - <newexp> ^cont <k> - <newk>)
+  (<newk> ^predK <k>)}
+
+# if
 #   name is lookup and
 #   env is a bind and
 #   key matches bind's key
@@ -382,3 +433,62 @@ sp {cont*apply*contsuccK
 -->
   (<s> ^value <N> - (+ <N> 1) ^cont <k> - <newk>)}
 
+# if
+#   name is cont and
+#   cont is an ifzeroK and
+#   value is zero (nonzero)
+# then
+#   change name from cont to step
+#   set exp to the true (false) branch
+#   set env to the stored env
+#   change cont from ifzeroK to ifzeroK's Cont
+#   reject value
+sp {cont*propose*contifzeroK
+  (state <s> ^name cont ^cont.ifzeroK)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name contifzeroK)}
+
+sp {cont*apply*contifzeroK*zero
+  (state <s> ^name cont ^operator.name contifzeroK ^value 0 ^cont <k>)
+  (<k> ^ifzeroK <ifzeroK>)
+  (<ifzeroK> ^true <true> ^false <false> ^env <env> ^cont <newk>)
+-->
+  (<s> ^name cont - step ^exp <true> ^env <env> ^cont <k> - <newk> ^value 0 -)}
+
+sp {cont*apply*contifzeroK*nonzero
+  (state <s> ^name cont ^operator.name contifzeroK ^value <v> <> 0 ^cont <k>)
+  (<k> ^ifzeroK <ifzeroK>)
+  (<ifzeroK> ^true <true> ^false <false> ^env <env> ^cont <newk>)
+-->
+  (<s> ^name cont - step ^exp <false> ^env <env> ^cont <k> - <newk> ^value <v> -)}
+
+# if
+#   name is cont and
+#   cont is a predK
+# then
+#   decrement value (if possible)
+#   set cont to predK's cont
+sp {cont*propose*contpredKzero
+  (state <s> ^name cont ^cont.predK ^value 0)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name contpredKzero)}
+
+sp {cont*apply*contpredKzero
+  (state <s> ^name cont ^operator.name contpredKzero ^cont <k>)
+  (<k> ^predK <newk>)
+-->
+  (<s> ^cont <k> - <newk>)}
+
+sp {cont*propose*contpredKnonzero
+  (state <s> ^name cont ^cont.predK ^value <> 0)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name contpredKnonzero)}
+
+sp {cont*apply*contpredKnonzero
+  (state <s> ^name cont ^operator.name contpredKnonzero ^value <v> <> 0 ^cont <k>)
+  (<k> ^predK <newk>)
+-->
+  (<s> ^value <v> - (- <v> 1) ^cont <k> - <newk>)}

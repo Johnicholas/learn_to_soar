@@ -1,13 +1,3 @@
-#
-#increment(X) :- !,
-#  X = lam(x, succ(var(x))).
-#
-#true(X) :- !,
-#  X = lam(truebranch, lam(falsebranch, var(truebranch))).
-#
-#false(X) :- !,
-#  X = lam(truebranch, lam(falsebranch, var(falsebranch))).
-#
 # y(X) :- !, yhelper(H),
 #   X = lam(f, app(H, H)).
 # yhelper(X) :- !,
@@ -15,43 +5,156 @@
 # 
 # There shouldn't be any problem with sharing. I hope.
 #
-sp {apply*create-yhelper
+sp {apply*create-ycombinator
   (state <s> ^operator <o>)
-  (<o> ^name create-y ^return-to <r>)
+  (<o> ^name create-ycombinator ^return-to <r>)
 -->
   (<s> ^<r> <ycombinator>)
   (<ycombinator> ^lam <l1>)
-  (<l1> ^name <f> ^exp <a2>)
+  (<l1> ^key <f> ^exp.app <a2>)
   (<a2> ^major <yhelper> ^minor <yhelper>) 
   (<yhelper> ^lam <l3>)
-  (<l3> ^name <x> ^exp.app <a4>)
+  (<l3> ^key <x> ^exp.app <a4>)
   (<a4> ^major.var <f> ^minor.lam <l5>)
-  (<l5> ^name <v> ^exp.app <a6>)
+  (<l5> ^key <v> ^exp.app <a6>)
   (<a6> ^major.app <a7> ^minor.var <v>)
   (<a7> ^major.var <x> ^minor.var <x>)}
 
-#emitloop(X) :- !, y(Y), emitloopbody(Body),
-#  X = app(Y, Body).
-#emitloopbody(X) :- !,
-#  X = lam(f, lam(x, ifzero(var(x), int(1), app(lam(y, app(var(f), pred(var(x)))), emit(var(c)))))).
-#emitblock(X) :- !, emitloop(Loop),
-#  X = app(lam(len, app(lam(c, app(Loop, var(len))), getchar)), getchar).
+# emitloopbody(X) :- !,
+#   X = lam(f, lam(x, ifzero(var(x), int(1), app(lam(y, app(var(f), pred(var(x)))), emit(var(c)))))).
+# emitloop(X) :- !, y(Y), emitloopbody(Body),
+#   X = app(Y, Body).
+# emitblock(X) :- !, emitloop(Loop),
+#   X = app(lam(len, app(lam(c, app(Loop, var(len))), getchar)), getchar).
+sp {initialize*create-emitblock
+  (state <s> ^superstate.operator <o>)
+  (<o> ^name create-emitblock ^return-to <r>)
+-->
+  (<s> ^name create-emitblock ^return-to <r>)}
 
-#decompressbody(X) :- !, emitblock(EMITBLOCK),
-#  X = lam(rest, lam(notdone, ifzero(var(notdone),
-#    app(lam(x, int(1)), emit(int(0))),
-#    app(lam(c, 
-#    app(rest, ifzero(var(c), int(0), ifzero(minus(var(c), int(123)), app(lam(x, int(1)), EMITBLOCK), app(lam(x,# int(1)), emit(var(c))))))), getchar)))).
+sp {create-emitblock*propose*create-ycombinator
+  (state <s> ^name create-emitblock -^ycombinator)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name create-ycombinator ^return-to ycombinator)}
 
-#dim(X) :- !, y(Y),
-#  X = app(Y, lam(recursefun, lam(x, lam(y, ifzero(var(y), var(x), ifzero(var(x), var(x), 
-#    app(app(var(recursefun), pred(var(x))), pred(var(y))))))))).
+sp {apply*create-emitblock
+  (state <s> ^name create-emitblock ^return-to <r> ^ycombinator <Y> ^superstate <ss>)
+-->
+  (<ss> ^<r> <emitblock>)
+  (<emitblock> ^app <a1>)
+  (<a1> ^major.lam <l2> ^minor getchar)
+  (<l2> ^key <len> ^exp.app <a3>)
+  (<a3> ^major.lam <l4> ^minor getchar)
+  (<l4> ^key <c> ^exp.app <a5>)
+  (<a5> ^major.app <a6> ^minor.var <len>)
+  (<a6> ^major <Y> ^minor.lam <l7>)
+  (<l7> ^key <f> ^exp.lam <l8>)
+  (<l8> ^key <x> ^exp.ifzero <i9>)
+  (<i9> ^test.var <x> ^true.int 1 ^false.app <a10>)
+  (<a10> ^major.lam <l11> ^minor.emit.var <c>)
+  (<l11> ^key <y> ^exp.app <a12>)
+  (<a12> ^major.var <f> ^minor.pred.var <x>)}
+
+# decompressbody(X) :- !, emitblock(EMITBLOCK),
+#   X = lam(rest, lam(notdone, ifzero(var(notdone),
+#     app(lam(x, int(1)), emit(int(0))),
+#       app(lam(c, 
+#       app(var(rest), ifzero(var(c),
+#                        int(0),
+#                        ifzero(minus(var(c), int(123)),
+#                               app(lam(x, int(1)), EMITBLOCK),
+#                               app(lam(x, int(1)), emit(var(c))))))),
+#    getchar)))).
+sp {initialize*create-decompressbody
+  (state <s> ^superstate.operator <o>)
+  (<o> ^name create-decompressbody ^return-to <r>)
+-->
+  (<s> ^name create-decompressbody ^return-to <r>)}
+
+sp {create-decompressbody*propose*create-emitblock
+  (state <s> ^name create-decompressbody -^emitblock)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name create-emitblock ^return-to emitblock)}
+
+sp {apply*create-decompressbody
+  (state <s> ^name create-decompressbody ^emitblock <EMITBLOCK> ^superstate <ss> ^return-to <r>)
+-->
+  (<ss> ^<r> <decompressbody>)
+  (<decompressbody> ^lam <l1>)
+  (<l1> ^key <rest> ^exp.lam <l2>)
+  (<l2> ^key <notdone> ^exp.ifzero <i3>)
+  (<i3> ^test.var <notdone> ^true.app <a4> ^false.app <a5>)
+  (<a4> ^major.lam <K1> ^minor.emit.int 0)
+  (<a5> ^major.lam <l6> ^minor getchar)
+  (<l6> ^key <c> ^exp.app <a7>)
+  (<a7> ^major.var <rest> ^minor.ifzero <i8>)
+  (<i8> ^test.var <c> ^true.int 0 ^false.ifzero <i9>)
+  (<i9> ^test.minus <m10> ^true.app <a11> ^false.app <a12>)
+  (<m10> ^minuend.var <c> ^subtrahend.int 123)
+  (<a11> ^major.lam <K1> ^minor <EMITBLOCK>)
+  (<a12> ^major.lam <K1> ^minor.emit.var <c>)
+  (<K1> ^key <x> ^exp.int 1)}
+
+# dim(X) :- !, y(Y),
+#   X = app(Y, lam(recursefun, lam(x, lam(y, ifzero(var(y), var(x), ifzero(var(x), var(x), 
+#     app(app(var(recursefun), pred(var(x))), pred(var(y))))))))).
+sp {initialize*create-diminish
+  (state <s> ^superstate.operator <o>)
+  (<o> ^name create-diminish ^return-to <r>)
+-->
+  (<s> ^name create-diminish ^return-to <r>)}
+
+sp {create-diminish*propose*create-emitblock
+  (state <s> ^name create-diminish -^ycombinator)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name create-ycombinator ^return-to ycombinator)}
+
+sp {apply*create-diminish
+  (state <s> ^name create-diminish ^ycombinator <Y> ^superstate <ss> ^return-to <r>)
+-->
+  (<ss> ^<r> <diminish>)
+  (<diminish> ^app <a1>)
+  (<a1> ^major <Y> ^minor.lam <l2>)
+  (<l2> ^key <recursefun> ^exp.lam <l3>)
+  (<l3> ^key <x> ^exp.lam <l4>)
+  (<l4> ^key <y> ^exp.ifzero <i5>)
+  (<i5> ^test.var <y> ^true.var <x> ^false.ifzero <i6>)
+  (<i6> ^test.var <x> ^true.var <x> ^false.app <a7>)
+  (<a7> ^major.app <a8> ^minor.pred.var <y>)
+  (<a8> ^major.var <recursefun> ^minor.pred.var <x>)}
 
 #% technically this tests for between A and Z in ascii representation,
 #% not 'alpha' which should at least include lowercase.
 #isalpha(X) :- !, dim(D),
 #  X = lam(c, ifzero(app(app(D, int(65)), var(c)),
 #    ifzero(app(app(D, var(c)), int(90)), int(1), int(0)), int(0))).
+sp {initialize*create-isalpha
+  (state <s> ^superstate.operator <o>)
+  (<o> ^name create-isalpha ^return-to <r>)
+-->
+  (<s> ^name create-isalpha ^return-to <r>)}
+
+sp {create-isalpha*propose*create-emitblock
+  (state <s> ^name create-isalpha -^diminish)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name create-diminish ^return-to diminish)}
+
+sp {apply*create-isalpha
+  (state <s> ^name create-isalpha ^diminish <D> ^superstate <ss> ^return-to <r>)
+-->
+  (<ss> ^<r> <isalpha>)
+  (<isalpha> ^lam <l1>)
+  (<l1> ^key <c> ^exp.ifzero <i2>)
+  (<i2> ^test.app <a3> ^true.ifzero <i5> ^false.int 0)
+  (<a3> ^major.app <a4> ^minor.var <c>)
+  (<a4> ^major <D> ^minor.int 65) # 65 is 'A'
+  (<i5> ^test.app <a6> ^true.int 1 ^false.int 0)
+  (<a6> ^major.app <a7> ^minor.int 90) # 90 is 'Z'
+  (<a7> ^major <D> ^minor.var <c>)}
 
 #% restofword is supposed to take a character,
 #% and keep getting new characters and emitting them so long as they're alphabetic

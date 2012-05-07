@@ -1,27 +1,32 @@
 
 source shift-reset-3.soar
+source shift-reset-3-exps.soar
 
-learn --on
+# commented for now
+# learn --on
 
 sp {initialize
   (state <s> ^superstate nil)
 -->
   (<s> ^name shift-reset-3-test)}
 
-sp {shift-reset-3-test*apply*create-exp
-  (state <s> ^name shift-reset-3-test ^operator.name create-exp)
+sp {shift-reset-3-test*propose*create-isalpha
+  (state <s> ^name shift-reset-3-test -^isalpha)
 -->
-  (<s> ^exp.reset.exp.succ <e1>)
-  (<e1> ^exp.shift <s2>)
-  (<s2> ^key k ^exp.app <a3>)
-  (<a3> ^major.var k ^minor.app <a4>)
-  (<a4> ^major.var k ^minor.int 123)}
+  (<s> ^operator <o> +)
+  (<o> ^name create-isalpha ^return-to isalpha)}
 
 sp {shift-reset-3-test*propose*create-exp
-  (state <s> ^name shift-reset-3-test -^exp)
+  (state <s> ^name shift-reset-3-test -^exp ^isalpha)
 -->
   (<s> ^operator <o> +)
   (<o> ^name create-exp)}
+
+sp {shift-reset-3-test*apply*create-exp
+  (state <s> ^name shift-reset-3-test ^operator.name create-exp ^isalpha <ISALPHA>)
+-->
+  (<s> ^exp.app <a1>)
+  (<a1> ^major <ISALPHA> ^minor.int 6)}
 
 sp {shift-reset-3-test*propose*run
   (state <s> ^name shift-reset-3-test ^exp <e> -^run-done)

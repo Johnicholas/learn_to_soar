@@ -263,7 +263,10 @@ cont(appK2(clo(X, Exp, Env), Cont), Value, Out) :- !,
 %   name is cont and
 %   cont is a appK2 of a capture
 % then
-%  
+%   first
+%     eval the captured continuation on the value
+%   then
+%     eval the rest of the continuation on the resulting value
 cont(appK2(cap(ContPrime), Cont), Value, Out) :- !,
   % print('cont*appK2*cap'), nl, backtrace(5),
   cont(ContPrime, Value, Temp), % NOTE NOT A TAIL CALL! PUSHES ONTO THE PROLOG STACK!
@@ -290,7 +293,7 @@ cont(succK(Cont), N, Out) :- !,
 %   name is cont and
 %   cont is a predK
 % then
-%   increment value
+%   decrement value
 %   set cont to predK's cont
 cont(predK(Cont), N, Out) :- !,
   % print('cont*predK'), nl, backtrace(5),
@@ -326,7 +329,8 @@ cont(ifzeroK(TrueBranch, FalseBranch, Env, Cont), N, Out) :- N = 0, !,
 %   value is not zero
 % then
 %   change name from cont to step
-%   change exp to the false branch
+%   set exp to the false branch
+%   set env to the ifzeroK's env
 %   change cont from ifzeroK to ifzeroK's Cont
 cont(ifzeroK(TrueBranch, FalseBranch, Env, Cont), N, Out) :- N \= 0, !,
   % print('cont*ifzeroKfalse'), nl, backtrace(5),

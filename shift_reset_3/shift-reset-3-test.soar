@@ -1,6 +1,7 @@
 setup {
 
 source shift-reset-3.soar
+source shift-reset-3-exps.soar
 
 sp {initialize
   (state <s> ^superstate nil)
@@ -302,3 +303,36 @@ sp {shift-reset-3-test*pass
 
 }
 
+# exercising some more extensions
+test "run(app(Isalpha, int(6))) should be 1" {
+
+sp {shift-reset-3-test*propose*create-isalpha
+  (state <s> ^name shift-reset-3-test -^isalpha)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name create-isalpha ^return-to isalpha)}
+
+sp {shift-reset-3-test*propose*create-exp
+  (state <s> ^name shift-reset-3-test -^exp ^isalpha)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name create-exp)}
+
+sp {shift-reset-3-test*apply*create-exp
+  (state <s> ^name shift-reset-3-test ^operator.name create-exp ^isalpha <ISALPHA>)
+-->
+  (<s> ^exp.app <a1>)
+  (<a1> ^major <ISALPHA> ^minor.int 65)}
+
+sp {shift-reset-3-test*propose*run
+  (state <s> ^name shift-reset-3-test ^exp <e> -^run-done)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name run ^exp <e> ^return-to <s>)}
+
+sp {shift-reset-3-test*pass
+  (state <s> ^name shift-reset-3-test ^run-done 1)
+-->
+  (pass)}
+
+}
