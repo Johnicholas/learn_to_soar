@@ -8,6 +8,11 @@ sp {initialize
 -->
   (<s> ^name shift-reset-3-test)}
 
+sp {initialize*top-state
+  (state <s> ^superstate nil)
+-->
+  (<s> ^top-state <s>)}
+
 }
 
 # return an integer
@@ -368,5 +373,16 @@ sp {shift-reset-3-test*pass
   (state <s> ^name shift-reset-3-test ^run-done 1)
 -->
   (pass)}
+
+sp {shift-reset-3-test*propose*fake-input
+  (state <s> ^name stepgetchar ^top-state.io.output-link.getchar)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name fake-input)}
+
+sp {shift-reset-3-test*apply*fake-input
+  (state <s> ^name stepgetchar ^operator.name fake-input ^superstate <ss>)
+-->
+  (<ss> ^value 123)}
 
 }

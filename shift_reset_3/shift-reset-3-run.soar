@@ -10,23 +10,31 @@ sp {initialize
 -->
   (<s> ^name shift-reset-3-test ^top-state <s>)}
 
-sp {shift-reset-3-test*propose*create-parser
-  (state <s> ^name shift-reset-3-test -^parser)
+sp {shift-reset-3-test*propose*create-cat2
+  (state <s> ^name shift-reset-3-test -^cat2)
 -->
   (<s> ^operator <o> + =)
-  (<o> ^name create-parser ^return-to parser)}
+  (<o> ^name create-cat2 ^return-to cat2)}
+
+sp {shift-reset-3-test*propose*create-interpret
+  (state <s> ^name shift-reset-3-test -^interpret)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name create-interpret ^return-to interpret)}
 
 sp {shift-reset-3-test*propose*create-exp
-  (state <s> ^name shift-reset-3-test -^exp ^parser)
+  (state <s> ^name shift-reset-3-test -^exp ^cat2 ^interpret)
 -->
   (<s> ^operator <o> + =)
   (<o> ^name create-exp)}
 
+# "interpret(INTERPRET), cat2(CAT2), run(app(INTERPRET, reset(app(CAT2, getchar))), Answer)."
 sp {shift-reset-3-test*apply*create-exp
-  (state <s> ^name shift-reset-3-test ^operator.name create-exp ^parser <PARSER>)
+  (state <s> ^name shift-reset-3-test ^operator.name create-exp ^cat2 <CAT2> ^interpret <INTERPRET>)
 -->
   (<s> ^exp.app <a1>)
-  (<a1> ^major <PARSER> ^minor getchar)}
+  (<a1> ^major <INTERPRET> ^minor.reset.app <a2>)
+  (<a2> ^major <CAT2> ^minor getchar)}
 
 sp {shift-reset-3-test*propose*run
   (state <s> ^name shift-reset-3-test ^exp <e> -^run-done)

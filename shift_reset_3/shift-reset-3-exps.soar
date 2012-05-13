@@ -144,7 +144,7 @@ sp {create-isalpha*propose*create-diminish
   (<s> ^operator <o> +)
   (<o> ^name create-diminish ^return-to diminish)}
 
-sp {create-isapha*apply
+sp {create-isalpha*apply
   (state <s> ^name create-isalpha ^diminish <D> ^superstate <ss> ^return-to <r>)
 -->
   (<ss> ^<r> <isalpha>)
@@ -284,33 +284,147 @@ sp {create-parser*apply
 #% app(lam(ignored, emit(shift(k, Read(k)))), Exit)
 #% write contains a character to write,
 #% and a continuation that accepts nothing.
-#% service(req) == shift(k, app(var(req), var(k)))
 #service(X) :- !,
 #  X = lam(req, shift(k, app(var(req), var(k)))).
+sp {create-service*initialize
+  (state <s> ^superstate.operator <o>)
+  (<o> ^name create-service ^return-to <r>)
+-->
+  (<s> ^name create-service ^return-to <r>)}
+
+sp {create-service*apply
+  (state <s> ^name create-service ^superstate <ss> ^return-to <r>)
+-->
+  (<ss> ^<r> <SERVICE>)
+  (<SERVICE> ^lam <l1>)
+  (<l1> ^key <req> ^exp.shift <s2>)
+  (<s2> ^key k1 ^exp.app <a3>)
+  (<a3> ^major.var <req> ^minor.var k1)}
 
 #% datatype Req = Exit | Read(k) | Write(char, k)
 #% a reqconsumer needs three branches
 #% I think this is the Scott encoding?
 #reqexit(X) :- !,
 #  X = lam(k, lam(e, lam(r, lam(w, var(e))))).
+sp {create-exit*initialize
+  (state <s> ^superstate.operator <o>)
+  (<o> ^name create-exit ^return-to <r>)
+-->
+  (<s> ^name create-exit ^return-to <r>)}
+
+sp {create-exit*apply
+  (state <s> ^name create-exit ^superstate <ss> ^return-to <r>)
+-->
+  (<ss> ^<r> <EXIT>)
+  (<EXIT> ^lam <l1>)
+  (<l1> ^key k2 ^exp.lam <l2>)
+  (<l2> ^key <e> ^exp.lam <l3>)
+  (<l3> ^key <r> ^exp.lam <l4>)
+  (<l4> ^key <w> ^exp.var <e>)}
+
 #reqread(X) :- !,
 #  X = lam(k, lam(e, lam(r, lam(w, app(var(r), var(k)))))).
+sp {create-read*initialize
+  (state <s> ^superstate.operator <o>)
+  (<o> ^name create-read ^return-to <r>)
+-->
+  (<s> ^name create-read ^return-to <r>)}
+
+sp {create-read*apply
+  (state <s> ^name create-read ^superstate <ss> ^return-to <r>)
+-->
+  (<ss> ^<r> <READ>)
+  (<READ> ^lam <l1>)
+  (<l1> ^key k3 ^exp.lam <l2>)
+  (<l2> ^key <e> ^exp.lam <l3>)
+  (<l3> ^key <r> ^exp.lam <l4>)
+  (<l4> ^key <w> ^exp.app <a5>)
+  (<a5> ^major.var <r> ^minor.var k3)}
+
 #reqwrite(X) :- !,
 #  X = lam(c, lam(k, lam(e, lam(r, lam(w, 
 #    app(app(var(w), var(c)), var(k))))))).
+sp {create-write*initialize
+  (state <s> ^superstate.operator <o>)
+  (<o> ^name create-write ^return-to <r>)
+-->
+  (<s> ^name create-write ^return-to <r>)}
+
+sp {create-write*apply
+  (state <s> ^name create-write ^superstate <ss> ^return-to <r>)
+-->
+  (<ss> ^<r> <WRITE>)
+  (<WRITE> ^lam <l1>)
+  (<l1> ^key k4 ^exp.lam <l2>)
+  (<l2> ^key <e> ^exp.lam <l3>)
+  (<l3> ^key <r> ^exp.lam <l4>)
+  (<l4> ^key <w> ^exp.app <a5>)
+  (<a5> ^major.app <a6> ^minor.var k4)
+  (<a6> ^major.var <w> ^minor.var <w>)}
 
 #% cat2 is a process
 #% cat2 reads a character, writes it, reads another character, writes it, and then exits.
 #cat2(X) :- !, reqread(Read), reqwrite(Write), reqexit(Exit), service(Service),
 #  X = app(lam(c,
-#        app(lam(ignored,
+#        app(lam(ignored1,
 #          app(lam(d,
-#            app(lam(ignored,
+#            app(lam(ignored2,
 #              app(Service, Exit)
 #            ), app(Service, app(Write, var(d))))
 #          ), app(Service, Read))
 #        ), app(Service, app(Write, var(c))))
 #      ), app(Service, Read)).
+sp {create-cat2*initialize
+  (state <s> ^superstate.operator <o>)
+  (<o> ^name create-cat2 ^return-to <r>)
+-->
+  (<s> ^name create-cat2 ^return-to <r>)}
+
+sp {create-cat2*propose*create-read
+  (state <s> ^name create-cat2 -^read)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name create-read ^return-to read)}
+
+sp {create-cat2*propose*create-write
+  (state <s> ^name create-cat2 -^write)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name create-write ^return-to write)}
+
+sp {create-cat2*propose*create-exit
+  (state <s> ^name create-cat2 -^exit)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name create-exit ^return-to exit)}
+
+sp {create-cat2*propose*create-service
+  (state <s> ^name create-cat2 -^service)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name create-service ^return-to service)}
+
+sp {create-cat2*apply
+  (state <s> ^name create-cat2 ^superstate <ss> ^return-to <r>
+  ^read <READ> ^write <WRITE> ^exit <EXIT> ^service <SERVICE>)
+-->
+  (<ss> ^<r> <CAT2>)
+  (<CAT2> ^app <a1>)
+  (<a1> ^major.lam <l2> ^minor.app <a15>)
+  (<l2> ^key <c> ^exp.app <a3>)
+  (<a3> ^major.lam <l4> ^minor.app <a13>)
+  (<l4> ^key <ignored1> ^exp.app <a5>)
+  (<a5> ^major.lam <l6> ^minor.app <a12>)
+  (<l6> ^key <d> ^exp.app <a7>)
+  (<a7> ^major.lam <l8> ^minor.app <a10>)
+  (<l8> ^key <ignored2> ^exp.app <a9>)
+  (<a9> ^major <SERVICE> ^minor <EXIT>)
+  (<a10> ^major <SERVICE> ^minor.app <a11>)
+  (<a11> ^major <WRITE> ^minor.var <d>)
+  (<a12> ^major <SERVICE> ^minor <READ>)
+  (<a13> ^major <SERVICE> ^minor.app <a14>)
+  (<a14> ^major <WRITE> ^minor.var <c>)
+  (<a15> ^major <SERVICE> ^minor <READ>)}
 
 #% cat is a process, you read it something like:
 #% fixpoint of lam(recurse, 
@@ -418,6 +532,36 @@ sp {create-parser*apply
 #  	int(1)), % exit 
 #  	lam(k, app(var(recurse), reset(app(var(k), getchar))))), % read
 #  	lam(c, lam(k, app(var(recurse), reset(app(var(k), emit(var(c))))))))))). % write
+sp {create-interpret*initialize
+  (state <s> ^superstate.operator <o>)
+  (<o> ^name create-interpret ^return-to <r>)
+-->
+  (<s> ^name create-interpret ^return-to <r>)}
+
+sp {create-interpret*propose*create-ycombinator
+  (state <s> ^name create-interpret -^ycombinator)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name create-ycombinator ^return-to ycombinator)}
+
+sp {create-interpret*apply
+  (state <s> ^name create-interpret ^superstate <ss> ^return-to <r> ^ycombinator <YCOMBINATOR>)
+-->
+  (<ss> ^<r> <INTERPRET>)
+  (<INTERPRET> ^app <a1>)
+  (<a1> ^major <YCOMBINATOR> ^minor.lam <l2>)
+  (<l2> ^key <recurse> ^exp.lam <l3>)
+  (<l3> ^key <tointerpret> ^exp.app <a4>)
+  (<a4> ^major.app <a5> ^minor.lam <l10>)
+  (<a5> ^major.app <a6> ^minor.lam <l7>)
+  (<a6> ^major.var <tointerpret> ^minor.int 1)
+  (<l7> ^key k5 ^exp.app <a8>)
+  (<a8> ^major.var <recurse> ^minor.reset.app <a9>)
+  (<a9> ^major.var k5 ^minor getchar)
+  (<l10> ^key <c> ^exp.lam <l11>)
+  (<l11> ^key k6 ^exp.app <a12>)
+  (<a12> ^major.var <recurse> ^minor.reset.app <a13>)
+  (<a13> ^major.var k6 ^minor.emit.var <c>)}
 
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 #% This is the "operating system" section

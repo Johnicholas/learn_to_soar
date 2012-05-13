@@ -82,6 +82,7 @@ sp {run*initialize
 -->
   (<s> ^name run ^exp <e> ^return-to <r>)}
 
+
 # if
 #   name is run
 # then
@@ -99,7 +100,6 @@ sp {run*apply*start
   (state <s> ^name run ^operator.name start)
 -->
   (<s> ^name run - step ^env empty ^cont hole)}
-
 
 # if
 #   name is step and
@@ -239,11 +239,18 @@ sp {step*apply*stepshift
 #     reject exp and
 #     reject env and
 #     set value to Temp
-sp {step*propose*run
-  (state <s> ^name step ^exp.reset <exp> -^run-done)
+sp {step*propose*recursivestep
+  (state <s> ^name step ^exp.reset <exp> ^env <env> -^run-done)
 -->
   (<s> ^operator <o> +)
-  (<o> ^name run ^exp <exp> ^return-to <s>)}
+  (<o> ^name recursivestep ^exp <exp> ^env <env> ^cont hole ^return-to <s>)}
+
+sp {recursivestep*initialize
+  (state <s> ^superstate <ss>)
+  (<ss> ^operator <o>)
+  (<o> ^name recursivestep ^exp <exp> ^env <env> ^cont <cont>)
+-->
+  (<s> ^name step ^exp <exp> ^env <env> ^cont <cont> ^return-to <ss>)}
 
 sp {step*propose*stepreset2
   (state <s> ^name step ^exp.reset ^run-done)
