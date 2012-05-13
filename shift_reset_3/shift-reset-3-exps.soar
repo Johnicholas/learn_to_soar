@@ -169,10 +169,8 @@ sp {create-isapha*apply
 #           app(lam(d,
 #             ifzero(app(ISALPHA, var(d)),
 #               app(lam(ignored2,
-#                 app(lam(ignored3,
-#                   app(var(recursefun), getchar)
-#                 ), emit(int(119)))
-#               ), emit(var(d))),
+#                 app(var(recursefun), var(d))
+#               ), emit(int(119))),
 #               app(var(recursefun2), var(d)))
 #           ), getchar)
 #         ), emit(var(c)))))).
@@ -207,14 +205,12 @@ sp {create-restofword*apply
   (<l5> ^key <ignored1> ^exp.app <a6>)
   (<a6> ^major.lam <l7> ^minor getchar)
   (<l7> ^key <d> ^exp.ifzero <i8>)
-  (<i8> ^test.app <a9> ^true.app <a10> ^false.app <a15>)
+  (<i8> ^test.app <a9> ^true.app <a10> ^false.app <a13>)
   (<a9> ^major <ISALPHA> ^minor.var <d>)
-  (<a10> ^major.lam <l11> ^minor.emit.var <d>)
+  (<a10> ^major.lam <l11> ^minor.emit.int 119)
   (<l11> ^key <ignored2> ^exp.app <a12>)
-  (<a12> ^major.lam <l13> ^minor.emit.int 119)
-  (<l13> ^key <ignored3> ^exp.app <a14>)
-  (<a14> ^major.var <recursefun> ^minor getchar)
-  (<a15> ^major.var <recursefun2> ^mior.var <d>)}
+  (<a12> ^major.var <recursefun> ^minor.var <d>)
+  (<a13> ^major.var <recursefun2> ^minor.var <d>)}
 
 #% this "parser" (actually more like a lexer?) reads numbers until it sees a sentinel (123),
 #% and classifies them into contiguous sequences of uppercase alpha (A-Z) 
@@ -259,7 +255,7 @@ sp {create-parser*propose*create-restofword
 
 sp {create-parser*apply
   (state <s> ^name create-parser ^superstate <ss> ^return-to <r>
-  ^isalpha <ISALPHA> ^ycombinator <Y> ^restofword <RESTOFWORD>)
+  ^isalpha <ISALPHA> ^ycombinator <Y> ^restofword <RESTOFWORD> ^recursefun <recursefun>)
 -->
   (<ss> ^<r> <PARSER>)
   (<PARSER> ^app <a1>)
@@ -275,7 +271,7 @@ sp {create-parser*apply
   (<a10> ^major.lam <l11> ^minor.emit.int 112)
   (<l11> ^key <ignored2> ^exp.app <a12>)
   (<a12> ^major.var <recursefun> ^minor getchar)
-  (<a13> ^major.app <RESTOFWORD> ^minor.var <c>)}
+  (<a13> ^major <RESTOFWORD> ^minor.var <c>)}
 
 #% requests are a data structure
 #% requests include exit, read, and write

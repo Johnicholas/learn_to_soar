@@ -417,10 +417,8 @@ X = app(Y, lam(recursefun2,
           app(lam(d,
             ifzero(app(ISALPHA, var(d)),
               app(lam(ignored,
-                app(lam(ignored,
-                  app(var(recursefun), getchar)
-                ), emit(int(119)))
-              ), emit(var(d))),
+                app(var(recursefun), var(d))
+              ), emit(int(119))),
               app(var(recursefun2), var(d)))
           ), getchar)
         ), emit(var(c)))))).
