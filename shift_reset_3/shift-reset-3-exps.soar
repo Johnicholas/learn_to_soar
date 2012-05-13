@@ -128,22 +128,23 @@ sp {apply*create-diminish
 
 #% technically this tests for between A and Z in ascii representation,
 #% not 'alpha' which should at least include lowercase.
-#isalpha(X) :- !, dim(D),
-#  X = lam(c, ifzero(app(app(D, int(65)), var(c)),
-#    ifzero(app(app(D, var(c)), int(90)), int(1), int(0)), int(0))).
+#
+# isalpha(X) :- !, dim(D),
+#   X = lam(c, ifzero(app(app(D, int(65)), var(c)),
+#     ifzero(app(app(D, var(c)), int(90)), int(1), int(0)), int(0))).
 sp {initialize*create-isalpha
   (state <s> ^superstate.operator <o>)
   (<o> ^name create-isalpha ^return-to <r>)
 -->
   (<s> ^name create-isalpha ^return-to <r>)}
 
-sp {create-isalpha*propose*create-emitblock
+sp {create-isalpha*propose*create-diminish
   (state <s> ^name create-isalpha -^diminish)
 -->
   (<s> ^operator <o> +)
   (<o> ^name create-diminish ^return-to diminish)}
 
-sp {apply*create-isalpha
+sp {create-isapha*apply
   (state <s> ^name create-isalpha ^diminish <D> ^superstate <ss> ^return-to <r>)
 -->
   (<ss> ^<r> <isalpha>)
@@ -160,38 +161,121 @@ sp {apply*create-isalpha
 #% and keep getting new characters and emitting them so long as they're alphabetic
 #% until it finds a nonalphabetic character. Then it emits a 119 ('w') to indicate 'word'
 #% and stops. It's a helper for parser, not a thing in itself.
-#restofword(X) :- !, isalpha(ISALPHA), y(Y),
-#X = app(Y, lam(recursefun2,
-#      lam(c,
-#        app(lam(ignored,
-#          app(lam(d,
-#            ifzero(app(ISALPHA, var(d)),
-#              app(lam(ignored,
-#                app(lam(ignored,
-#                  app(var(recursefun), getchar)
-#                ), emit(int(119)))
-#              ), emit(var(d))),
-#              app(var(recursefun2), var(d)))
-#          ), getchar)
-#        ), emit(var(c)))))).
+#
+# restofword(X) :- !, isalpha(ISALPHA), y(Y),
+# X = app(Y, lam(recursefun2,
+#       lam(c,
+#         app(lam(ignored1,
+#           app(lam(d,
+#             ifzero(app(ISALPHA, var(d)),
+#               app(lam(ignored2,
+#                 app(lam(ignored3,
+#                   app(var(recursefun), getchar)
+#                 ), emit(int(119)))
+#               ), emit(var(d))),
+#               app(var(recursefun2), var(d)))
+#           ), getchar)
+#         ), emit(var(c)))))).
+sp {create-restofword*initialize
+  (state <s> ^superstate.operator <o>)
+  (<o> ^name create-restofword ^return-to <r> ^recursefun <recursefun>)
+-->
+  (<s> ^name create-restofword ^return-to <r> ^recursefun <recursefun>)}
+
+sp {create-restofword*propose*create-ycombinator
+  (state <s> ^name create-restofword -^ycombinator)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name create-ycombinator ^return-to ycombinator)}
+
+sp {create-restofword*propose*create-isalpha
+  (state <s> ^name create-restofword -^isalpha)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name create-isalpha ^return-to isalpha)}
+
+sp {create-restofword*apply
+  (state <s> ^name create-restofword ^superstate <ss> ^return-to <r>
+  ^ycombinator <Y> ^isalpha <ISALPHA> ^recursefun <recursefun>)
+-->
+  (<ss> ^<r> <RESTOFWORD>)
+  (<RESTOFWORD> ^app <a1>)
+  (<a1> ^major <Y> ^minor.lam <l2>)
+  (<l2> ^key <recursefun2> ^exp.lam <l3>)
+  (<l3> ^key <c> ^exp.app <a4>)
+  (<a4> ^major.lam <l5> ^minor.emit.var <c>)
+  (<l5> ^key <ignored1> ^exp.app <a6>)
+  (<a6> ^major.lam <l7> ^minor getchar)
+  (<l7> ^key <d> ^exp.ifzero <i8>)
+  (<i8> ^test.app <a9> ^true.app <a10> ^false.app <a15>)
+  (<a9> ^major <ISALPHA> ^minor.var <d>)
+  (<a10> ^major.lam <l11> ^minor.emit.var <d>)
+  (<l11> ^key <ignored2> ^exp.app <a12>)
+  (<a12> ^major.lam <l13> ^minor.emit.int 119)
+  (<l13> ^key <ignored3> ^exp.app <a14>)
+  (<a14> ^major.var <recursefun> ^minor getchar)
+  (<a15> ^major.var <recursefun2> ^mior.var <d>)}
 
 #% this "parser" (actually more like a lexer?) reads numbers until it sees a sentinel (123),
 #% and classifies them into contiguous sequences of uppercase alpha (A-Z) 
 #% or a single character of anything else by suffixing them with 119 ('w') for 'word'
 #% or 112 'p' for 'punctuation'.
-#parser(X) :- !, isalpha(ISALPHA), y(Y), restofword(RESTOFWORD),
-#X = app(Y, lam(recursefun, 
-#     lam(c, 
-#       ifzero(minus(var(c), int(123)),
-#         int(1),
-#         ifzero(app(ISALPHA, var(c)),
-#           app(lam(ignored,
-#             app(lam(ignored,
-#               app(var(recursefun), getchar)
-#             ), emit(int(112)))
-#           ), emit(var(c))),
-#	   app(RESTOFWORD, var(c))
-#     ))))).
+# parser(X) :- !, isalpha(ISALPHA), y(Y), restofword(RESTOFWORD),
+# X = app(Y, lam(recursefun, 
+#      lam(c, 
+#        ifzero(minus(var(c), int(123)),
+#          int(1),
+#          ifzero(app(ISALPHA, var(c)),
+#            app(lam(ignored1,
+#              app(lam(ignored2,
+#                app(var(recursefun), getchar)
+#              ), emit(int(112)))
+#            ), emit(var(c))),
+# 	   app(RESTOFWORD, var(c))
+#      ))))).
+sp {create-parser*initialize
+  (state <s> ^superstate.operator <o>)
+  (<o> ^name create-parser ^return-to <r>)
+-->
+  (<s> ^name create-parser ^return-to <r> ^recursefun <recursefun>)}
+
+sp {create-parser*propose*create-isalpha
+  (state <s> ^name create-parser -^isalpha)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name create-isalpha ^return-to isalpha)}
+
+sp {create-parser*propose*create-ycombinator
+  (state <s> ^name create-parser -^ycombinator)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name create-ycombinator ^return-to ycombinator)}
+
+sp {create-parser*propose*create-restofword
+  (state <s> ^name create-parser ^recursefun <recursefun> -^restofword)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name create-restofword ^return-to restofword ^recursefun <recursefun>)}
+
+sp {create-parser*apply
+  (state <s> ^name create-parser ^superstate <ss> ^return-to <r>
+  ^isalpha <ISALPHA> ^ycombinator <Y> ^restofword <RESTOFWORD>)
+-->
+  (<ss> ^<r> <PARSER>)
+  (<PARSER> ^app <a1>)
+  (<a1> ^major <Y> ^minor.lam <l2>)
+  (<l2> ^key <recursefun> ^exp.lam <l3>)
+  (<l3> ^key <c> ^exp.ifzero <i4>)
+  (<i4> ^test.minus <m5> ^true.int 1 ^false.ifzero <i6>)
+  (<m5> ^minuend.var <c> ^subtrahend.int 123)
+  (<i6> ^test.app <a7> ^true.app <a8> ^false.app <a13>)
+  (<a7> ^major <ISALPHA> ^minor.var <c>)
+  (<a8> ^major.lam <l9> ^minor.emit.var <c>)
+  (<l9> ^key <ignored1> ^exp.app <a10>)
+  (<a10> ^major.lam <l11> ^minor.emit.int 112)
+  (<l11> ^key <ignored2> ^exp.app <a12>)
+  (<a12> ^major.var <recursefun> ^minor getchar)
+  (<a13> ^major.app <RESTOFWORD> ^minor.var <c>)}
 
 #% requests are a data structure
 #% requests include exit, read, and write

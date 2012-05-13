@@ -41,15 +41,38 @@
 #   envs can be (<env> ^bind <bind>)
 #   binds can be (<bind> ^key <x> ^value <value> ^env <env>)
 #
-# and an extension:
+# and an extension, ifzero:
 #   exp can be (<exp> ^ifzero <ifzero>)
 #   ifzero can be (<ifzero> ^test <exp> ^true <exp> ^false <exp>)
 #   continuations can be (<cont> ^ifzeroK <ifzeroK>)
 #   ifzeroK can be (<ifzeroK> ^true <exp> ^false <exp> ^env <env> ^cont <cont>)
 #
-# another extension:
+# another extension, predecessor:
 #   exp can be (<exp> ^pred <exp>)
 #   continuations can be (<cont> ^predK <cont>)
+#
+# another extension, getchar:
+#   exp can be getchar
+#
+# another extension, minus:
+#   exp can be (<exp> ^minus <minus>)
+#   minus can be (<minus> ^minuend <exp> ^subtrahend <exp>)
+#   continuations can be (<cont> ^minusK1 <minusK1>)
+#   continuations can be (<cont> ^minusK2 <minusK2>)
+#   minusK1 can be (<minusK1> ^subtrahend <exp> ^env <env> ^cont <cont>)
+#   minusK2 can be (<minusK2> ^value <value> ^cont <cont>)
+#
+## another extension, emit
+##   exp can be (<exp> ^emit <exp>)
+##   continuations can be (<cont> ^emitK <cont>)
+
+# This is a frequently-used "default" rule,
+# that copies down top-state from whereever it
+# originates
+sp {elaborate*state*top-state
+  (state <s> ^superstate.top-state <ts>)
+-->
+  (<s> ^top-state <ts>)}
 
 
 #################################### run
@@ -281,6 +304,89 @@ sp {step*apply*steppred
   (<newk> ^predK <k>)}
 
 # if
+#   name is step
+#   exp is getchar
+# then
+#   first
+#     get a character (as integer) from the top state
+#   then
+#     change name to cont and
+#     reject exp and
+#     reject env and
+#     (keep cont the same and)
+#     set value to a newly gotten integer
+sp {step*propose*stepgetchar
+  (state <s> ^name step ^exp getchar)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name stepgetchar)}
+
+sp {initialize*stepgetchar
+  (state <s> ^superstate.operator <o>)
+  (<o> ^name stepgetchar)
+-->
+  (<s> ^name stepgetchar)}
+
+sp {stepgetchar*elaborate*ask
+  (state <s> ^name stepgetchar ^top-state.io.output-link <ol>)
+-->
+  (<ol> ^getchar <g>)}
+
+sp {stepgetchar*propose*wait
+  (state <s> ^name stepgetchar ^top-state.io.output-link.getchar)
+-->
+  (<s> ^operator <o> + <) # '<' means worst preference
+  (<o> ^name wait)}
+
+sp {stepgetchar*apply*wait
+  (state <s> ^name stepgetchar ^operator.name wait)
+-->
+}
+
+sp {stepgetchar*propose*handle-answer
+  (state <s> ^name stepgetchar ^top-state.io.input-link.answer <v>)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name handle-answer)}
+
+sp {stepgetchar*apply*handle-answer
+  (state <s> ^name stepgetchar ^operator.name handle-answer ^top-state.io <io> ^superstate <ss>)
+  (<io> ^input-link <il>)
+  (<il> ^answer <v>)
+-->
+  (<ss> ^value <v>)
+  (<il> ^answer <v> -)}
+
+sp {step*apply*stepgetchar
+  (state <s> ^name step ^operator.name stepgetchar ^exp getchar ^env <env> ^cont <k> ^value ^top-state <ts>)
+  (<ts> ^io.input-link <il>)
+  (<il> ^answer <a>)
+-->
+  (<s> ^name step - cont ^exp getchar - ^env <env> -)
+  (<il> ^answer <a> -)}
+
+# if
+#   name is step and
+#   exp is a minus
+# then
+#   change exp to minus's minuend
+#   change cont to a newly built minusK1 of minus's subtrahend, env, and cont
+sp {step*propose*stepminus
+  (state <s> ^name step ^exp.minus)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name stepminus)}
+
+sp {step*apply*stepminus
+  (state <s> ^name step ^operator.name stepminus ^exp <exp> ^cont <cont> ^env <env>)
+  (<exp> ^minus <m>)
+  (<m> ^minuend <minuend> ^subtrahend <subtrahend>)
+-->
+  (<s> ^exp <exp> - <minuend> ^cont <cont> - <newcont>)
+  (<newcont> ^minusK1 <minusK1>)
+  (<minusK1> ^subtrahend <subtrahend> ^env <env> ^cont <cont>)}
+
+# if
 #   name is lookup and
 #   env is a bind and
 #   key matches bind's key
@@ -492,3 +598,47 @@ sp {cont*apply*contpredKnonzero
   (<k> ^predK <newk>)
 -->
   (<s> ^value <v> - (- <v> 1) ^cont <k> - <newk>)}
+
+# if
+#   name is cont and
+#   cont is an minusK1
+# then
+#   change name from cont to step
+#   set exp to minusK1's subtrahend
+#   set env to minusK1's env
+#   change cont from minusK1 to a newly built minusK2
+#   reject value
+sp {cont*propose*contminusK1
+  (state <s> ^name cont ^cont.minusK1)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name contminusK1)}
+
+sp {cont*apply*contminusK1
+  (state <s> ^name cont ^operator.name contminusK1 ^cont <cont> ^value <value>)
+  (<cont> ^minusK1 <minusK1>)
+  (<minusK1> ^subtrahend <subtrahend> ^env <env> ^cont <later>)
+-->
+  (<s> ^name cont - step ^exp <subtrahend> ^env <env> ^cont <cont> - <newcont> ^value <value> -)
+  (<newcont> ^minusK2 <minusK2>)
+  (<minusK2> ^value <value> ^cont <later>)}
+
+# if
+#   name is cont and
+#   cont is an minusK2
+# then
+#   change value to minuend minus subtrahend
+#   change cont to minusK2's cont
+sp {cont*propose*contminusK2
+  (state <s> ^name cont ^cont.minusK2)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name contminusK2)}
+
+sp {cont*apply*contminusK2
+  (state <s> ^name cont ^operator.name contminusK2 ^cont <cont> ^value <subtrahendv>)
+  (<cont> ^minusK2 <minusK2>)
+  (<minusK2> ^value <minuendv> ^cont <newcont>)
+-->
+  (<s> ^value <subtrahendv> - (- <minuendv> <subtrahendv>) ^cont <cont> - <newcont>)}
+
