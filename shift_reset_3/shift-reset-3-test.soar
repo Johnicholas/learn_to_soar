@@ -386,3 +386,49 @@ sp {shift-reset-3-test*apply*fake-input
   (<ss> ^value 123)}
 
 }
+
+test "interpret(Interpret), service(Service), exit(Exit), run(Interpret, reset(app(Service, Exit))) is 1" {
+
+sp {shift-reset-3-test*propose*create-interpret
+  (state <s> ^name shift-reset-3-test -^interpret)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name create-interpret ^return-to interpret)}
+
+sp {shift-reset-3-test*propose*create-service
+  (state <s> ^name shift-reset-3-test -^service)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name create-service ^return-to service)}
+
+sp {shift-reset-3-test*propose*create-exit
+  (state <s> ^name shift-reset-3-test -^exit)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name create-exit ^return-to exit)}
+
+sp {shift-reset-3-test*propose*create-exp
+  (state <s> ^name shift-reset-3-test -^exp ^interpret ^service ^exit)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name create-exp)}
+
+sp {shift-reset-3-test*apply*create-exp
+  (state <s> ^name shift-reset-3-test ^operator.name create-exp ^interpret <INTERPRET> ^service <SERVICE> ^exit <EXIT>)
+-->
+  (<s> ^exp.app <a1>)
+  (<a1> ^major <INTERPRET> ^minor.reset.app <a2>)
+  (<a2> ^major <SERVICE> ^minor <EXIT>)}
+
+sp {shift-reset-3-test*propose*run
+  (state <s> ^name shift-reset-3-test ^exp <e> -^run-done)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name run ^exp <e> ^return-to <s>)}
+
+sp {shift-reset-3-test*pass
+  (state <s> ^name shift-reset-3-test ^run-done 1)
+-->
+  (pass)}
+
+}

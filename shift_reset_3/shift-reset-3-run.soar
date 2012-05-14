@@ -10,35 +10,57 @@ sp {initialize
 -->
   (<s> ^name shift-reset-3-test ^top-state <s>)}
 
-sp {shift-reset-3-test*propose*create-cat2
-  (state <s> ^name shift-reset-3-test -^cat2)
--->
-  (<s> ^operator <o> + =)
-  (<o> ^name create-cat2 ^return-to cat2)}
-
 sp {shift-reset-3-test*propose*create-interpret
   (state <s> ^name shift-reset-3-test -^interpret)
 -->
   (<s> ^operator <o> + =)
   (<o> ^name create-interpret ^return-to interpret)}
 
+sp {shift-reset-3-test*propose*create-service
+  (state <s> ^name shift-reset-3-test -^service)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name create-service ^return-to service)}
+
+sp {shift-reset-3-test*propose*create-exit
+  (state <s> ^name shift-reset-3-test -^exit)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name create-exit ^return-to exit)}
+
+sp {shift-reset-3-test*propose*create-read
+  (state <s> ^name shift-reset-3-test -^read)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name create-read ^return-to read)}
+
+sp {shift-reset-3-test*propose*create-write
+  (state <s> ^name shift-reset-3-test -^write)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name create-write ^return-to write)}
+
 sp {shift-reset-3-test*propose*create-exp
-  (state <s> ^name shift-reset-3-test -^exp ^cat2 ^interpret)
+  (state <s> ^name shift-reset-3-test -^exp ^interpret ^service ^exit ^read ^write)
 -->
   (<s> ^operator <o> + =)
   (<o> ^name create-exp)}
 
-# "interpret(INTERPRET), cat2(CAT2), run(app(INTERPRET, reset(app(CAT2, getchar))), Answer)."
 sp {shift-reset-3-test*apply*create-exp
-  (state <s> ^name shift-reset-3-test ^operator.name create-exp ^cat2 <CAT2> ^interpret <INTERPRET>)
+  (state <s> ^name shift-reset-3-test ^operator.name create-exp ^interpret <INTERPRET> ^service <SERVICE> ^exit <EXIT> ^read <READ> ^write <WRITE>)
 -->
   (<s> ^exp.app <a1>)
   (<a1> ^major <INTERPRET> ^minor.reset.app <a2>)
-  (<a2> ^major <CAT2> ^minor getchar)}
+  (<a2> ^major.lam <l3> ^minor.app <a5>)
+  (<l3> ^key <ignored> ^exp.app <a4>)
+  (<a4> ^major <SERVICE> ^minor <EXIT>)
+  (<a5> ^major <SERVICE> ^minor.app <a6>)
+  (<a6> ^major <WRITE> ^minor.int 123)}
 
 sp {shift-reset-3-test*propose*run
   (state <s> ^name shift-reset-3-test ^exp <e> -^run-done)
 -->
   (<s> ^operator <o> +)
   (<o> ^name run ^exp <e> ^return-to <s>)}
+
 

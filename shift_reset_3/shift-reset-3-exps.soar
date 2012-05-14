@@ -354,13 +354,14 @@ sp {create-write*apply
   (state <s> ^name create-write ^superstate <ss> ^return-to <r>)
 -->
   (<ss> ^<r> <WRITE>)
-  (<WRITE> ^lam <l1>)
+  (<WRITE> ^lam <l0>)
+  (<l0> ^key <c> ^exp.lam <l1>)
   (<l1> ^key k4 ^exp.lam <l2>)
   (<l2> ^key <e> ^exp.lam <l3>)
   (<l3> ^key <r> ^exp.lam <l4>)
   (<l4> ^key <w> ^exp.app <a5>)
   (<a5> ^major.app <a6> ^minor.var k4)
-  (<a6> ^major.var <w> ^minor.var <w>)}
+  (<a6> ^major.var <w> ^minor.var <c>)}
 
 #% cat2 is a process
 #% cat2 reads a character, writes it, reads another character, writes it, and then exits.
@@ -378,6 +379,7 @@ sp {create-cat2*initialize
   (state <s> ^superstate.operator <o>)
   (<o> ^name create-cat2 ^return-to <r>)
 -->
+
   (<s> ^name create-cat2 ^return-to <r>)}
 
 sp {create-cat2*propose*create-read
@@ -395,6 +397,7 @@ sp {create-cat2*propose*create-write
 sp {create-cat2*propose*create-exit
   (state <s> ^name create-cat2 -^exit)
 -->
+
   (<s> ^operator <o> + =)
   (<o> ^name create-exit ^return-to exit)}
 
@@ -430,6 +433,7 @@ sp {create-cat2*apply
 #% fixpoint of lam(recurse, 
 #%   let input = service Read in
 #%   let _ = service (Write input) in
+
 #%   recurse
 #cat(X) :- !, reqread(Read), reqwrite(Write), service(Service), y(Y),
 #  X = app(Y, lam(recurse,
@@ -562,6 +566,12 @@ sp {create-interpret*apply
   (<l11> ^key k6 ^exp.app <a12>)
   (<a12> ^major.var <recurse> ^minor.reset.app <a13>)
   (<a13> ^major.var k6 ^minor.emit.var <c>)}
+#interpret(X) :- !, y(Y),
+#  X = app(Y, lam(recurse, lam(to_interpret, 
+#    app(app(app(var(to_interpret), 
+#  	int(1)), % exit 
+#  	lam(k, app(var(recurse), reset(app(var(k), getchar))))), % read
+#  	lam(c, lam(k, app(var(recurse), reset(app(var(k), emit(var(c))))))))))). % write
 
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 #% This is the "operating system" section

@@ -685,5 +685,5 @@ sp {cont*apply*contemitK
   (state <s> ^name cont ^operator.name contemitK ^cont <cont> ^value <value>)
   (<cont> ^emitK <newcont>)
 -->
-  (write (crlf) |Emit: | <value>)
+  (write (crlf) <value>)
   (<s> ^value <value> - 1 ^cont <cont> - <newcont>)}
