@@ -517,6 +517,60 @@ sp {create-cat2*apply
 #
 #emitblock_service(X) :- !, y(Y), service(Service), reqread(Read), reqwrite(Write),
 #  X = app(lam(len, app(lam(c, app(app(Y, lam(f, lam(x, ifzero(var(x), int(1), app(lam(y, app(var(f), pred(var(x#)))), app(Service, app(Write, var(c)))))))), var(len))), app(Service, Read))), app(Service, Read)).
+sp {create-emitblock-service*initialize
+  (state <s> ^superstate.operator <o>)
+  (<o> ^name create-emitblock-service ^return-to <r>)
+-->
+
+  (<s> ^name create-emitblock-service ^return-to <r>)}
+
+sp {create-emitblock-service*propose*create-ycombinator
+  (state <s> ^name create-emitblock-service -^ycombinator)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name create-ycombinator ^return-to ycombinator)}
+
+sp {create-emitblock-service*propose*create-service
+  (state <s> ^name create-emitblock-service -^service)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name create-service ^return-to service)}
+
+sp {create-emitblock-service*propose*create-read
+  (state <s> ^name create-emitblock-service -^read)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name create-read ^return-to read)}
+
+sp {create-emitblock-service*propose*create-write
+  (state <s> ^name create-emitblock-service -^write)
+-->
+
+  (<s> ^operator <o> + =)
+  (<o> ^name create-write ^return-to write)}
+
+sp {create-emitblock-service*apply
+  (state <s> ^name create-emitblock-service ^superstate <ss> ^return-to <r> ^ycombinator <Y>
+  ^read <READ> ^write <WRITE> ^service <SERVICE>)
+-->
+  (<ss> ^<r> <EMITBLOCKSERVICE>)
+  (<EMITBLOCKSERVICE> ^app <a1>)
+  (<a1> ^major.lam <l2> ^minor.app <a16>)
+  (<l2> ^key <len> ^exp.app <a3>)
+  (<a3> ^major.lam <l4> ^minor.app <a15>)
+  (<l4> ^key <c> ^exp.app <a5>)
+  (<a5> ^major.app <a6> ^minor.var <len>)
+  (<a6> ^major <Y> ^minor.lam <l7>)
+  (<l7> ^key <f> ^exp.lam <l8>)
+  (<l8> ^key <x> ^exp.ifzero <i9>)
+  (<i9> ^test.var <x> ^true.int 1 ^false.app <a10>)
+  (<a10> ^major.lam <l11> ^minor.app <a13>)
+  (<l11> ^key <y> ^exp.app <a12>)
+  (<a12> ^major.var <f> ^minor.pred.var <x>)
+  (<a13> ^major <SERVICE> ^minor.app <a14>)
+  (<a14> ^major <WRITE> ^minor.var <c>)
+  (<a15> ^major <SERVICE> ^minor <READ>)
+  (<a16> ^major <SERVICE> ^minor <READ>)}
 
 #decompress_service(X) :- !, 
 #  y(Y), emitblock_service(BLOCK), service(Service), reqread(Read), reqwrite(Write), reqexit(Exit),
@@ -524,7 +578,75 @@ sp {create-cat2*apply
 #  	ifzero(minus(var(x), int(123)), 
 #  	app(lam(y, app(var(f), app(Service, Read))), BLOCK),
 #  	app(lam(y, app(var(f), app(Service, Read))), app(Service, app(Write, var(x))))))))).
-#
+sp {create-decompress-service*initialize
+  (state <s> ^superstate.operator <o>)
+  (<o> ^name create-decompress-service ^return-to <r>)
+-->
+
+  (<s> ^name create-decompress-service ^return-to <r>)}
+
+sp {create-decompress-service*propose*create-ycombinator
+  (state <s> ^name create-decompress-service -^ycombinator)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name create-ycombinator ^return-to ycombinator)}
+
+sp {create-decompress-service*propose*create-emitblock-service
+  (state <s> ^name create-decompress-service -^emitblock-service)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name create-emitblock-service ^return-to emitblock-service)}
+
+sp {create-decompress-service*propose*create-service
+  (state <s> ^name create-decompress-service -^service)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name create-service ^return-to service)}
+
+sp {create-decompress-service*propose*create-read
+  (state <s> ^name create-decompress-service -^read)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name create-read ^return-to read)}
+
+sp {create-decompress-service*propose*create-write
+  (state <s> ^name create-decompress-service -^write)
+-->
+
+  (<s> ^operator <o> + =)
+  (<o> ^name create-write ^return-to write)}
+
+sp {create-decompress-service*propose*create-exit
+  (state <s> ^name create-decompress-service -^exit)
+-->
+
+  (<s> ^operator <o> + =)
+  (<o> ^name create-exit ^return-to exit)}
+
+sp {create-decompress-service*apply
+  (state <s> ^name create-decompress-service ^superstate <ss> ^return-to <r> ^ycombinator <Y>
+  ^emitblock-service <EMITBLOCKSERVICE> ^read <READ> ^write <WRITE> ^exit <EXIT> ^service <SERVICE>)
+-->
+  (<ss> ^<r> <DECOMPRESSSERVICE>)
+  (<DECOMPRESSSERVICE> ^app <a1>)
+  (<a1> ^major <Y> ^minor.lam <l2>)
+  (<l2> ^key <f> ^exp.lam <l3>)
+  (<l3> ^key <x> ^exp.ifzero <i4>)
+  (<i4> ^test.var <x> ^true.app <a5> ^false.ifzero <i6>)
+  (<a5> ^major <SERVICE> ^minor <EXIT>)
+  (<i6> ^test.minus <m7> ^true.app <a8> ^false.app <a12>)
+  (<m7> ^minuend.var <x> ^subtrahend.int 123)
+  (<a8> ^major.lam <l9> ^minor <EMITBLOCKSERVICE>)
+  (<l9> ^key <y1> ^exp.app <a10>)
+  (<a10> ^major.var <f> ^minor.app <a11>)
+  (<a11> ^major <SERVICE> ^minor <READ>)
+  (<a12> ^major.lam <l13> ^minor.app <a16>)
+  (<l13> ^key <y2> ^exp.app <a14>)
+  (<a14> ^major.var <f> ^minor.app <a15>)
+  (<a15> ^major <SERVICE> ^minor <READ>)
+  (<a16> ^major <SERVICE> ^minor.app <a17>)
+  (<a17> ^major <WRITE> ^minor.var <x>)}
+
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 #% interpret lets you run a single process
 #%
@@ -566,12 +688,6 @@ sp {create-interpret*apply
   (<l11> ^key k6 ^exp.app <a12>)
   (<a12> ^major.var <recurse> ^minor.reset.app <a13>)
   (<a13> ^major.var k6 ^minor.emit.var <c>)}
-#interpret(X) :- !, y(Y),
-#  X = app(Y, lam(recurse, lam(to_interpret, 
-#    app(app(app(var(to_interpret), 
-#  	int(1)), % exit 
-#  	lam(k, app(var(recurse), reset(app(var(k), getchar))))), % read
-#  	lam(c, lam(k, app(var(recurse), reset(app(var(k), emit(var(c))))))))))). % write
 
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 #% This is the "operating system" section
