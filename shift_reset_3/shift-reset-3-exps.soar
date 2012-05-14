@@ -486,6 +486,72 @@ sp {create-cat2*apply
 #                app(var(recursefun2), var(d)))
 #            ), app(Service, Read))
 #          ), app(Service, app(Write, var(c))))))).
+sp {create-restofword-service*initialize
+  (state <s> ^superstate.operator <o>)
+  (<o> ^name create-restofword-service ^return-to <r> ^recursefun <recursefun>)
+-->
+  (<s> ^name create-restofword-service ^return-to <r> ^recursefun <recursefun>)}
+
+sp {create-restofword-service*propose*create-ycombinator
+  (state <s> ^name create-restofword-service -^ycombinator)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name create-ycombinator ^return-to ycombinator)}
+
+sp {create-restofword-service*propose*create-isalpha
+  (state <s> ^name create-restofword-service -^isalpha)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name create-isalpha ^return-to isalpha)}
+
+sp {create-restofword-service*propose*create-service
+  (state <s> ^name create-restofword-service -^service)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name create-service ^return-to service)}
+
+sp {create-restofword-service*propose*create-read
+  (state <s> ^name create-restofword-service -^read)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name create-read ^return-to read)}
+
+sp {create-restofword-service*propose*create-write
+  (state <s> ^name create-restofword-service -^write)
+-->
+
+  (<s> ^operator <o> + =)
+  (<o> ^name create-write ^return-to write)}
+
+sp {create-restofword-service*apply
+  (state <s> ^name create-restofword-service ^superstate <ss> ^return-to <r> ^ycombinator <Y>
+  ^isalpha <ISALPHA> ^read <READ> ^write <WRITE> ^service <SERVICE> ^recursefun <recursefun>)
+-->
+  (<ss> ^<r> <RESTOFWORDSERVICE>)
+  (<RESTOFWORDSERVICE> ^app <a1>)
+  (<a1> ^major <Y> ^minor.lam <l2>)
+  (<l2> ^key <recursefun2> ^exp.lam <l3>)
+  (<l3> ^key <c> ^exp.app <a4>)
+  (<a4> ^major.lam <l5> ^minor.app <a22>)
+  (<l5> ^key <ignored1> ^exp.app <a6>)
+  (<a6> ^major.lam <l7> ^minor.app <a21>)
+  (<l7> ^key <d> ^exp.ifzero <i8>)
+  (<i8> ^test.app <a9> ^true.app <a10> ^false.app <a20>)
+  (<a9> ^major <ISALPHA> ^minor.var <d>)
+  (<a10> ^major.lam <l11> ^minor.app <a18>)
+  (<l11> ^key <ignored2> ^exp.app <a12>)
+  (<a12> ^major.lam <l13> ^minor.app <a16>)
+  (<l13> ^key <ignored3> ^exp.app <a14>)
+  (<a14> ^major.var <recursefun> ^minor.app <a15>)
+  (<a15> ^major <SERVICE> ^minor <READ>)
+  (<a16> ^major <SERVICE> ^minor.app <a17>)
+  (<a17> ^major <WRITE> ^minor.int 119)
+  (<a18> ^major <SERVICE> ^minor.app <a19>)
+  (<a19> ^major <WRITE> ^minor.var <d>)
+  (<a20> ^major.var <recursefun2> ^minor.var <d>)
+  (<a21> ^major <SERVICE> ^minor <READ>)
+  (<a22> ^major <SERVICE> ^minor.app <a23>)
+  (<a23> ^major <WRITE> ^minor.var <c>)}
 
 #parser_service(X) :- !,
 #  isalpha(ISALPHA), y(Y), restofword_service(RESTOFWORD),
@@ -495,13 +561,89 @@ sp {create-cat2*apply
 #         ifzero(minus(var(c), int(123)),
 #           app(Service, Exit),
 #           ifzero(app(ISALPHA, var(c)),
-#             app(lam(ignored,
-#               app(lam(ignored,
+#             app(lam(ignored1,
+#               app(lam(ignored2,
 #                 app(var(recursefun), app(Service, Read))
 #               ), app(Service, app(Write, int(112))))
 #             ), app(Service, app(Write, var(c)))),
 #  	   app(RESTOFWORD, var(c))
 #       ))))).
+sp {create-parser-service*initialize
+  (state <s> ^superstate.operator <o>)
+  (<o> ^name create-parser-service ^return-to <r>)
+-->
+  (<s> ^name create-parser-service ^return-to <r> ^recursefun <recursefun>)}
+
+sp {create-parser-service*propose*create-ycombinator
+  (state <s> ^name create-parser-service -^ycombinator)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name create-ycombinator ^return-to ycombinator)}
+
+sp {create-parser-service*propose*create-isalpha
+  (state <s> ^name create-parser-service -^isalpha)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name create-isalpha ^return-to isalpha)}
+
+sp {create-parser-service*propose*create-service
+  (state <s> ^name create-parser-service -^service)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name create-service ^return-to service)}
+
+sp {create-parser-service*propose*create-read
+  (state <s> ^name create-parser-service -^read)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name create-read ^return-to read)}
+
+sp {create-parser-service*propose*create-write
+  (state <s> ^name create-parser-service -^write)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name create-write ^return-to write)}
+
+sp {create-parser-service*propose*create-exit
+  (state <s> ^name create-parser-service -^exit)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name create-exit ^return-to exit)}
+
+sp {create-parser-service*propose*create-restofword-service
+  (state <s> ^name create-parser-service -^restofwordservice ^recursefun <recursefun>)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name create-restofword-service ^return-to restofwordservice ^recursefun <recursefun>)}
+
+sp {create-parser-service*apply
+  (state <s> ^name create-parser-service ^superstate <ss> ^return-to <r>
+  ^ycombinator <Y> ^isalpha <ISALPHA> ^read <READ> ^write <WRITE>
+  ^exit <EXIT> ^service <SERVICE> ^restofwordservice <RESTOFWORDSERVICE>
+  ^recursefun <recursefun>)
+-->
+  (<ss> ^<r> <PARSERSERVICE>)
+  (<PARSERSERVICE> ^app <a1>)
+  (<a1> ^major <Y> ^minor.lam <l2>)
+  (<l2> ^key <recursefun> ^exp.lam <l3>)
+  (<l3> ^key <c> ^exp.ifzero <i4>)
+  (<i4> ^test.minus <m5> ^true.app <a6> ^false.ifzero <i7>)
+  (<m5> ^minuend.var <c> ^subtrahend.int 123)
+  (<a6> ^major <SERVICE> ^minor <EXIT>)
+  (<i7> ^test.app <a8> ^true.app <a9> ^false.app <a19>)
+  (<a8> ^major <ISALPHA> ^minor.var <c>)
+  (<a9> ^major.lam <l10> ^minor.app <a17>)
+  (<l10> ^key <ignored1> ^exp.app <a11>)
+  (<a11> ^major.lam <l12> ^minor.app <a15>)
+  (<l12> ^key <ignored2> ^exp.app <a13>)
+  (<a13> ^major.var <recursefun> ^minor.app <a14>)
+  (<a14> ^major <SERVICE> ^minor <READ>)
+  (<a15> ^major <SERVICE> ^minor.app <a16>)
+  (<a16> ^major <WRITE> ^minor.int 112)
+  (<a17> ^major <SERVICE> ^minor.app <a18>)
+  (<a18> ^major <WRITE> ^minor.var <c>)
+  (<a19> ^major <RESTOFWORDSERVICE> ^minor.var <c>)}
+
 
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 #% This is the decompressor process.
