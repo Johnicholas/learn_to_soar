@@ -475,14 +475,12 @@ sp {create-cat2*apply
 #restofword_service(X) :- !, isalpha(ISALPHA), y(Y), service(Service), reqread(Read), reqwrite(Write),
 #  X = app(Y, lam(recursefun2,
 #        lam(c,
-#          app(lam(ignored,
+#          app(lam(ignored1,
 #            app(lam(d,
 #              ifzero(app(ISALPHA, var(d)),
-#                app(lam(ignored,
-#                  app(lam(ignored,
-#                    app(var(recursefun), app(Service, Read))
-#                  ), app(Service, app(Write, int(119))))
-#                ), app(Service, app(Write, var(d)))),
+#                app(lam(ignored2,
+#                  app(var(recursefun), var(d))
+#                ), app(Service, app(Write, int(119)))),
 #                app(var(recursefun2), var(d)))
 #            ), app(Service, Read))
 #          ), app(Service, app(Write, var(c))))))).
@@ -532,26 +530,21 @@ sp {create-restofword-service*apply
   (<a1> ^major <Y> ^minor.lam <l2>)
   (<l2> ^key <recursefun2> ^exp.lam <l3>)
   (<l3> ^key <c> ^exp.app <a4>)
-  (<a4> ^major.lam <l5> ^minor.app <a22>)
+  (<a4> ^major.lam <l5> ^minor.app <a19>)
   (<l5> ^key <ignored1> ^exp.app <a6>)
-  (<a6> ^major.lam <l7> ^minor.app <a21>)
+  (<a6> ^major.lam <l7> ^minor.app <a18>)
   (<l7> ^key <d> ^exp.ifzero <i8>)
-  (<i8> ^test.app <a9> ^true.app <a10> ^false.app <a20>)
+  (<i8> ^test.app <a9> ^true.app <a10> ^false.app <a17>)
   (<a9> ^major <ISALPHA> ^minor.var <d>)
-  (<a10> ^major.lam <l11> ^minor.app <a18>)
-  (<l11> ^key <ignored2> ^exp.app <a12>)
-  (<a12> ^major.lam <l13> ^minor.app <a16>)
-  (<l13> ^key <ignored3> ^exp.app <a14>)
-  (<a14> ^major.var <recursefun> ^minor.app <a15>)
-  (<a15> ^major <SERVICE> ^minor <READ>)
-  (<a16> ^major <SERVICE> ^minor.app <a17>)
-  (<a17> ^major <WRITE> ^minor.int 119)
-  (<a18> ^major <SERVICE> ^minor.app <a19>)
-  (<a19> ^major <WRITE> ^minor.var <d>)
-  (<a20> ^major.var <recursefun2> ^minor.var <d>)
-  (<a21> ^major <SERVICE> ^minor <READ>)
-  (<a22> ^major <SERVICE> ^minor.app <a23>)
-  (<a23> ^major <WRITE> ^minor.var <c>)}
+  (<a10> ^major.lam <l11> ^minor.app <a15>)
+  (<l11> ^key <ignored2> ^exp.app <a14>)
+  (<a14> ^major.var <recursefun> ^minor.var <d>)
+  (<a15> ^major <SERVICE> ^minor.app <a16>)
+  (<a16> ^major <WRITE> ^minor.int 119)
+  (<a17> ^major.var <recursefun2> ^minor.var <d>)
+  (<a18> ^major <SERVICE> ^minor <READ>)
+  (<a19> ^major <SERVICE> ^minor.app <a20>)
+  (<a20> ^major <WRITE> ^minor.var <c>)}
 
 #parser_service(X) :- !,
 #  isalpha(ISALPHA), y(Y), restofword_service(RESTOFWORD),

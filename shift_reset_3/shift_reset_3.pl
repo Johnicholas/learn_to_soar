@@ -529,10 +529,8 @@ restofword_service(X) :- !, isalpha(ISALPHA), y(Y), service(Service), reqread(Re
             app(lam(d,
               ifzero(app(ISALPHA, var(d)),
                 app(lam(ignored,
-                  app(lam(ignored,
-                    app(var(recursefun), app(Service, Read))
-                  ), app(Service, app(Write, int(119))))
-                ), app(Service, app(Write, var(d)))),
+                  app(var(recursefun), var(d))
+                ), app(Service, app(Write, int(119)))),
                 app(var(recursefun2), var(d)))
             ), app(Service, Read))
           ), app(Service, app(Write, var(c))))))).
