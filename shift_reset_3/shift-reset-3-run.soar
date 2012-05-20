@@ -10,11 +10,11 @@ sp {initialize
 -->
   (<s> ^name shift-reset-3-test ^top-state <s>)}
 
-sp {shift-reset-3-test*propose*create-interpret
-  (state <s> ^name shift-reset-3-test -^interpret)
+sp {shift-reset-3-test*propose*create-pipe
+  (state <s> ^name shift-reset-3-test -^pipe)
 -->
   (<s> ^operator <o> + =)
-  (<o> ^name create-interpret ^return-to interpret)}
+  (<o> ^name create-pipe ^return-to pipe)}
 
 sp {shift-reset-3-test*propose*create-parser-service
   (state <s> ^name shift-reset-3-test -^parserservice)
@@ -22,18 +22,26 @@ sp {shift-reset-3-test*propose*create-parser-service
   (<s> ^operator <o> + =)
   (<o> ^name create-parser-service ^return-to parserservice)}
 
+sp {shift-reset-3-test*propose*create-decompress-service
+  (state <s> ^name shift-reset-3-test -^decompressservice)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name create-decompress-service ^return-to decompressservice)}
+
 sp {shift-reset-3-test*propose*create-exp
-  (state <s> ^name shift-reset-3-test -^exp ^interpret ^parserservice)
+  (state <s> ^name shift-reset-3-test -^exp ^pipe ^parserservice ^decompressservice)
 -->
   (<s> ^operator <o> + =)
   (<o> ^name create-exp)}
 
 sp {shift-reset-3-test*apply*create-exp
-  (state <s> ^name shift-reset-3-test ^operator.name create-exp ^interpret <INTERPRET> ^parserservice <PARSERSERVICE>)
+  (state <s> ^name shift-reset-3-test ^operator.name create-exp ^pipe <PIPE>
+  ^parserservice <PARSERSERVICE> ^decompressservice <DECOMPRESSSERVICE>)
 -->
-  (<s> ^exp.app <a1>)
-  (<a1> ^major <INTERPRET> ^minor.reset.app <a2>)
-  (<a2> ^major <PARSERSERVICE> ^minor getchar)}
+  (<s> ^exp.app <a0>)
+  (<a0> ^major.app <a1> ^minor <PARSERSERVICE>)
+  (<a1> ^major <PIPE> ^minor.reset.app <a2>)
+  (<a2> ^major <DECOMPRESSSERVICE> ^minor getchar)}
 
 sp {shift-reset-3-test*propose*run
   (state <s> ^name shift-reset-3-test ^exp <e> -^run-done)

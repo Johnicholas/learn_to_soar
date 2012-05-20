@@ -430,7 +430,7 @@ sp {create-cat2*apply
   (<a15> ^major <SERVICE> ^minor <READ>)}
 
 #% cat is a process, you read it something like:
-#% fixpoint of lam(recurse, 
+#% fixpoint of lam recurse, 
 #%   let input = service Read in
 #%   let _ = service (Write input) in
 
@@ -832,7 +832,7 @@ sp {create-interpret*apply
 #% Oleg Kiselyov was able to write something like an operating system (ZipperFS)
 #% in 500 lines of Haskell. I am not Oleg Kiselyov.
 #%
-#% You can pipe the decompression service 
+#% You can pipe the decompression service into it like this.
 #% parser_service(Parser), decompress_service(Decompress), pipe(Pipe),
 #% run(app(app(Pipe, reset(app(Decompress, getchar))), Parser), Answer).
 #
@@ -842,9 +842,44 @@ sp {create-interpret*apply
 #  X = app(Y, lam(recurse2, lam(former2, lam(latter2,
 #    app(app(app(var(latter2),
 #  	int(1)), % latter exits - whole thing exits
-#        lam(k, app(app(var(recurse), reset(app(var(former2), int(1)))), var(k)))), % read from former
+#        lam(k1, app(app(var(recurse), reset(app(var(former2), int(1)))), var(k1)))), % read from former
 #  	lam(c, lam(k, app(app(var(recurse2), var(former2)), reset(app(var(k), emit(var(c)))))))) % write
 #)))).
+sp {create-write-block*initialize
+  (state <s> ^superstate.operator <o>)
+  (<o> ^name create-write-block ^return-to <r> ^recurse <recurse>)
+-->
+  (<s> ^name create-write-block ^return-to <r> ^recurse <recurse>)}
+
+sp {create-write-block*propose*create-ycombinator
+  (state <s> ^name create-write-block -^ycombinator)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name create-ycombinator ^return-to ycombinator)}
+
+sp {create-write-block*apply
+  (state <s> ^name create-write-block ^superstate <ss> ^return-to <r>
+  ^ycombinator <YCOMBINATOR> ^recurse <recurse>)
+-->
+  (<ss> ^<r> <WRITEBLOCK>)
+  (<WRITEBLOCK> ^app <a1>)
+  (<a1> ^major <YCOMBINATOR> ^minor.lam <l3>)
+  (<l3> ^key <recurse2> ^exp.lam <l4>)
+  (<l4> ^key <former2> ^exp.lam <l5>)
+  (<l5> ^key <latter2> ^exp.app <a6>)
+  (<a6> ^major.app <a7> ^minor.lam <l13>)
+  (<a7> ^major.app <a8> ^minor.lam <l9>)
+  (<a8> ^major.var <latter2> ^minor.int 1)
+  (<l9> ^key <k1> ^exp.app <a10>)
+  (<a10> ^major.app <a11> ^minor.var <k1>)
+  (<a11> ^major.var <recurse> ^minor.reset.app <a12>)
+  (<a12> ^major.var <former2> ^minor.int 1)
+  (<l13> ^key <c> ^exp.lam <l14>)
+  (<l14> ^key <k2> ^exp.app <a15>)
+  (<a15> ^major.app <a16> ^minor.reset.app <a17>)
+  (<a16> ^major.var <recurse2> ^minor.var <former2>)
+  (<a17> ^major.var <k2> ^minor.emit.var <c>)}
+
 
 #% pipe is like interpret for two processes
 #% it implements read and write differently for the two processes
@@ -857,4 +892,43 @@ sp {create-interpret*apply
 #        lam(k, app(app(var(recurse), reset(app(var(k), getchar))), var(latter)))), % former reads - getchar
 #        lam(c, lam(k, app(app(Writeblock, var(k)), reset(app(var(latter), var(c))))))) % pipe to latter
 #)))).
+sp {create-pipe*initialize
+  (state <s> ^superstate.operator <o>)
+  (<o> ^name create-pipe ^return-to <r>)
+-->
+  (<s> ^name create-pipe ^return-to <r> ^recurse <recurse>)}
 
+sp {create-pipe*propose*create-ycombinator
+  (state <s> ^name create-pipe -^ycombinator)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name create-ycombinator ^return-to ycombinator)}
+
+sp {create-pipe*propose*create-write-block
+  (state <s> ^name create-pipe -^writeblock ^recurse <recurse>)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name create-write-block ^return-to writeblock ^recurse <recurse>)}
+
+sp {create-pipe*apply
+  (state <s> ^name create-pipe ^superstate <ss> ^return-to <r>
+  ^writeblock <WRITEBLOCK> ^ycombinator <YCOMBINATOR> ^recurse <recurse>)
+-->
+  (<ss> ^<r> <PIPE>)
+  (<PIPE> ^app <a1>)
+  (<a1> ^major <YCOMBINATOR> ^minor.lam <l2>)
+  (<l2> ^key <recurse> ^exp.lam <l3>)
+  (<l3> ^key <former> ^exp.lam <l4>)
+  (<l4> ^key <latter> ^exp.app <a5>)
+  (<a5> ^major.app <a6> ^minor.lam <l12>)
+  (<a6> ^major.app <a7> ^minor.lam <l8>)
+  (<a7> ^major.var <former> ^minor.int 1)
+  (<l8> ^key <k1> ^exp.app <a9>)
+  (<a9> ^major.app <a10> ^minor.var <latter>)
+  (<a10> ^major.var <recurse> ^minor.reset.app <a11>)
+  (<a11> ^major.var <k1> ^minor getchar)
+  (<l12> ^key <c> ^exp.lam <l13>)
+  (<l13> ^key <k2> ^exp.app <a14>)
+  (<a14> ^major.app <a15> ^minor.reset.app <a16>)
+  (<a15> ^major <WRITEBLOCK> ^minor.var <k2>)
+  (<a16> ^major.var <latter> ^minor.var <c>)}
