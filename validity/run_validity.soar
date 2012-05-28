@@ -9,8 +9,13 @@ sp {propose*validity
   (state <s> ^name validity-test)
 -->
   (<s> ^operator <o> +)
-  (<o> ^name validity ^exp.or <or> ^env empty ^todo done ^desired false)
-  (<or> ^p.not.var x ^q.var x)}
+  (<o> ^name validity ^exp.or <or1> ^env empty ^todo done ^desired false)
+  (<or1> ^p.not.or <or2> ^q.or <or3>)
+  (<or2> ^p.var p ^q.var q)
+  (<or3> ^p.not.and <and4> ^q.var r)
+  (<and4> ^p.or <or6> ^q.or <or7>)
+  (<or6> ^p.not.var p ^q.var r)
+  (<or7> ^p.not.var q ^q.var r)}
 
 sp {pass
   (state <s> ^name validity-test ^validity-done empty)

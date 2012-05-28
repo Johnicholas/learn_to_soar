@@ -86,11 +86,17 @@ sp {validity*propose*decompose
 # and exp is an and, and desired is true
 # change todo to a newly built todo out of the and's q, the current desired, and the old todo
 # change exp to and's p
-
+sp {validity*apply*decompose*and*false
+  (state <s> ^name validity ^operator.name decompose ^exp <exp> ^desired true ^todo <todo>)
+  (<exp> ^and <and>)
+  (<and> ^p <p> ^q <q>)
+-->
+  (<s> ^todo <todo> - <newtodo> ^exp <exp> - <p>)
+  (<newtodo> ^q <q> ^desired true ^todo <todo>)}
 
 # if name is validity and operator is decompose
 # and exp is an and, and desired is false
-# propose recursion on the and's p
+# then recurse on the and's p
 sp {validity*apply*decompose*and*false*recurse
   (state <s> ^superstate <ss>)
   (<ss> ^name validity ^operator.name decompose ^exp.and <and> ^desired false ^env <env> ^todo <todo>)
@@ -103,31 +109,56 @@ sp {validity*apply*decompose*and*false*recurse
 # and there is a recursive answer which is not empty
 # return the recursive answer
 sp {validity*apply*decompose*and*false*recurse*return
-  (state <s> ^name validity ^exp.and ^desired false ^validity-done <env> <> empty ^superstate <ss>)
+  (state <s> ^name validity ^operator.name decompose
+  ^exp.and ^desired false ^validity-done <env> <> empty ^superstate <ss>)
 -->
   (<ss> ^validity-done <env>)}
+
 
 # if name is validity and operator is decompose
 # and exp is an and and desired is false
 # and there is a recursive answer which is empty
-# change exp to the and's q
+# reject the recursive answer and change exp to the and's q
+sp {validity*apply*decompose*and*false*recurse*retry
+  (state <s> ^name validity ^operator.name decompose
+  ^exp <exp> ^desired false ^validity-done empty)
+  (<exp> ^and <and>)
+  (<and> ^q <q>)
+-->
+  (<s> ^validity-done empty - ^exp <exp> - <q>)}
 
 
 # if name is validity and operator is decompose
 # and exp is an or and desired is true
-# then propose recusion on the or's p
-
+# then recurse on the or's p
+sp {validity*apply*decompose*or*false*recurse
+  (state <s> ^superstate <ss>)
+  (<ss> ^name validity ^operator.name decompose ^exp.or <or> ^desired true ^env <env> ^todo <todo>)
+  (<or> ^p <p>)
+-->
+  (<s> ^name validity ^exp <p> ^env <env> ^todo <todo> ^desired true)}
 
 # if name is validity and operator is decompose
 # and exp is an or and desired is true
 # and there is a recursive answer which is not empty
 # return the recursive answer
+sp {validity*apply*decompose*or*true*recurse*return*nonempty
+  (state <s> ^name validity ^operator.name decompose ^exp.or ^desired true ^validity-done <env> <> empty ^superstate <ss>)
+-->
+  (<ss> ^validity-done <env>)}
 
 
 # if name is validity and operator is decompose
 # and exp is an or and desired is true
 # and there is a recursive answer which is empty
-# change exp to the or's q
+# reject the recursive answer and change exp to the or's q
+sp {validity*apply*decompose*or*true*recurse*retry
+  (state <s> ^name validity ^operator.name decompose
+  ^exp <exp> ^desired true ^validity-done empty)
+  (<exp> ^or <or>)
+  (<or> ^q <q>)
+-->
+  (<s> ^validity-done empty - ^exp <exp> - <q>)}
 
 
 # if name is validity and operator is decompose
@@ -136,7 +167,8 @@ sp {validity*apply*decompose*and*false*recurse*return
 # made of the or's q, the current desired, and the current todo
 # and change exp to or's p
 sp {validity*apply*decompose*or*false
-  (state <s> ^name validity ^operator.name decompose ^exp <exp> ^desired false ^todo <todo>)
+  (state <s> ^name validity ^operator.name decompose
+  ^exp <exp> ^desired false ^todo <todo>)
   (<exp> ^or <or>)
   (<or> ^p <p> ^q <q>)
 -->
@@ -153,6 +185,7 @@ sp {validity*apply*decompose*not*change-exp
 -->
   (<s> ^exp <exp> - <p>)}
 
+
 # if name is validity and operator is decompose
 # and exp is a not and desired is true
 # then change desired to false
@@ -161,6 +194,7 @@ sp {validity*apply*decompose*not*desired*true
 -->
   (<s> ^desired true - false)}
 
+
 # if name is validity and operator is decompose
 # and exp is a not and desired is false
 # then change desired to true
@@ -168,6 +202,7 @@ sp {validity*apply*decompose*not*desired*false
   (state <s> ^name validity ^operator.name decompose ^exp.not ^desired false)
 -->
   (<s> ^desired false - true)}
+
 
 # if name is validity and operator is decompose
 # and exp is a var then set key to var's key
@@ -179,6 +214,7 @@ sp {validity*apply*decompose*var
 -->
   (<s> ^key <key> ^iterator <env> ^exp <exp> -)}
 
+
 # if name is validity and there is no name to lookup or exp to decompose
 # then propose dotodo
 sp {validity*propose*dotodo
@@ -186,6 +222,7 @@ sp {validity*propose*dotodo
 -->
   (<s> ^operator <o> +)
   (<o> ^name dotodo)}
+
 
 # if name is validity and operator is dotodo
 # and todo is not done
@@ -198,6 +235,7 @@ sp {validity*apply*dotodo*notdone
 -->
   (<s> ^exp <q> ^desired <newdesired> ^todo <todo> - <newtodo>)}
 
+
 # if name is validity and operator is dotodo
 # and todo is done
 # then return env
@@ -205,6 +243,7 @@ sp {validity*apply*dotodo*done
   (state <s> ^name validity ^operator.name dotodo ^todo done ^superstate <ss> ^env <env>)
 -->
   (<ss> ^validity-done <env>)}
+
 
 # if an isvalid operator was proposed with an exp
 # then propose validity with that exp, an empty env, a done todo, and a desired of false
