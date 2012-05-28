@@ -249,7 +249,6 @@ int main(int argc, char* argv[]) {
 			       VAR("r")))),
 		    VAR("r")))) == true);
   printf("\n");
-  /*
   assert(test(OR(NOT(OR(VAR("x"), VAR("q"))),
 		 OR(NOT(AND(OR(NOT(VAR("p")),
 			       VAR("r")),
@@ -301,6 +300,5 @@ int main(int argc, char* argv[]) {
 			    OR(NOT(VAR("q")),
 			       VAR("r")))),
 		    VAR("x")))) == false);
-  */
   return 0;
 }
