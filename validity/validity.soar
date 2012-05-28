@@ -37,7 +37,7 @@ sp {validity*propose*lookup
 # if name is validity and operator is lookup
 # and iterator points to bind that matches key and value matches desired
 # reject key, everything's good
-sp {validity*apply*lookup*found
+sp {validity*apply*lookup*found*match
   (state <s> ^name validity ^operator.name lookup ^key <key> ^desired <desired> ^iterator <bind>)
   (<bind> ^key <key> ^value <desired>)
 -->
@@ -47,6 +47,11 @@ sp {validity*apply*lookup*found
 # if name is validity and operator is lookup
 # and iterator points to bind that matches key and value that doesn't match desired
 # return empty
+sp {validity*apply*lookup*found*nonmatch
+  (state <s> ^name validity ^operator.name lookup ^key <key> ^desired <desired> ^iterator <bind> ^superstate <ss>)
+  (<bind> ^key <key> ^value <value> <> <desired>)
+-->
+  (<ss> ^validity-done empty)}
 
 
 # if name is validity and operator is lookup

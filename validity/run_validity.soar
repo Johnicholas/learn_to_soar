@@ -10,12 +10,10 @@ sp {propose*validity
 -->
   (<s> ^operator <o> +)
   (<o> ^name validity ^exp.or <or> ^env empty ^todo done ^desired false)
-  (<or> ^p.var x ^q.var y)}
+  (<or> ^p.not.var x ^q.var x)}
 
 sp {pass
-  (state <s> ^name validity-test ^validity-done <env1>)
-  (<env1> ^key y ^value false ^env <env2>)
-  (<env2> ^key x ^value false ^env empty)
+  (state <s> ^name validity-test ^validity-done empty)
 -->
   (write |pass| (crlf))}
 
