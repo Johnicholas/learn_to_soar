@@ -1,0 +1,70 @@
+source validity.soar
+
+sp {initialize
+  (state <s> ^superstate nil)
+-->
+  (<s> ^name validity-test)}
+
+sp {propose*validity
+  (state <s> ^name validity-test)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name validity ^exp.var p ^env empty ^todo done ^desired false)}
+
+#  assert(test(AND(VAR("p"), VAR("p"))) == false);
+#  assert(test(AND(VAR("p"), VAR("q"))) == false);
+#  assert(test(OR(VAR("p"), VAR("p"))) == false);
+#  assert(test(OR(VAR("p"), VAR("q"))) == false);
+#  assert(test(OR(NOT(VAR("p")), VAR("q"))) == false);
+#  assert(test(OR(NOT(VAR("p")), VAR("p"))) == true);
+#  assert(test(OR(NOT(OR(VAR("p"), VAR("q"))),
+#		 OR(NOT(AND(OR(NOT(VAR("p")),
+#			       VAR("r")),
+#			    OR(NOT(VAR("q")),
+#			       VAR("r")))),
+#		    VAR("r")))) == true);
+#  assert(test(OR(NOT(OR(VAR("x"), VAR("q"))),
+#		 OR(NOT(AND(OR(NOT(VAR("p")),
+#			       VAR("r")),
+#			    OR(NOT(VAR("q")),
+#			       VAR("r")))),
+#		    VAR("r"
+#			))))
+#	 == false);
+#  assert(test(OR(NOT(OR(VAR("p"), VAR("x"))),
+#		 OR(NOT(AND(OR(NOT(VAR("p")),
+#			       VAR("r")),
+#			    OR(NOT(VAR("q")),
+#			       VAR("r")))),
+#		    VAR("r")))) == false);
+#  assert(test(OR(NOT(OR(VAR("p"), VAR("q"))),
+#		 OR(NOT(AND(OR(NOT(VAR("x")),
+#			       VAR("r")),
+#			    OR(NOT(VAR("q")),
+#			       VAR("r")))),
+#		    VAR("r")))) == false);
+#  assert(test(OR(NOT(OR(VAR("p"), VAR("q"))),
+#		 OR(NOT(AND(OR(NOT(VAR("p")),
+#			       VAR("x")),
+#			    OR(NOT(VAR("q")),
+#			       VAR("r")))),
+#		    VAR("r")))) == false);
+#  assert(test(OR(NOT(OR(VAR("p"), VAR("q"))),
+#		 OR(NOT(AND(OR(NOT(VAR("p")),
+#			       VAR("r")),
+#			    OR(NOT(VAR("x")),
+#			       VAR("r")))),
+#		    VAR("r")))) == false);
+#  assert(test(OR(NOT(OR(VAR("p"), VAR("q"))),
+#		 OR(NOT(AND(OR(NOT(VAR("p")),
+#			       VAR("r")),
+#			    OR(NOT(VAR("q")),
+#			       VAR("x")))),
+#		    VAR("r")))) == false);
+#  assert(test(OR(NOT(OR(VAR("p"), VAR("q"))),
+#		 OR(NOT(AND(OR(NOT(VAR("p")),
+#			       VAR("r")),
+#			    OR(NOT(VAR("q")),
+#			       VAR("r")))),
+#		    VAR("x")))) == false);
+

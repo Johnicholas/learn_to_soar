@@ -1,0 +1,164 @@
+# Based on validity.py which is copyright (c) Feb 2000, by Denys
+# Duchier, Universitaet des Saarlandes
+#
+# Transliterated (badly) from Python to Soar by Johnicholas Hines,
+# but with the two-continuation model changed to the one-continuation model.
+# (The failure continuation is the Soar architectural stack.)
+#
+# data model:
+#   a todo can be done
+#   a todo can be <later> where (<later> ^q <exp> ^desired <bool> ^todo <todo>)
+#   a bool can be true
+#   a bool can be false
+#   a env can be empty
+#   a env can be <bind> where (<bind> ^key <key> ^value <bool> ^env <env>)
+#   an exp can be (<exp> ^and <and>) where (<and> ^p <exp> ^q <exp>)
+#   an exp can be (<exp> ^or <or>) where (<or> ^p <exp> ^q <exp>)
+#   an exp can be (<exp> ^not <exp>)
+#   an exp can be (<exp> ^var <key>)
+
+# validity is an operator that takes an exp, an env, a todo, and a bool
+sp {initialize*validity
+  (state <s> ^superstate.operator <o>)
+  (<o> ^name validity ^exp <exp> ^env <env> ^todo <todo> ^desired <bool>)
+-->
+  (<s> ^name validity ^exp <exp> ^env <env> ^todo <todo> ^desired <bool>)}
+
+# if name is validity and key exists
+# then propose lookup
+sp {validity*propose*lookup
+  (state <s> ^name validity ^key <key>)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name lookup)}
+
+# if name is validity and operator is lookup
+# and iterator points to bind that matches key and value matches desired
+# reject key
+
+
+# if name is validity and operator is lookup
+# and iterator points to bind that matches key and value that doesn't match desired
+# return empty
+
+
+# if name is validity and operator is lookup
+# and iterator points to bind that doesn't match key
+# change iterator to point to bind's env
+
+
+# if name is validity and operator is lookup
+# and iterator points to empty
+# change env to point to a new bind of key, desired, and oldenv
+# and reject key
+sp {validity*apply*lookup*empty
+  (state <s> ^name validity ^operator.name lookup ^env empty ^key <key> ^desired <desired>)
+-->
+  (<s> ^env empty - <newenv> ^key <key> - ^desired <desired> -)
+  (<newenv> ^bind <bind>)
+  (<bind> ^key <key> ^value <desired> ^env empty)}
+
+# if name is validity and exp exists
+# then propose decompose
+sp {propose*decompose
+  (state <s> ^name validity ^exp)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name decompose)}
+
+# if name is validity and operator is decompose
+# and exp is an and, and desired is true
+# change todo to a newly built todo out of the and's q, the current desired, and the old todo
+# change exp to and's p
+
+
+# if name is validity and operator is decompose
+# and exp is an and, and desired is false
+# propose recursion on the and's p
+
+
+# if name is validity and operator is decompose
+# and exp is an and and desired is false
+# and there is a recursive answer which is not empty
+# return the recursive answer
+
+
+# if name is validity and operator is decompose
+# and exp is an and and desired is false
+# and there is a recursive answer which is empty
+# change exp to the and's q
+
+
+# if name is validity and operator is decompose
+# and exp is an or and desired is true
+# then propose recusion on the or's p
+
+
+# if name is validity and operator is decompose
+# and exp is an or and desired is true
+# and there is a recursive answer which is not empty
+# return the recursive answer
+
+
+# if name is validity and operator is decompose
+# and exp is an or and desired is true
+# and there is a recursive answer which is empty
+# change exp to the or's q
+
+
+# if name is validity and operator is decompose
+# and exp is an or and desired is false
+# then change todo to a new todo of the or's q, the current desired, and the current todo
+# and change exp to or's p
+
+
+# if name is validity and operator is decompose
+# and exp is a not 
+# then change exp to the not's p
+
+
+# if name is validity and operator is decompose
+# and exp is a not and desired is true
+# then change desired to false
+
+
+# if name is validity and operator is decompose
+# and exp is a not and desired is false
+# then change desired to true
+
+
+# if name is validity and operator is decompose
+# and exp is a var then set key to var's key
+# and set iterator to env
+# and reject exp
+sp {validity*apply*decompose*var
+  (state <s> ^name validity ^operator.name decompose ^exp <exp> ^env <env>)
+  (<exp> ^var <key>)
+-->
+  (<s> ^key <key> ^iterator <env> ^exp <exp> -)}
+
+# if name is validity and there is no name to lookup or exp to decompose
+# then propose dotodo
+sp {validity*propose*dotodo
+  (state <s> ^name validity -^key -^exp)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name dotodo)}
+
+# if name is validity and operator is dotodo
+# and todo is not done
+# then set exp to todo's q
+# set desired to todo's desired
+# set todo to todo's todo
+
+
+# if name is validity and operator is dotodo
+# and todo is done
+# then return env
+sp {validity*apply*dotodo*done
+  (state <s> ^name validity ^operator.name dotodo ^todo done ^superstate <ss> ^env <env>)
+-->
+  (<ss> ^validity-done <env>)}
+
+# if an isvalid operator was proposed with an exp
+# then propose validity with that exp, an empty env, a done todo, and a desired of false
