@@ -235,12 +235,12 @@ int main(int argc, char* argv[]) {
   printf("\n");
   assert(test(OR(VAR("p"), VAR("p"))) == false);
   printf("\n");
-  */
   assert(test(OR(VAR("p"), VAR("q"))) == false);
   printf("\n");
-  /*
+  */
   assert(test(OR(NOT(VAR("p")), VAR("q"))) == false);
   printf("\n");
+  /*
   assert(test(OR(NOT(VAR("p")), VAR("p"))) == true);
   printf("\n");
   assert(test(OR(NOT(OR(VAR("p"), VAR("q"))),

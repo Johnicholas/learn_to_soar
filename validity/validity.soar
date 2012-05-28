@@ -38,10 +38,10 @@ sp {validity*propose*lookup
 # and iterator points to bind that matches key and value matches desired
 # reject key, everything's good
 sp {validity*apply*lookup*found
-  (state <s> ^name validity ^operator.name lookup ^key <key> ^desired <desired> ^env.bind <bind>)
+  (state <s> ^name validity ^operator.name lookup ^key <key> ^desired <desired> ^iterator <bind>)
   (<bind> ^key <key> ^value <desired>)
 -->
-  (<s> ^key <key> -)}
+  (<s> ^key <key> - ^iterator <bind> -)}
 
 
 # if name is validity and operator is lookup
@@ -52,18 +52,22 @@ sp {validity*apply*lookup*found
 # if name is validity and operator is lookup
 # and iterator points to bind that doesn't match key
 # change iterator to point to bind's env
+sp {validity*apply*lookup*advance
+  (state <s> ^name validity ^operator.name lookup ^key <key> ^desired <desired> ^iterator <bind>)
+  (<bind> ^key <key2> <> <key> ^env <next>)
+-->
+  (<s> ^iterator <bind> - <next>)}
 
 
 # if name is validity and operator is lookup
 # and iterator points to empty
 # change env to point to a new bind of key, desired, and oldenv
-# and reject key
+# and reject key, desired, and iterator
 sp {validity*apply*lookup*empty
-  (state <s> ^name validity ^operator.name lookup ^env empty ^key <key> ^desired <desired>)
+  (state <s> ^name validity ^operator.name lookup ^iterator empty ^key <key> ^desired <desired> ^env <env>)
 -->
-  (<s> ^env empty - <newenv> ^key <key> - ^desired <desired> -)
-  (<newenv> ^bind <bind>)
-  (<bind> ^key <key> ^value <desired> ^env empty)}
+  (<s> ^env <env> - <newenv> ^key <key> - ^desired <desired> - ^iterator empty -)
+  (<newenv> ^key <key> ^value <desired> ^env <env>)}
 
 # if name is validity and exp exists
 # then propose decompose
