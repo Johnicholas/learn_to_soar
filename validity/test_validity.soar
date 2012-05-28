@@ -42,6 +42,23 @@ sp {pass
 
 }
 
+test "and(var(x), var(y)) should be invalid" {
+
+sp {propose*validity
+  (state <s> ^name validity-test)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name validity ^exp.and <and> ^env empty ^todo done ^desired false)
+  (<and> ^p.var x ^q.var y)}
+
+sp {pass
+  (state <s> ^name validity-test ^validity-done.bind <env>)
+  (<env> ^key x ^value false ^env empty)
+-->
+  (pass)}
+
+}
+
 #  assert(test(AND(VAR("p"), VAR("p"))) == false);
 #  assert(test(AND(VAR("p"), VAR("q"))) == false);
 #  assert(test(OR(VAR("p"), VAR("p"))) == false);
