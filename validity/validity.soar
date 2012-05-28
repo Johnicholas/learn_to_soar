@@ -142,17 +142,27 @@ sp {validity*apply*decompose*or*false
 # if name is validity and operator is decompose
 # and exp is a not 
 # then change exp to the not's p
-
+sp {validity*apply*decompose*not*change-exp
+  (state <s> ^name validity ^operator.name decompose ^exp <exp>)
+  (<exp> ^not <p>)
+-->
+  (<s> ^exp <exp> - <p>)}
 
 # if name is validity and operator is decompose
 # and exp is a not and desired is true
 # then change desired to false
-
+sp {validity*apply*decompose*not*desired*true
+  (state <s> ^name validity ^operator.name decompose ^exp.not ^desired true)
+-->
+  (<s> ^desired true - false)}
 
 # if name is validity and operator is decompose
 # and exp is a not and desired is false
 # then change desired to true
-
+sp {validity*apply*decompose*not*desired*false
+  (state <s> ^name validity ^operator.name decompose ^exp.not ^desired false)
+-->
+  (<s> ^desired false - true)}
 
 # if name is validity and operator is decompose
 # and exp is a var then set key to var's key
