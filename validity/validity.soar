@@ -24,17 +24,24 @@ sp {validity*initialize
 -->
   (<s> ^name validity ^exp <exp> ^env <env> ^todo <todo> ^desired <bool>)}
 
+
 # if name is validity and key exists
 # then propose lookup
 sp {validity*propose*lookup
-  (state <s> ^name validity ^key <key>)
+  (state <s> ^name validity ^key)
 -->
   (<s> ^operator <o> +)
   (<o> ^name lookup)}
 
+
 # if name is validity and operator is lookup
 # and iterator points to bind that matches key and value matches desired
-# reject key
+# reject key, everything's good
+sp {validity*apply*lookup*found
+  (state <s> ^name validity ^operator.name lookup ^key <key> ^desired <desired> ^env.bind <bind>)
+  (<bind> ^key <key> ^value <desired>)
+-->
+  (<s> ^key <key> -)}
 
 
 # if name is validity and operator is lookup
@@ -116,8 +123,16 @@ sp {validity*apply*decompose*and*false*recurse*return
 
 # if name is validity and operator is decompose
 # and exp is an or and desired is false
-# then change todo to a new todo of the or's q, the current desired, and the current todo
+# then change todo to a new todo,
+# made of the or's q, the current desired, and the current todo
 # and change exp to or's p
+sp {validity*apply*decompose*or*false
+  (state <s> ^name validity ^operator.name decompose ^exp <exp> ^desired false ^todo <todo>)
+  (<exp> ^or <or>)
+  (<or> ^p <p> ^q <q>)
+-->
+  (<s> ^todo <todo> - <newtodo> ^exp <exp> - <p>)
+  (<newtodo> ^q <q> ^desired false ^todo <todo>)}
 
 
 # if name is validity and operator is decompose
@@ -158,7 +173,11 @@ sp {validity*propose*dotodo
 # then set exp to todo's q
 # set desired to todo's desired
 # set todo to todo's todo
-
+sp {validity*apply*dotodo*notdone
+  (state <s> ^name validity ^operator.name dotodo ^todo <todo>)
+  (<todo> ^q <q> ^desired <newdesired> ^todo <newtodo>)
+-->
+  (<s> ^exp <q> ^desired <newdesired> ^todo <todo> - <newtodo>)}
 
 # if name is validity and operator is dotodo
 # and todo is done

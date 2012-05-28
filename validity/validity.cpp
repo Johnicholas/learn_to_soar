@@ -86,7 +86,7 @@ EnvPtr go(ExpPtr initial_exp,
 	    return EnvPtr();
 	  }
 	} else {
-	    printf("%s %d\n", __PRETTY_FUNCTION__, __LINE__);
+	  printf("%s %d\n", __PRETTY_FUNCTION__, __LINE__);
 	  env_iterator = env_iterator->env;
 	}
       } else {
@@ -116,7 +116,7 @@ EnvPtr go(ExpPtr initial_exp,
 	}
       } else if (DOWNCAST<Or>(exp)) {
 	if (desired) {
-	    printf("%s %d\n", __PRETTY_FUNCTION__, __LINE__);
+	  printf("%s %d\n", __PRETTY_FUNCTION__, __LINE__);
 	  EnvPtr temp = go(DOWNCAST<Or>(exp)->p, env, todo, desired);
 	  if (temp) {
 	    printf("%s %d\n", __PRETTY_FUNCTION__, __LINE__);
@@ -126,7 +126,7 @@ EnvPtr go(ExpPtr initial_exp,
 	    exp = DOWNCAST<Or>(exp)->q;
 	  }
 	} else {
-	    printf("%s %d\n", __PRETTY_FUNCTION__, __LINE__);
+	  printf("%s %d\n", __PRETTY_FUNCTION__, __LINE__);
 	  todo = TodoPtr(new Todo(DOWNCAST<Or>(exp)->q, desired, todo));
 	  exp = DOWNCAST<Or>(exp)->p;
 	}
@@ -134,10 +134,10 @@ EnvPtr go(ExpPtr initial_exp,
 	    printf("%s %d\n", __PRETTY_FUNCTION__, __LINE__);
 	exp = DOWNCAST<Not>(exp)->p;
 	if (desired) {
-	    printf("%s %d\n", __PRETTY_FUNCTION__, __LINE__);
+	  printf("%s %d\n", __PRETTY_FUNCTION__, __LINE__);
 	  desired = false;
 	} else {
-	    printf("%s %d\n", __PRETTY_FUNCTION__, __LINE__);
+	  printf("%s %d\n", __PRETTY_FUNCTION__, __LINE__);
 	  desired = true;
 	}
       } else if (DOWNCAST<Var>(exp)) {
@@ -152,7 +152,7 @@ EnvPtr go(ExpPtr initial_exp,
 
     if (name == "" and exp == NULL) {
       if (todo) {
-	    printf("%s %d\n", __PRETTY_FUNCTION__, __LINE__);
+	printf("%s %d\n", __PRETTY_FUNCTION__, __LINE__);
 	exp = todo->q;
 	desired = todo->desired;
 	todo = todo->todo;
@@ -229,17 +229,16 @@ int main(int argc, char* argv[]) {
   /*
   assert(test(VAR("p")) == false);
   printf("\n");
-  */
   assert(test(AND(VAR("p"), VAR("p"))) == false);
   printf("\n");
-  /*
   assert(test(AND(VAR("p"), VAR("q"))) == false);
-
   printf("\n");
   assert(test(OR(VAR("p"), VAR("p"))) == false);
   printf("\n");
+  */
   assert(test(OR(VAR("p"), VAR("q"))) == false);
   printf("\n");
+  /*
   assert(test(OR(NOT(VAR("p")), VAR("q"))) == false);
   printf("\n");
   assert(test(OR(NOT(VAR("p")), VAR("p"))) == true);

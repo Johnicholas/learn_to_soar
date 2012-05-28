@@ -9,8 +9,9 @@ sp {propose*validity
   (state <s> ^name validity-test)
 -->
   (<s> ^operator <o> +)
-  (<o> ^name validity ^exp.and <and> ^env empty ^todo done ^desired false)
-  (<and> ^p.var x ^q.var x)}
+  (<o> ^name validity ^exp.or <or> ^env empty ^todo done ^desired false)
+  (<or> ^p.var x ^q.var x)}
+
 
 
 #  assert(test(AND(VAR("p"), VAR("p"))) == false);
