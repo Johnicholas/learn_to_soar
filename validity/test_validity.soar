@@ -128,6 +128,25 @@ sp {pass
 
 }
 
+test "or(var(x), and(not(var(x)), var(y))) should not be valid" {
+
+sp {propose*validity
+  (state <s> ^name validity-test)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name validity ^exp.or <o1> ^env empty ^todo done ^desired false)
+  (<o1> ^p.var x ^q.and <a2>)
+  (<a2> ^p.not.var x ^q.var y)}
+
+sp {pass
+  (state <s> ^name validity-test ^validity-done <e1>)
+  (<e1> ^key y ^value false ^env <e2>)
+  (<e2> ^key x ^value false ^env empty)
+-->
+  (pass)}
+
+}
+
 test "a complicated expression that should be valid" {
 
 sp {propose*validity

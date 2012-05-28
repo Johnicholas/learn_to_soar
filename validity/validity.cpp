@@ -100,7 +100,7 @@ EnvPtr go(ExpPtr initial_exp,
     if (exp != NULL) {
       if (DOWNCAST<And>(exp)) {
 	if (desired) {
-	    printf("%s %d\n", __PRETTY_FUNCTION__, __LINE__);
+	  printf("%s %d\n", __PRETTY_FUNCTION__, __LINE__);
 	  todo = TodoPtr(new Todo(DOWNCAST<And>(exp)->q, desired, todo));
 	  exp = DOWNCAST<And>(exp)->p;
 	} else {
@@ -110,7 +110,7 @@ EnvPtr go(ExpPtr initial_exp,
 	    printf("%s %d\n", __PRETTY_FUNCTION__, __LINE__);
 	    return temp;
 	  } else {
-	    printf("%s %d\n", __PRETTY_FUNCTION__, __LINE__);
+	    printf("%s %d TARGETTED\n", __PRETTY_FUNCTION__, __LINE__);
 	    exp = DOWNCAST<And>(exp)->q;
 	  }
 	}
@@ -300,5 +300,7 @@ int main(int argc, char* argv[]) {
 			    OR(NOT(VAR("q")),
 			       VAR("r")))),
 		    VAR("x")))) == false);
+  printf("\n");
+  assert(test(OR(VAR("p"), AND(NOT(VAR("p")), VAR("q")))) == false);
   return 0;
 }
