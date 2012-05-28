@@ -104,7 +104,7 @@ EnvPtr go(ExpPtr initial_exp,
 	  todo = TodoPtr(new Todo(DOWNCAST<And>(exp)->q, desired, todo));
 	  exp = DOWNCAST<And>(exp)->p;
 	} else {
-	    printf("%s %d\n", __PRETTY_FUNCTION__, __LINE__);
+	  printf("%s %d\n", __PRETTY_FUNCTION__, __LINE__);
 	  EnvPtr temp = go(DOWNCAST<And>(exp)->p, env, todo, desired);
 	  if (temp) {
 	    printf("%s %d\n", __PRETTY_FUNCTION__, __LINE__);
@@ -226,11 +226,13 @@ bool test(ExpPtr to_test) {
 #define NOT(p) ExpPtr(new Not(p))
 
 int main(int argc, char* argv[]) {
-  assert(test(VAR("p")) == false);
   /*
+  assert(test(VAR("p")) == false);
   printf("\n");
+  */
   assert(test(AND(VAR("p"), VAR("p"))) == false);
   printf("\n");
+  /*
   assert(test(AND(VAR("p"), VAR("q"))) == false);
 
   printf("\n");

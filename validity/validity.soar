@@ -18,7 +18,7 @@
 #   an exp can be (<exp> ^var <key>)
 
 # validity is an operator that takes an exp, an env, a todo, and a bool
-sp {initialize*validity
+sp {validity*initialize
   (state <s> ^superstate.operator <o>)
   (<o> ^name validity ^exp <exp> ^env <env> ^todo <todo> ^desired <bool>)
 -->
@@ -60,7 +60,7 @@ sp {validity*apply*lookup*empty
 
 # if name is validity and exp exists
 # then propose decompose
-sp {propose*decompose
+sp {validity*propose*decompose
   (state <s> ^name validity ^exp)
 -->
   (<s> ^operator <o> +)
@@ -75,13 +75,21 @@ sp {propose*decompose
 # if name is validity and operator is decompose
 # and exp is an and, and desired is false
 # propose recursion on the and's p
-
+sp {validity*apply*decompose*and*false*recurse
+  (state <s> ^superstate <ss>)
+  (<ss> ^name validity ^operator.name decompose ^exp.and <and> ^desired false ^env <env> ^todo <todo>)
+  (<and> ^p <p>)
+-->
+  (<s> ^name validity ^exp <p> ^env <env> ^todo <todo> ^desired false)}
 
 # if name is validity and operator is decompose
 # and exp is an and and desired is false
 # and there is a recursive answer which is not empty
 # return the recursive answer
-
+sp {validity*apply*decompose*and*false*recurse*return
+  (state <s> ^name validity ^exp.and ^desired false ^validity-done <env> <> empty ^superstate <ss>)
+-->
+  (<ss> ^validity-done <env>)}
 
 # if name is validity and operator is decompose
 # and exp is an and and desired is false
