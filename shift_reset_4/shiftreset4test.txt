@@ -1,0 +1,40 @@
+% -*- Prolog -*-
+[shiftreset4].
+
+% tests
+
+% return an integer
+run(int(123), 123).
+
+% compute successor of an integer
+run(succ(int(123)), 124).
+
+% empty continuation captured and not used
+run(reset(shift(k, int(123))), 123).
+
+% empty continuation captured and used
+run(reset(shift(k, app(var(k), int(123)))), 123).
+
+% empty continuation captured and used twice
+run(reset(shift(k, app(var(k), app(var(k), int(123))))), 123).
+
+% nonempty continuation captured and not used
+run(reset(succ(shift(k, int(123)))), 123).
+
+% nonempty continuation captured and used
+run(reset(succ(shift(k, app(var(k), int(123))))), 124).
+
+% nonempty continuation captured and used twice
+run(reset(succ(shift(k, app(var(k), app(var(k), int(123)))))), 125).
+
+% applying the identity function
+run(app(lam(x, var(x)), int(123)), 123).
+
+% applying the constant constructor function
+run(app(app(lam(x, lam(y, var(x))), int(123)), int(456)), 123).
+
+% more basic lambda functionality
+increment(Inc),
+true(True),
+run(app(Inc, app(app(True, int(123)), int(456))), 124).
+

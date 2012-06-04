@@ -1,0 +1,141 @@
+%========================================================================
+%----This outputs TPTP Problem Set clauses and formulae in a format
+%----acceptable to the ljt system.
+%----
+%----Written by Jens Otten & Thomas Raths, March 2005
+%========================================================================
+
+%----------------------------------------------------------------------
+%----Print out a literal with - for negative, nothing for positive.
+%----Use positive representation
+output_ljt_signed_literal(--Atom):-
+    !, write(' '), write(Atom).
+
+output_ljt_signed_literal(++Atom):-
+    write('-'), write(Atom).
+%----------------------------------------------------------------------
+%----Print out the literals of a clause in ljt format.
+%----Special case of an empty clause
+output_ljt_literals([]):-
+    write('[]').
+
+output_ljt_literals([OneLiteral]):-
+    !, output_ljt_signed_literal(OneLiteral).
+
+output_ljt_literals([FirstLiteral|RestOfLiterals]):-
+    output_ljt_signed_literal(FirstLiteral),
+    write('  ,'), nl, write(' '),
+    output_ljt_literals(RestOfLiterals).
+%----------------------------------------------------------------------
+%----Print out the clauses in ljt format.
+output_ljt_clauses([]).
+
+output_ljt_clauses([input_clause(Name,Status,Literals)|
+RestOfClauses]):-
+    write('% '), write(Name), write(' , '),
+    write(Status), write('.'), nl,
+    write('['),
+    output_ljt_literals(Literals),
+    write(']'),
+    (RestOfClauses\==[]  ->
+        (nl, nl, write(' & '), nl, nl);
+         true),
+    output_ljt_clauses(RestOfClauses).
+%----------------------------------------------------------------------
+%----Print out the list of input clauses as a formula in ljt format.
+output_ljt_formula([]):-
+    !.
+
+output_ljt_formula(Clauses):-
+    nl,
+    write('f(['), nl, nl,
+    output_ljt_clauses(Clauses), nl, nl,
+    write(']).'), nl, nl.
+%----------------------------------------------------------------------
+
+%----------------------------------------------------------------------
+%----Print out the connectives, quantifiers, and literals of a formula
+%----in ljt format.
+output_ljt_fof(~ A):-
+    !, write('( ~ '), output_ljt_fof(A), write(' )').
+output_ljt_fof('|'(A,B) ):- 
+    !, write('( '), output_ljt_fof(A), write(' v '),
+    output_ljt_fof(B), write(' )').
+output_ljt_fof((A ; B)):- 
+    !, write('( '), output_ljt_fof(A), write(' v '),
+    output_ljt_fof(B), write(' )').
+output_ljt_fof(A & B):-
+    !, write('( '), output_ljt_fof(A), write(' & '),
+    output_ljt_fof(B), write(' )').
+output_ljt_fof(A => B):-
+    !, write('( '), output_ljt_fof(A), write(' -> '),
+    output_ljt_fof(B), write(' )').
+output_ljt_fof(A <=> B):-
+    !, write('( '), output_ljt_fof(A), write(' <-> '),
+    output_ljt_fof(B), write(' )').
+output_ljt_fof('$true') :- !, write('(true___->true___)').
+output_ljt_fof($true) :- !, write('(true___->true___)').
+output_ljt_fof('$false') :- !, write('(false___ & ~ false___)').
+output_ljt_fof($false) :- !, write('(false___ & ~ false___)').
+output_ljt_fof(Atom) :-
+    write(Atom).
+%----------------------------------------------------------------------
+%----Print out the formulae in ljt format.
+output_ljt_fo_formulae([]).
+
+% for TPTP-v3.1.0 or later
+output_ljt_fo_formulae([fof(Name,Status,Formula)|RestOfFormulae]) :-
+    ((Status==conjecture, RestOfFormulae \= []) -> 
+      (append(RestOfFormulae,[fof(Name,Status,Formula)],Formulae),
+       output_ljt_fo_formulae(Formulae))) ;
+      (write('% '), write(Name), write(', '), write(Status), write('.'), nl,
+       write('('), output_ljt_fof(Formula), write(')'),
+       (RestOfFormulae == [] -> true;
+        (((RestOfFormulae=[fof(_,conjecture,_)|_]  ->
+           (nl, nl, write('  -> '), nl, nl)); 
+           (nl, nl, write('  & '), nl, nl)),
+          output_ljt_fo_formulae(RestOfFormulae)))).
+
+% for TPTP-v2.7.0 or earlier
+output_ljt_fo_formulae([input_formula(Name,Status,Formula)|
+RestOfFormulae]):-
+    output_ljt_fo_formulae([fof(Name,Status,Formula)|RestOfFormulae]).
+
+%----------------------------------------------------------------------
+%----Print out the list of input formulae as a first-order formula in
+%----ljt format.
+output_ljt_fo_formula([]):-
+    !.
+
+output_ljt_fo_formula(Formulae):-
+    nl,
+    write('f(('), nl, nl,
+    % negate problems without conjecture
+    (\+ (member(fof(_,conjecture,_),Formulae);
+         member(input_formula(_,conjecture,_),Formulae)) -> 
+                                             (write('~ ('), nl) ; true),
+    output_ljt_fo_formulae(Formulae), nl, nl,
+    (\+ (member(fof(_,conjecture,_),Formulae);
+         member(input_formula(_,conjecture,_),Formulae)) -> 
+                                             (write(')'), nl); true),
+   write(')).'), nl, nl.
+
+%----------------------------------------------------------------------
+
+%----------------------------------------------------------------------
+%----Print out all the clauses in ljt format.
+ljt(ljt,Clauses,_):-
+    tptp_clauses(Clauses),
+    output_ljt_formula(Clauses).
+
+%----Print out first-order formula in ljt format.
+ljt(ljt,Formulae,_):-
+    tptp_formulae(Formulae),
+    output_ljt_fo_formula(Formulae).
+%----------------------------------------------------------------------
+%----Provide information about the ljt format.
+ljt_format_information('%','.ljt').
+%----------------------------------------------------------------------
+%----Provide information about the TPTP file.
+ljt_file_information(format,ljt).
+%----------------------------------------------------------------------

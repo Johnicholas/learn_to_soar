@@ -1,0 +1,934 @@
+# y(X) :- !, yhelper(H),
+#   X = lam(f, app(H, H)).
+# yhelper(X) :- !,
+#   X = lam(x, app(var(f), lam(v, app(app(var(x), var(x)), var(v))))).
+# 
+# There shouldn't be any problem with sharing. I hope.
+#
+sp {apply*create-ycombinator
+  (state <s> ^operator <o>)
+  (<o> ^name create-ycombinator ^return-to <r>)
+-->
+  (<s> ^<r> <ycombinator>)
+  (<ycombinator> ^lam <l1>)
+  (<l1> ^key <f> ^exp.app <a2>)
+  (<a2> ^major <yhelper> ^minor <yhelper>) 
+  (<yhelper> ^lam <l3>)
+  (<l3> ^key <x> ^exp.app <a4>)
+  (<a4> ^major.var <f> ^minor.lam <l5>)
+  (<l5> ^key <v> ^exp.app <a6>)
+  (<a6> ^major.app <a7> ^minor.var <v>)
+  (<a7> ^major.var <x> ^minor.var <x>)}
+
+# emitloopbody(X) :- !,
+#   X = lam(f, lam(x, ifzero(var(x), int(1), app(lam(y, app(var(f), pred(var(x)))), emit(var(c)))))).
+# emitloop(X) :- !, y(Y), emitloopbody(Body),
+#   X = app(Y, Body).
+# emitblock(X) :- !, emitloop(Loop),
+#   X = app(lam(len, app(lam(c, app(Loop, var(len))), getchar)), getchar).
+sp {initialize*create-emitblock
+  (state <s> ^superstate.operator <o>)
+  (<o> ^name create-emitblock ^return-to <r>)
+-->
+  (<s> ^name create-emitblock ^return-to <r>)}
+
+sp {create-emitblock*propose*create-ycombinator
+  (state <s> ^name create-emitblock -^ycombinator)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name create-ycombinator ^return-to ycombinator)}
+
+sp {apply*create-emitblock
+  (state <s> ^name create-emitblock ^return-to <r> ^ycombinator <Y> ^superstate <ss>)
+-->
+  (<ss> ^<r> <emitblock>)
+  (<emitblock> ^app <a1>)
+  (<a1> ^major.lam <l2> ^minor getchar)
+  (<l2> ^key <len> ^exp.app <a3>)
+  (<a3> ^major.lam <l4> ^minor getchar)
+  (<l4> ^key <c> ^exp.app <a5>)
+  (<a5> ^major.app <a6> ^minor.var <len>)
+  (<a6> ^major <Y> ^minor.lam <l7>)
+  (<l7> ^key <f> ^exp.lam <l8>)
+  (<l8> ^key <x> ^exp.ifzero <i9>)
+  (<i9> ^test.var <x> ^true.int 1 ^false.app <a10>)
+  (<a10> ^major.lam <l11> ^minor.emit.var <c>)
+  (<l11> ^key <y> ^exp.app <a12>)
+  (<a12> ^major.var <f> ^minor.pred.var <x>)}
+
+# decompressbody(X) :- !, emitblock(EMITBLOCK),
+#   X = lam(rest, lam(notdone, ifzero(var(notdone),
+#     app(lam(x, int(1)), emit(int(0))),
+#       app(lam(c, 
+#       app(var(rest), ifzero(var(c),
+#                        int(0),
+#                        ifzero(minus(var(c), int(123)),
+#                               app(lam(x, int(1)), EMITBLOCK),
+#                               app(lam(x, int(1)), emit(var(c))))))),
+#    getchar)))).
+sp {initialize*create-decompressbody
+  (state <s> ^superstate.operator <o>)
+  (<o> ^name create-decompressbody ^return-to <r>)
+-->
+  (<s> ^name create-decompressbody ^return-to <r>)}
+
+sp {create-decompressbody*propose*create-emitblock
+  (state <s> ^name create-decompressbody -^emitblock)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name create-emitblock ^return-to emitblock)}
+
+sp {apply*create-decompressbody
+  (state <s> ^name create-decompressbody ^emitblock <EMITBLOCK> ^superstate <ss> ^return-to <r>)
+-->
+  (<ss> ^<r> <decompressbody>)
+  (<decompressbody> ^lam <l1>)
+  (<l1> ^key <rest> ^exp.lam <l2>)
+  (<l2> ^key <notdone> ^exp.ifzero <i3>)
+  (<i3> ^test.var <notdone> ^true.app <a4> ^false.app <a5>)
+  (<a4> ^major.lam <K1> ^minor.emit.int 0)
+  (<a5> ^major.lam <l6> ^minor getchar)
+  (<l6> ^key <c> ^exp.app <a7>)
+  (<a7> ^major.var <rest> ^minor.ifzero <i8>)
+  (<i8> ^test.var <c> ^true.int 0 ^false.ifzero <i9>)
+  (<i9> ^test.minus <m10> ^true.app <a11> ^false.app <a12>)
+  (<m10> ^minuend.var <c> ^subtrahend.int 123)
+  (<a11> ^major.lam <K1> ^minor <EMITBLOCK>)
+  (<a12> ^major.lam <K1> ^minor.emit.var <c>)
+  (<K1> ^key <x> ^exp.int 1)}
+
+# dim(X) :- !, y(Y),
+#   X = app(Y, lam(recursefun, lam(x, lam(y, ifzero(var(y), var(x), ifzero(var(x), var(x), 
+#     app(app(var(recursefun), pred(var(x))), pred(var(y))))))))).
+sp {initialize*create-diminish
+  (state <s> ^superstate.operator <o>)
+  (<o> ^name create-diminish ^return-to <r>)
+-->
+  (<s> ^name create-diminish ^return-to <r>)}
+
+sp {create-diminish*propose*create-emitblock
+  (state <s> ^name create-diminish -^ycombinator)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name create-ycombinator ^return-to ycombinator)}
+
+sp {apply*create-diminish
+  (state <s> ^name create-diminish ^ycombinator <Y> ^superstate <ss> ^return-to <r>)
+-->
+  (<ss> ^<r> <diminish>)
+  (<diminish> ^app <a1>)
+  (<a1> ^major <Y> ^minor.lam <l2>)
+  (<l2> ^key <recursefun> ^exp.lam <l3>)
+  (<l3> ^key <x> ^exp.lam <l4>)
+  (<l4> ^key <y> ^exp.ifzero <i5>)
+  (<i5> ^test.var <y> ^true.var <x> ^false.ifzero <i6>)
+  (<i6> ^test.var <x> ^true.var <x> ^false.app <a7>)
+  (<a7> ^major.app <a8> ^minor.pred.var <y>)
+  (<a8> ^major.var <recursefun> ^minor.pred.var <x>)}
+
+#% technically this tests for between A and Z in ascii representation,
+#% not 'alpha' which should at least include lowercase.
+#
+# isalpha(X) :- !, dim(D),
+#   X = lam(c, ifzero(app(app(D, int(65)), var(c)),
+#     ifzero(app(app(D, var(c)), int(90)), int(1), int(0)), int(0))).
+sp {initialize*create-isalpha
+  (state <s> ^superstate.operator <o>)
+  (<o> ^name create-isalpha ^return-to <r>)
+-->
+  (<s> ^name create-isalpha ^return-to <r>)}
+
+sp {create-isalpha*propose*create-diminish
+  (state <s> ^name create-isalpha -^diminish)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name create-diminish ^return-to diminish)}
+
+sp {create-isalpha*apply
+  (state <s> ^name create-isalpha ^diminish <D> ^superstate <ss> ^return-to <r>)
+-->
+  (<ss> ^<r> <isalpha>)
+  (<isalpha> ^lam <l1>)
+  (<l1> ^key <c> ^exp.ifzero <i2>)
+  (<i2> ^test.app <a3> ^true.ifzero <i5> ^false.int 0)
+  (<a3> ^major.app <a4> ^minor.var <c>)
+  (<a4> ^major <D> ^minor.int 65) # 65 is 'A'
+  (<i5> ^test.app <a6> ^true.int 1 ^false.int 0)
+  (<a6> ^major.app <a7> ^minor.int 90) # 90 is 'Z'
+  (<a7> ^major <D> ^minor.var <c>)}
+
+#% restofword is supposed to take a character,
+#% and keep getting new characters and emitting them so long as they're alphabetic
+#% until it finds a nonalphabetic character. Then it emits a 119 ('w') to indicate 'word'
+#% and stops. It's a helper for parser, not a thing in itself.
+#
+# restofword(X) :- !, isalpha(ISALPHA), y(Y),
+# X = app(Y, lam(recursefun2,
+#       lam(c,
+#         app(lam(ignored1,
+#           app(lam(d,
+#             ifzero(app(ISALPHA, var(d)),
+#               app(lam(ignored2,
+#                 app(var(recursefun), var(d))
+#               ), emit(int(119))),
+#               app(var(recursefun2), var(d)))
+#           ), getchar)
+#         ), emit(var(c)))))).
+sp {create-restofword*initialize
+  (state <s> ^superstate.operator <o>)
+  (<o> ^name create-restofword ^return-to <r> ^recursefun <recursefun>)
+-->
+  (<s> ^name create-restofword ^return-to <r> ^recursefun <recursefun>)}
+
+sp {create-restofword*propose*create-ycombinator
+  (state <s> ^name create-restofword -^ycombinator)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name create-ycombinator ^return-to ycombinator)}
+
+sp {create-restofword*propose*create-isalpha
+  (state <s> ^name create-restofword -^isalpha)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name create-isalpha ^return-to isalpha)}
+
+sp {create-restofword*apply
+  (state <s> ^name create-restofword ^superstate <ss> ^return-to <r>
+  ^ycombinator <Y> ^isalpha <ISALPHA> ^recursefun <recursefun>)
+-->
+  (<ss> ^<r> <RESTOFWORD>)
+  (<RESTOFWORD> ^app <a1>)
+  (<a1> ^major <Y> ^minor.lam <l2>)
+  (<l2> ^key <recursefun2> ^exp.lam <l3>)
+  (<l3> ^key <c> ^exp.app <a4>)
+  (<a4> ^major.lam <l5> ^minor.emit.var <c>)
+  (<l5> ^key <ignored1> ^exp.app <a6>)
+  (<a6> ^major.lam <l7> ^minor getchar)
+  (<l7> ^key <d> ^exp.ifzero <i8>)
+  (<i8> ^test.app <a9> ^true.app <a10> ^false.app <a13>)
+  (<a9> ^major <ISALPHA> ^minor.var <d>)
+  (<a10> ^major.lam <l11> ^minor.emit.int 119)
+  (<l11> ^key <ignored2> ^exp.app <a12>)
+  (<a12> ^major.var <recursefun> ^minor.var <d>)
+  (<a13> ^major.var <recursefun2> ^minor.var <d>)}
+
+#% this "parser" (actually more like a lexer?) reads numbers until it sees a sentinel (123),
+#% and classifies them into contiguous sequences of uppercase alpha (A-Z) 
+#% or a single character of anything else by suffixing them with 119 ('w') for 'word'
+#% or 112 'p' for 'punctuation'.
+# parser(X) :- !, isalpha(ISALPHA), y(Y), restofword(RESTOFWORD),
+# X = app(Y, lam(recursefun, 
+#      lam(c, 
+#        ifzero(minus(var(c), int(123)),
+#          int(1),
+#          ifzero(app(ISALPHA, var(c)),
+#            app(lam(ignored1,
+#              app(lam(ignored2,
+#                app(var(recursefun), getchar)
+#              ), emit(int(112)))
+#            ), emit(var(c))),
+# 	   app(RESTOFWORD, var(c))
+#      ))))).
+sp {create-parser*initialize
+  (state <s> ^superstate.operator <o>)
+  (<o> ^name create-parser ^return-to <r>)
+-->
+  (<s> ^name create-parser ^return-to <r> ^recursefun <recursefun>)}
+
+sp {create-parser*propose*create-isalpha
+  (state <s> ^name create-parser -^isalpha)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name create-isalpha ^return-to isalpha)}
+
+sp {create-parser*propose*create-ycombinator
+  (state <s> ^name create-parser -^ycombinator)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name create-ycombinator ^return-to ycombinator)}
+
+sp {create-parser*propose*create-restofword
+  (state <s> ^name create-parser ^recursefun <recursefun> -^restofword)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name create-restofword ^return-to restofword ^recursefun <recursefun>)}
+
+sp {create-parser*apply
+  (state <s> ^name create-parser ^superstate <ss> ^return-to <r>
+  ^isalpha <ISALPHA> ^ycombinator <Y> ^restofword <RESTOFWORD> ^recursefun <recursefun>)
+-->
+  (<ss> ^<r> <PARSER>)
+  (<PARSER> ^app <a1>)
+  (<a1> ^major <Y> ^minor.lam <l2>)
+  (<l2> ^key <recursefun> ^exp.lam <l3>)
+  (<l3> ^key <c> ^exp.ifzero <i4>)
+  (<i4> ^test.minus <m5> ^true.int 1 ^false.ifzero <i6>)
+  (<m5> ^minuend.var <c> ^subtrahend.int 123)
+  (<i6> ^test.app <a7> ^true.app <a8> ^false.app <a13>)
+  (<a7> ^major <ISALPHA> ^minor.var <c>)
+  (<a8> ^major.lam <l9> ^minor.emit.var <c>)
+  (<l9> ^key <ignored1> ^exp.app <a10>)
+  (<a10> ^major.lam <l11> ^minor.emit.int 112)
+  (<l11> ^key <ignored2> ^exp.app <a12>)
+  (<a12> ^major.var <recursefun> ^minor getchar)
+  (<a13> ^major <RESTOFWORD> ^minor.var <c>)}
+
+#% requests are a data structure
+#% requests include exit, read, and write
+#% exit contains no continuation
+#% read contains a continuation that that accepts a character,
+#% yields anther request (usually exit)
+#% and may issue more requests.
+#% " a continuation that accepts a character and yields another request"
+#% might look like app(lam(ignored, emit([char])), shift(k, Exit))
+#% app(lam(ignored, emit(shift(k, Read(k)))), Exit)
+#% write contains a character to write,
+#% and a continuation that accepts nothing.
+#service(X) :- !,
+#  X = lam(req, shift(k, app(var(req), var(k)))).
+sp {create-service*initialize
+  (state <s> ^superstate.operator <o>)
+  (<o> ^name create-service ^return-to <r>)
+-->
+  (<s> ^name create-service ^return-to <r>)}
+
+sp {create-service*apply
+  (state <s> ^name create-service ^superstate <ss> ^return-to <r>)
+-->
+  (<ss> ^<r> <SERVICE>)
+  (<SERVICE> ^lam <l1>)
+  (<l1> ^key <req> ^exp.shift <s2>)
+  (<s2> ^key k1 ^exp.app <a3>)
+  (<a3> ^major.var <req> ^minor.var k1)}
+
+#% datatype Req = Exit | Read(k) | Write(char, k)
+#% a reqconsumer needs three branches
+#% I think this is the Scott encoding?
+#reqexit(X) :- !,
+#  X = lam(k, lam(e, lam(r, lam(w, var(e))))).
+sp {create-exit*initialize
+  (state <s> ^superstate.operator <o>)
+  (<o> ^name create-exit ^return-to <r>)
+-->
+  (<s> ^name create-exit ^return-to <r>)}
+
+sp {create-exit*apply
+  (state <s> ^name create-exit ^superstate <ss> ^return-to <r>)
+-->
+  (<ss> ^<r> <EXIT>)
+  (<EXIT> ^lam <l1>)
+  (<l1> ^key k2 ^exp.lam <l2>)
+  (<l2> ^key <e> ^exp.lam <l3>)
+  (<l3> ^key <r> ^exp.lam <l4>)
+  (<l4> ^key <w> ^exp.var <e>)}
+
+#reqread(X) :- !,
+#  X = lam(k, lam(e, lam(r, lam(w, app(var(r), var(k)))))).
+sp {create-read*initialize
+  (state <s> ^superstate.operator <o>)
+  (<o> ^name create-read ^return-to <r>)
+-->
+  (<s> ^name create-read ^return-to <r>)}
+
+sp {create-read*apply
+  (state <s> ^name create-read ^superstate <ss> ^return-to <r>)
+-->
+  (<ss> ^<r> <READ>)
+  (<READ> ^lam <l1>)
+  (<l1> ^key k3 ^exp.lam <l2>)
+  (<l2> ^key <e> ^exp.lam <l3>)
+  (<l3> ^key <r> ^exp.lam <l4>)
+  (<l4> ^key <w> ^exp.app <a5>)
+  (<a5> ^major.var <r> ^minor.var k3)}
+
+#reqwrite(X) :- !,
+#  X = lam(c, lam(k, lam(e, lam(r, lam(w, 
+#    app(app(var(w), var(c)), var(k))))))).
+sp {create-write*initialize
+  (state <s> ^superstate.operator <o>)
+  (<o> ^name create-write ^return-to <r>)
+-->
+  (<s> ^name create-write ^return-to <r>)}
+
+sp {create-write*apply
+  (state <s> ^name create-write ^superstate <ss> ^return-to <r>)
+-->
+  (<ss> ^<r> <WRITE>)
+  (<WRITE> ^lam <l0>)
+  (<l0> ^key <c> ^exp.lam <l1>)
+  (<l1> ^key k4 ^exp.lam <l2>)
+  (<l2> ^key <e> ^exp.lam <l3>)
+  (<l3> ^key <r> ^exp.lam <l4>)
+  (<l4> ^key <w> ^exp.app <a5>)
+  (<a5> ^major.app <a6> ^minor.var k4)
+  (<a6> ^major.var <w> ^minor.var <c>)}
+
+#% cat2 is a process
+#% cat2 reads a character, writes it, reads another character, writes it, and then exits.
+#cat2(X) :- !, reqread(Read), reqwrite(Write), reqexit(Exit), service(Service),
+#  X = app(lam(c,
+#        app(lam(ignored1,
+#          app(lam(d,
+#            app(lam(ignored2,
+#              app(Service, Exit)
+#            ), app(Service, app(Write, var(d))))
+#          ), app(Service, Read))
+#        ), app(Service, app(Write, var(c))))
+#      ), app(Service, Read)).
+sp {create-cat2*initialize
+  (state <s> ^superstate.operator <o>)
+  (<o> ^name create-cat2 ^return-to <r>)
+-->
+
+  (<s> ^name create-cat2 ^return-to <r>)}
+
+sp {create-cat2*propose*create-read
+  (state <s> ^name create-cat2 -^read)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name create-read ^return-to read)}
+
+sp {create-cat2*propose*create-write
+  (state <s> ^name create-cat2 -^write)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name create-write ^return-to write)}
+
+sp {create-cat2*propose*create-exit
+  (state <s> ^name create-cat2 -^exit)
+-->
+
+  (<s> ^operator <o> + =)
+  (<o> ^name create-exit ^return-to exit)}
+
+sp {create-cat2*propose*create-service
+  (state <s> ^name create-cat2 -^service)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name create-service ^return-to service)}
+
+sp {create-cat2*apply
+  (state <s> ^name create-cat2 ^superstate <ss> ^return-to <r>
+  ^read <READ> ^write <WRITE> ^exit <EXIT> ^service <SERVICE>)
+-->
+  (<ss> ^<r> <CAT2>)
+  (<CAT2> ^app <a1>)
+  (<a1> ^major.lam <l2> ^minor.app <a15>)
+  (<l2> ^key <c> ^exp.app <a3>)
+  (<a3> ^major.lam <l4> ^minor.app <a13>)
+  (<l4> ^key <ignored1> ^exp.app <a5>)
+  (<a5> ^major.lam <l6> ^minor.app <a12>)
+  (<l6> ^key <d> ^exp.app <a7>)
+  (<a7> ^major.lam <l8> ^minor.app <a10>)
+  (<l8> ^key <ignored2> ^exp.app <a9>)
+  (<a9> ^major <SERVICE> ^minor <EXIT>)
+  (<a10> ^major <SERVICE> ^minor.app <a11>)
+  (<a11> ^major <WRITE> ^minor.var <d>)
+  (<a12> ^major <SERVICE> ^minor <READ>)
+  (<a13> ^major <SERVICE> ^minor.app <a14>)
+  (<a14> ^major <WRITE> ^minor.var <c>)
+  (<a15> ^major <SERVICE> ^minor <READ>)}
+
+#% cat is a process, you read it something like:
+#% fixpoint of lam recurse, 
+#%   let input = service Read in
+#%   let _ = service (Write input) in
+
+#%   recurse
+#cat(X) :- !, reqread(Read), reqwrite(Write), service(Service), y(Y),
+#  X = app(Y, lam(recurse,
+#      app(lam(input, 
+#        app(lam(ignored, 
+#          var(recurse)
+#        ), app(Service, app(Write, var(input))))
+#      ), app(Service, Read)))).
+
+#% catuntil is a process
+#% catuntil copies to input to output until it sees a sentinel value (123)
+#% it's something like:
+#% let rec catuntil input = 
+#%   if input == 123 then
+#%     service Exit
+#%   else
+#%     let _ = service (Write input) in
+#%       recurse (service Read)
+#catuntil(X) :- !, reqread(Read), reqwrite(Write), reqexit(Exit), service(Service), y(Y),
+#  X = app(Y, lam(recurse, lam(input, 
+#        ifzero(minus(var(input), int(123)),
+#          app(Service, Exit),
+#          app(lam(ignored, 
+#            app(var(recurse), app(Service, Read))
+#          ), app(Service, app(Write, var(input))))
+#        )
+#      ))).
+
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+#% This is the previous "parser" rewritten as a process
+#% We replace 'getchar' with app(Service, Read)
+#% and emit(foo) with app(Service, app(Write, foo))
+#%
+#% The parser process can be run on its own like so:
+#%
+#% parser_service(Parser), interpret(Interpret),
+#% run(app(Interpret, reset(app(Parser, getchar))), Answer).
+#
+#restofword_service(X) :- !, isalpha(ISALPHA), y(Y), service(Service), reqread(Read), reqwrite(Write),
+#  X = app(Y, lam(recursefun2,
+#        lam(c,
+#          app(lam(ignored1,
+#            app(lam(d,
+#              ifzero(app(ISALPHA, var(d)),
+#                app(lam(ignored2,
+#                  app(var(recursefun), var(d))
+#                ), app(Service, app(Write, int(119)))),
+#                app(var(recursefun2), var(d)))
+#            ), app(Service, Read))
+#          ), app(Service, app(Write, var(c))))))).
+sp {create-restofword-service*initialize
+  (state <s> ^superstate.operator <o>)
+  (<o> ^name create-restofword-service ^return-to <r> ^recursefun <recursefun>)
+-->
+  (<s> ^name create-restofword-service ^return-to <r> ^recursefun <recursefun>)}
+
+sp {create-restofword-service*propose*create-ycombinator
+  (state <s> ^name create-restofword-service -^ycombinator)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name create-ycombinator ^return-to ycombinator)}
+
+sp {create-restofword-service*propose*create-isalpha
+  (state <s> ^name create-restofword-service -^isalpha)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name create-isalpha ^return-to isalpha)}
+
+sp {create-restofword-service*propose*create-service
+  (state <s> ^name create-restofword-service -^service)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name create-service ^return-to service)}
+
+sp {create-restofword-service*propose*create-read
+  (state <s> ^name create-restofword-service -^read)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name create-read ^return-to read)}
+
+sp {create-restofword-service*propose*create-write
+  (state <s> ^name create-restofword-service -^write)
+-->
+
+  (<s> ^operator <o> + =)
+  (<o> ^name create-write ^return-to write)}
+
+sp {create-restofword-service*apply
+  (state <s> ^name create-restofword-service ^superstate <ss> ^return-to <r> ^ycombinator <Y>
+  ^isalpha <ISALPHA> ^read <READ> ^write <WRITE> ^service <SERVICE> ^recursefun <recursefun>)
+-->
+  (<ss> ^<r> <RESTOFWORDSERVICE>)
+  (<RESTOFWORDSERVICE> ^app <a1>)
+  (<a1> ^major <Y> ^minor.lam <l2>)
+  (<l2> ^key <recursefun2> ^exp.lam <l3>)
+  (<l3> ^key <c> ^exp.app <a4>)
+  (<a4> ^major.lam <l5> ^minor.app <a19>)
+  (<l5> ^key <ignored1> ^exp.app <a6>)
+  (<a6> ^major.lam <l7> ^minor.app <a18>)
+  (<l7> ^key <d> ^exp.ifzero <i8>)
+  (<i8> ^test.app <a9> ^true.app <a10> ^false.app <a17>)
+  (<a9> ^major <ISALPHA> ^minor.var <d>)
+  (<a10> ^major.lam <l11> ^minor.app <a15>)
+  (<l11> ^key <ignored2> ^exp.app <a14>)
+  (<a14> ^major.var <recursefun> ^minor.var <d>)
+  (<a15> ^major <SERVICE> ^minor.app <a16>)
+  (<a16> ^major <WRITE> ^minor.int 119)
+  (<a17> ^major.var <recursefun2> ^minor.var <d>)
+  (<a18> ^major <SERVICE> ^minor <READ>)
+  (<a19> ^major <SERVICE> ^minor.app <a20>)
+  (<a20> ^major <WRITE> ^minor.var <c>)}
+
+#parser_service(X) :- !,
+#  isalpha(ISALPHA), y(Y), restofword_service(RESTOFWORD),
+#  service(Service), reqread(Read), reqwrite(Write), reqexit(Exit),
+#  X = app(Y, lam(recursefun, 
+#       lam(c, 
+#         ifzero(minus(var(c), int(123)),
+#           app(Service, Exit),
+#           ifzero(app(ISALPHA, var(c)),
+#             app(lam(ignored1,
+#               app(lam(ignored2,
+#                 app(var(recursefun), app(Service, Read))
+#               ), app(Service, app(Write, int(112))))
+#             ), app(Service, app(Write, var(c)))),
+#  	   app(RESTOFWORD, var(c))
+#       ))))).
+sp {create-parser-service*initialize
+  (state <s> ^superstate.operator <o>)
+  (<o> ^name create-parser-service ^return-to <r>)
+-->
+  (<s> ^name create-parser-service ^return-to <r> ^recursefun <recursefun>)}
+
+sp {create-parser-service*propose*create-ycombinator
+  (state <s> ^name create-parser-service -^ycombinator)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name create-ycombinator ^return-to ycombinator)}
+
+sp {create-parser-service*propose*create-isalpha
+  (state <s> ^name create-parser-service -^isalpha)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name create-isalpha ^return-to isalpha)}
+
+sp {create-parser-service*propose*create-service
+  (state <s> ^name create-parser-service -^service)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name create-service ^return-to service)}
+
+sp {create-parser-service*propose*create-read
+  (state <s> ^name create-parser-service -^read)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name create-read ^return-to read)}
+
+sp {create-parser-service*propose*create-write
+  (state <s> ^name create-parser-service -^write)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name create-write ^return-to write)}
+
+sp {create-parser-service*propose*create-exit
+  (state <s> ^name create-parser-service -^exit)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name create-exit ^return-to exit)}
+
+sp {create-parser-service*propose*create-restofword-service
+  (state <s> ^name create-parser-service -^restofwordservice ^recursefun <recursefun>)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name create-restofword-service ^return-to restofwordservice ^recursefun <recursefun>)}
+
+sp {create-parser-service*apply
+  (state <s> ^name create-parser-service ^superstate <ss> ^return-to <r>
+  ^ycombinator <Y> ^isalpha <ISALPHA> ^read <READ> ^write <WRITE>
+  ^exit <EXIT> ^service <SERVICE> ^restofwordservice <RESTOFWORDSERVICE>
+  ^recursefun <recursefun>)
+-->
+  (<ss> ^<r> <PARSERSERVICE>)
+  (<PARSERSERVICE> ^app <a1>)
+  (<a1> ^major <Y> ^minor.lam <l2>)
+  (<l2> ^key <recursefun> ^exp.lam <l3>)
+  (<l3> ^key <c> ^exp.ifzero <i4>)
+  (<i4> ^test.minus <m5> ^true.app <a6> ^false.ifzero <i7>)
+  (<m5> ^minuend.var <c> ^subtrahend.int 123)
+  (<a6> ^major <SERVICE> ^minor <EXIT>)
+  (<i7> ^test.app <a8> ^true.app <a9> ^false.app <a19>)
+  (<a8> ^major <ISALPHA> ^minor.var <c>)
+  (<a9> ^major.lam <l10> ^minor.app <a17>)
+  (<l10> ^key <ignored1> ^exp.app <a11>)
+  (<a11> ^major.lam <l12> ^minor.app <a15>)
+  (<l12> ^key <ignored2> ^exp.app <a13>)
+  (<a13> ^major.var <recursefun> ^minor.app <a14>)
+  (<a14> ^major <SERVICE> ^minor <READ>)
+  (<a15> ^major <SERVICE> ^minor.app <a16>)
+  (<a16> ^major <WRITE> ^minor.int 112)
+  (<a17> ^major <SERVICE> ^minor.app <a18>)
+  (<a18> ^major <WRITE> ^minor.var <c>)
+  (<a19> ^major <RESTOFWORDSERVICE> ^minor.var <c>)}
+
+
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+#% This is the decompressor process.
+#%
+#% It does something like run length decompression,
+#% with 123 as a sentinel value, so a run of 4 3s is coded as 123 4 3
+#% and a literal 123 is coded as 123 1 123
+#%
+#% The decompressor process can be run on its own like so:
+#%
+#% decompress_service(Decompress), interpret(Interpret),
+#% run(app(Interpret, reset(app(Decompress, getchar))), Answer).
+#
+#emitblock_service(X) :- !, y(Y), service(Service), reqread(Read), reqwrite(Write),
+#  X = app(lam(len, app(lam(c, app(app(Y, lam(f, lam(x, ifzero(var(x), int(1), app(lam(y, app(var(f), pred(var(x#)))), app(Service, app(Write, var(c)))))))), var(len))), app(Service, Read))), app(Service, Read)).
+sp {create-emitblock-service*initialize
+  (state <s> ^superstate.operator <o>)
+  (<o> ^name create-emitblock-service ^return-to <r>)
+-->
+
+  (<s> ^name create-emitblock-service ^return-to <r>)}
+
+sp {create-emitblock-service*propose*create-ycombinator
+  (state <s> ^name create-emitblock-service -^ycombinator)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name create-ycombinator ^return-to ycombinator)}
+
+sp {create-emitblock-service*propose*create-service
+  (state <s> ^name create-emitblock-service -^service)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name create-service ^return-to service)}
+
+sp {create-emitblock-service*propose*create-read
+  (state <s> ^name create-emitblock-service -^read)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name create-read ^return-to read)}
+
+sp {create-emitblock-service*propose*create-write
+  (state <s> ^name create-emitblock-service -^write)
+-->
+
+  (<s> ^operator <o> + =)
+  (<o> ^name create-write ^return-to write)}
+
+sp {create-emitblock-service*apply
+  (state <s> ^name create-emitblock-service ^superstate <ss> ^return-to <r> ^ycombinator <Y>
+  ^read <READ> ^write <WRITE> ^service <SERVICE>)
+-->
+  (<ss> ^<r> <EMITBLOCKSERVICE>)
+  (<EMITBLOCKSERVICE> ^app <a1>)
+  (<a1> ^major.lam <l2> ^minor.app <a16>)
+  (<l2> ^key <len> ^exp.app <a3>)
+  (<a3> ^major.lam <l4> ^minor.app <a15>)
+  (<l4> ^key <c> ^exp.app <a5>)
+  (<a5> ^major.app <a6> ^minor.var <len>)
+  (<a6> ^major <Y> ^minor.lam <l7>)
+  (<l7> ^key <f> ^exp.lam <l8>)
+  (<l8> ^key <x> ^exp.ifzero <i9>)
+  (<i9> ^test.var <x> ^true.int 1 ^false.app <a10>)
+  (<a10> ^major.lam <l11> ^minor.app <a13>)
+  (<l11> ^key <y> ^exp.app <a12>)
+  (<a12> ^major.var <f> ^minor.pred.var <x>)
+  (<a13> ^major <SERVICE> ^minor.app <a14>)
+  (<a14> ^major <WRITE> ^minor.var <c>)
+  (<a15> ^major <SERVICE> ^minor <READ>)
+  (<a16> ^major <SERVICE> ^minor <READ>)}
+
+#decompress_service(X) :- !, 
+#  y(Y), emitblock_service(BLOCK), service(Service), reqread(Read), reqwrite(Write), reqexit(Exit),
+#  X = app(Y, lam(f, lam(x, ifzero(var(x), app(Service, Exit),
+#  	ifzero(minus(var(x), int(123)), 
+#  	app(lam(y, app(var(f), app(Service, Read))), BLOCK),
+#  	app(lam(y, app(var(f), app(Service, Read))), app(Service, app(Write, var(x))))))))).
+sp {create-decompress-service*initialize
+  (state <s> ^superstate.operator <o>)
+  (<o> ^name create-decompress-service ^return-to <r>)
+-->
+
+  (<s> ^name create-decompress-service ^return-to <r>)}
+
+sp {create-decompress-service*propose*create-ycombinator
+  (state <s> ^name create-decompress-service -^ycombinator)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name create-ycombinator ^return-to ycombinator)}
+
+sp {create-decompress-service*propose*create-emitblock-service
+  (state <s> ^name create-decompress-service -^emitblock-service)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name create-emitblock-service ^return-to emitblock-service)}
+
+sp {create-decompress-service*propose*create-service
+  (state <s> ^name create-decompress-service -^service)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name create-service ^return-to service)}
+
+sp {create-decompress-service*propose*create-read
+  (state <s> ^name create-decompress-service -^read)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name create-read ^return-to read)}
+
+sp {create-decompress-service*propose*create-write
+  (state <s> ^name create-decompress-service -^write)
+-->
+
+  (<s> ^operator <o> + =)
+  (<o> ^name create-write ^return-to write)}
+
+sp {create-decompress-service*propose*create-exit
+  (state <s> ^name create-decompress-service -^exit)
+-->
+
+  (<s> ^operator <o> + =)
+  (<o> ^name create-exit ^return-to exit)}
+
+sp {create-decompress-service*apply
+  (state <s> ^name create-decompress-service ^superstate <ss> ^return-to <r> ^ycombinator <Y>
+  ^emitblock-service <EMITBLOCKSERVICE> ^read <READ> ^write <WRITE> ^exit <EXIT> ^service <SERVICE>)
+-->
+  (<ss> ^<r> <DECOMPRESSSERVICE>)
+  (<DECOMPRESSSERVICE> ^app <a1>)
+  (<a1> ^major <Y> ^minor.lam <l2>)
+  (<l2> ^key <f> ^exp.lam <l3>)
+  (<l3> ^key <x> ^exp.ifzero <i4>)
+  (<i4> ^test.var <x> ^true.app <a5> ^false.ifzero <i6>)
+  (<a5> ^major <SERVICE> ^minor <EXIT>)
+  (<i6> ^test.minus <m7> ^true.app <a8> ^false.app <a12>)
+  (<m7> ^minuend.var <x> ^subtrahend.int 123)
+  (<a8> ^major.lam <l9> ^minor <EMITBLOCKSERVICE>)
+  (<l9> ^key <y1> ^exp.app <a10>)
+  (<a10> ^major.var <f> ^minor.app <a11>)
+  (<a11> ^major <SERVICE> ^minor <READ>)
+  (<a12> ^major.lam <l13> ^minor.app <a16>)
+  (<l13> ^key <y2> ^exp.app <a14>)
+  (<a14> ^major.var <f> ^minor.app <a15>)
+  (<a15> ^major <SERVICE> ^minor <READ>)
+  (<a16> ^major <SERVICE> ^minor.app <a17>)
+  (<a17> ^major <WRITE> ^minor.var <x>)}
+
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+#% interpret lets you run a single process
+#%
+#% It obeys requests to exit, read, or write,
+#% and then immediately resumes the computation (for read and write, obviously not exit).
+#interpret(X) :- !, y(Y),
+#  X = app(Y, lam(recurse, lam(to_interpret, 
+#    app(app(app(var(to_interpret), 
+#  	int(1)), % exit 
+#  	lam(k, app(var(recurse), reset(app(var(k), getchar))))), % read
+#  	lam(c, lam(k, app(var(recurse), reset(app(var(k), emit(var(c))))))))))). % write
+sp {create-interpret*initialize
+  (state <s> ^superstate.operator <o>)
+  (<o> ^name create-interpret ^return-to <r>)
+-->
+  (<s> ^name create-interpret ^return-to <r>)}
+
+sp {create-interpret*propose*create-ycombinator
+  (state <s> ^name create-interpret -^ycombinator)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name create-ycombinator ^return-to ycombinator)}
+
+sp {create-interpret*apply
+  (state <s> ^name create-interpret ^superstate <ss> ^return-to <r> ^ycombinator <YCOMBINATOR>)
+-->
+  (<ss> ^<r> <INTERPRET>)
+  (<INTERPRET> ^app <a1>)
+  (<a1> ^major <YCOMBINATOR> ^minor.lam <l2>)
+  (<l2> ^key <recurse> ^exp.lam <l3>)
+  (<l3> ^key <tointerpret> ^exp.app <a4>)
+  (<a4> ^major.app <a5> ^minor.lam <l10>)
+  (<a5> ^major.app <a6> ^minor.lam <l7>)
+  (<a6> ^major.var <tointerpret> ^minor.int 1)
+  (<l7> ^key k5 ^exp.app <a8>)
+  (<a8> ^major.var <recurse> ^minor.reset.app <a9>)
+  (<a9> ^major.var k5 ^minor getchar)
+  (<l10> ^key <c> ^exp.lam <l11>)
+  (<l11> ^key k6 ^exp.app <a12>)
+  (<a12> ^major.var <recurse> ^minor.reset.app <a13>)
+  (<a13> ^major.var k6 ^minor.emit.var <c>)}
+
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+#% This is the "operating system" section
+#% it's not much of an operating system,
+#% just a pipe between a producer (the "former") and a consumer (the "latter")
+#%
+#% Oleg Kiselyov was able to write something like an operating system (ZipperFS)
+#% in 500 lines of Haskell. I am not Oleg Kiselyov.
+#%
+#% You can pipe the decompression service into it like this.
+#% parser_service(Parser), decompress_service(Decompress), pipe(Pipe),
+#% run(app(app(Pipe, reset(app(Decompress, getchar))), Parser), Answer).
+#
+#% writeblock is a helper for pipe - it pumps the "latter" process,
+#% emitting as many characters as possible.
+#writeblock(X) :- !, y(Y), 
+#  X = app(Y, lam(recurse2, lam(former2, lam(latter2,
+#    app(app(app(var(latter2),
+#  	int(1)), % latter exits - whole thing exits
+#        lam(k1, app(app(var(recurse), reset(app(var(former2), int(1)))), var(k1)))), % read from former
+#  	lam(c, lam(k, app(app(var(recurse2), var(former2)), reset(app(var(k), emit(var(c)))))))) % write
+#)))).
+sp {create-write-block*initialize
+  (state <s> ^superstate.operator <o>)
+  (<o> ^name create-write-block ^return-to <r> ^recurse <recurse>)
+-->
+  (<s> ^name create-write-block ^return-to <r> ^recurse <recurse>)}
+
+sp {create-write-block*propose*create-ycombinator
+  (state <s> ^name create-write-block -^ycombinator)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name create-ycombinator ^return-to ycombinator)}
+
+sp {create-write-block*apply
+  (state <s> ^name create-write-block ^superstate <ss> ^return-to <r>
+  ^ycombinator <YCOMBINATOR> ^recurse <recurse>)
+-->
+  (<ss> ^<r> <WRITEBLOCK>)
+  (<WRITEBLOCK> ^app <a1>)
+  (<a1> ^major <YCOMBINATOR> ^minor.lam <l3>)
+  (<l3> ^key <recurse2> ^exp.lam <l4>)
+  (<l4> ^key <former2> ^exp.lam <l5>)
+  (<l5> ^key <latter2> ^exp.app <a6>)
+  (<a6> ^major.app <a7> ^minor.lam <l13>)
+  (<a7> ^major.app <a8> ^minor.lam <l9>)
+  (<a8> ^major.var <latter2> ^minor.int 1)
+  (<l9> ^key <k1> ^exp.app <a10>)
+  (<a10> ^major.app <a11> ^minor.var <k1>)
+  (<a11> ^major.var <recurse> ^minor.reset.app <a12>)
+  (<a12> ^major.var <former2> ^minor.int 1)
+  (<l13> ^key <c> ^exp.lam <l14>)
+  (<l14> ^key <k2> ^exp.app <a15>)
+  (<a15> ^major.app <a16> ^minor.reset.app <a17>)
+  (<a16> ^major.var <recurse2> ^minor.var <former2>)
+  (<a17> ^major.var <k2> ^minor.emit.var <c>)}
+
+
+#% pipe is like interpret for two processes
+#% it implements read and write differently for the two processes
+#% the first process reads via getchar, and writes into the second process
+#% the second process emits and reads from the first process.
+#pipe(X) :- !, y(Y), writeblock(Writeblock),
+#  X = app(Y, lam(recurse, lam(former, lam(latter,
+#    app(app(app(var(former),
+#  	int(1)), % former exits - whole thing exits
+#        lam(k, app(app(var(recurse), reset(app(var(k), getchar))), var(latter)))), % former reads - getchar
+#        lam(c, lam(k, app(app(Writeblock, var(k)), reset(app(var(latter), var(c))))))) % pipe to latter
+#)))).
+sp {create-pipe*initialize
+  (state <s> ^superstate.operator <o>)
+  (<o> ^name create-pipe ^return-to <r>)
+-->
+  (<s> ^name create-pipe ^return-to <r> ^recurse <recurse>)}
+
+sp {create-pipe*propose*create-ycombinator
+  (state <s> ^name create-pipe -^ycombinator)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name create-ycombinator ^return-to ycombinator)}
+
+sp {create-pipe*propose*create-write-block
+  (state <s> ^name create-pipe -^writeblock ^recurse <recurse>)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name create-write-block ^return-to writeblock ^recurse <recurse>)}
+
+sp {create-pipe*apply
+  (state <s> ^name create-pipe ^superstate <ss> ^return-to <r>
+  ^writeblock <WRITEBLOCK> ^ycombinator <YCOMBINATOR> ^recurse <recurse>)
+-->
+  (<ss> ^<r> <PIPE>)
+  (<PIPE> ^app <a1>)
+  (<a1> ^major <YCOMBINATOR> ^minor.lam <l2>)
+  (<l2> ^key <recurse> ^exp.lam <l3>)
+  (<l3> ^key <former> ^exp.lam <l4>)
+  (<l4> ^key <latter> ^exp.app <a5>)
+  (<a5> ^major.app <a6> ^minor.lam <l12>)
+  (<a6> ^major.app <a7> ^minor.lam <l8>)
+  (<a7> ^major.var <former> ^minor.int 1)
+  (<l8> ^key <k1> ^exp.app <a9>)
+  (<a9> ^major.app <a10> ^minor.var <latter>)
+  (<a10> ^major.var <recurse> ^minor.reset.app <a11>)
+  (<a11> ^major.var <k1> ^minor getchar)
+  (<l12> ^key <c> ^exp.lam <l13>)
+  (<l13> ^key <k2> ^exp.app <a14>)
+  (<a14> ^major.app <a15> ^minor.reset.app <a16>)
+  (<a15> ^major <WRITEBLOCK> ^minor.var <k2>)
+  (<a16> ^major.var <latter> ^minor.var <c>)}

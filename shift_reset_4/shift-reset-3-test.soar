@@ -1,0 +1,434 @@
+setup {
+
+source shift-reset-3.soar
+source shift-reset-3-exps.soar
+
+sp {initialize
+  (state <s> ^superstate nil)
+-->
+  (<s> ^name shift-reset-3-test)}
+
+sp {initialize*top-state
+  (state <s> ^superstate nil)
+-->
+  (<s> ^top-state <s>)}
+
+}
+
+# return an integer
+test "run(int(123)) should be 123" {
+
+sp {shift-reset-3-test*propose*create-exp
+  (state <s> ^name shift-reset-3-test -^exp)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name create-exp)}
+
+sp {shift-reset-3-test*apply*create-exp
+  (state <s> ^name shift-reset-3-test ^operator.name create-exp)
+-->
+  (<s> ^exp.int 123)}
+
+sp {shift-reset-3-test*propose*run
+  (state <s> ^name shift-reset-3-test ^exp <e> -^run-done)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name run ^exp <e> ^return-to <s>)}
+
+sp {shift-reset-3-test*pass
+  (state <s> ^name shift-reset-3-test ^run-done 123)
+-->
+  (pass)}
+
+}
+
+# compute successor of an integer
+test "run(succ(int(123))) should be 124" {
+
+sp {shift-reset-3-test*propose*create-exp
+  (state <s> ^name shift-reset-3-test -^exp)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name create-exp)}
+
+sp {shift-reset-3-test*apply*create-exp
+  (state <s> ^name shift-reset-3-test ^operator.name create-exp)
+-->
+  (<s> ^exp.succ.int 123)}
+
+sp {shift-reset-3-test*propose*run
+  (state <s> ^name shift-reset-3-test ^exp <e> -^run-done)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name run ^exp <e> ^return-to <s>)}
+
+sp {shift-reset-3-test*pass
+  (state <s> ^name shift-reset-3-test ^run-done 124)
+-->
+  (pass)}
+
+}
+
+# empty continuation captured and not used
+test "run(reset(shift(k, int(123)))) should be 123" {
+
+sp {shift-reset-3-test*propose*create-exp
+  (state <s> ^name shift-reset-3-test -^exp)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name create-exp)}
+
+sp {shift-reset-3-test*apply*create-exp
+  (state <s> ^name shift-reset-3-test ^operator.name create-exp)
+-->
+  (<s> ^exp.reset <e1>)
+  (<e1> ^shift <s2>)
+  (<s2> ^key <k> ^exp <e3>)
+  (<e3> ^int 123)}
+
+sp {shift-reset-3-test*propose*run
+  (state <s> ^name shift-reset-3-test ^exp <e> -^run-done)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name run ^exp <e> ^return-to <s>)}
+
+sp {shift-reset-3-test*pass
+  (state <s> ^name shift-reset-3-test ^run-done 123)
+-->
+  (pass)}
+
+}
+
+# empty continuation captured and used
+test "run(reset(shift(k, app(var(k), int(123))))) should be 123" {
+
+sp {shift-reset-3-test*propose*create-exp
+  (state <s> ^name shift-reset-3-test -^exp)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name create-exp)}
+
+sp {shift-reset-3-test*apply*create-exp
+  (state <s> ^name shift-reset-3-test ^operator.name create-exp)
+-->
+  (<s> ^exp.reset <s1>)
+  (<s1> ^shift <s2>)
+  (<s2> ^key <k> ^exp.app <a3>)
+  (<a3> ^major.var <k> ^minor.int 123)}
+
+sp {shift-reset-3-test*propose*run
+  (state <s> ^name shift-reset-3-test ^exp <e> -^run-done)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name run ^exp <e> ^return-to <s>)}
+
+sp {shift-reset-3-test*pass
+  (state <s> ^name shift-reset-3-test ^run-done 123)
+-->
+  (pass)}
+
+}
+
+# empty continuation captured and used twice
+test "run(reset(shift(k, app(var(k), app(var(k), int(123)))))) should be 123" {
+
+sp {shift-reset-3-test*propose*create-exp
+  (state <s> ^name shift-reset-3-test -^exp)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name create-exp)}
+
+sp {shift-reset-3-test*apply*create-exp
+  (state <s> ^name shift-reset-3-test ^operator.name create-exp)
+-->
+  (<s> ^exp.reset <s1>)
+  (<s1> ^shift <s2>)
+  (<s2> ^key <k> ^exp.app <a3>)
+  (<a3> ^major.var <k> ^minor.app <a4>)
+  (<a4> ^major.var <k> ^minor.int 123)}
+
+sp {shift-reset-3-test*propose*run
+  (state <s> ^name shift-reset-3-test ^exp <e> -^run-done)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name run ^exp <e> ^return-to <s>)}
+
+sp {shift-reset-3-test*pass
+  (state <s> ^name shift-reset-3-test ^run-done 123)
+-->
+  (pass)}
+
+}
+
+# nonempty continuation captured and not used
+test "run(reset(succ(shift(k, int(123))))) should be 123" {
+
+sp {shift-reset-3-test*propose*create-exp
+  (state <s> ^name shift-reset-3-test -^exp)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name create-exp)}
+
+sp {shift-reset-3-test*apply*create-exp
+  (state <s> ^name shift-reset-3-test ^operator.name create-exp)
+-->
+  (<s> ^exp.reset.succ.shift <s1>)
+  (<s1> ^key k ^exp.int 123)}
+
+sp {shift-reset-3-test*propose*run
+  (state <s> ^name shift-reset-3-test ^exp <e> -^run-done)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name run ^exp <e> ^return-to <s>)}
+
+sp {shift-reset-3-test*pass
+  (state <s> ^name shift-reset-3-test ^run-done 123)
+-->
+  (pass)}
+
+}
+
+# nonempty continuation captured and used
+test "run(reset(succ(shift(k, app(var(k), int(123))))) should be 124" {
+
+sp {shift-reset-3-test*propose*create-exp
+  (state <s> ^name shift-reset-3-test -^exp)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name create-exp)}
+
+sp {shift-reset-3-test*apply*create-exp
+  (state <s> ^name shift-reset-3-test ^operator.name create-exp)
+-->
+  (<s> ^exp.reset.succ.shift <s1>)
+  (<s1> ^key <k> ^exp.app <a2>)
+  (<a2> ^major.var <k> ^minor.int 123)}
+
+sp {shift-reset-3-test*propose*run
+  (state <s> ^name shift-reset-3-test ^exp <e> -^run-done)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name run ^exp <e> ^return-to <s>)}
+
+sp {shift-reset-3-test*pass
+  (state <s> ^name shift-reset-3-test ^run-done 124)
+-->
+  (pass)}
+
+}
+
+# nonempty continuation captured and used twice
+test "run(reset(succ(shift(k, app(var(k), app(var(k), int(123))))))) should be 125" {
+
+sp {shift-reset-3-test*propose*create-exp
+  (state <s> ^name shift-reset-3-test -^exp)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name create-exp)}
+
+sp {shift-reset-3-test*apply*create-exp
+  (state <s> ^name shift-reset-3-test ^operator.name create-exp)
+-->
+  (<s> ^exp.reset.succ <e1>)
+  (<e1> ^shift <s2>)
+  (<s2> ^key <k> ^exp.app <a3>)
+  (<a3> ^major.var <k> ^minor.app <a4>)
+  (<a4> ^major.var <k> ^minor.int 123)}
+
+sp {shift-reset-3-test*propose*run
+  (state <s> ^name shift-reset-3-test ^exp <e> -^run-done)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name run ^exp <e> ^return-to <s>)}
+
+sp {shift-reset-3-test*pass
+  (state <s> ^name shift-reset-3-test ^run-done 125)
+-->
+  (pass)}
+
+}
+
+# applying the identity function
+test "run(app(lam(x, var(x)), int(123))) should be 123" {
+
+sp {shift-reset-3-test*propose*create-exp
+  (state <s> ^name shift-reset-3-test -^exp)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name create-exp)}
+
+sp {shift-reset-3-test*apply*create-exp
+  (state <s> ^name shift-reset-3-test ^operator.name create-exp)
+-->
+  (<s> ^exp.app <a1>)
+  (<a1> ^major.lam <l2> ^minor.int 123)
+  (<l2> ^key <x> ^exp.var <x>)}
+
+sp {shift-reset-3-test*propose*run
+  (state <s> ^name shift-reset-3-test ^exp <e> -^run-done)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name run ^exp <e> ^return-to <s>)}
+
+sp {shift-reset-3-test*pass
+  (state <s> ^name shift-reset-3-test ^run-done 123)
+-->
+  (pass)}
+
+}
+
+# applying the constant constructor function
+test "run(app(app(lam(x, lam(y, var(x))), int(123)), int(456))) should be 123" {
+
+sp {shift-reset-3-test*propose*create-exp
+  (state <s> ^name shift-reset-3-test -^exp)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name create-exp)}
+
+sp {shift-reset-3-test*apply*create-exp
+  (state <s> ^name shift-reset-3-test ^operator.name create-exp)
+-->
+  (<s> ^exp.app <a1>)
+  (<a1> ^major.app <a2> ^minor.int 456)
+  (<a2> ^major.lam <l3> ^minor.int 123)
+  (<l3> ^key <x> ^exp.lam <l4>)
+  (<l4> ^key <y> ^exp.var <x>)}
+
+sp {shift-reset-3-test*propose*run
+  (state <s> ^name shift-reset-3-test ^exp <e> -^run-done)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name run ^exp <e> ^return-to <s>)}
+
+sp {shift-reset-3-test*pass
+  (state <s> ^name shift-reset-3-test ^run-done 123)
+-->
+  (pass)}
+
+}
+
+# exercising some more extensions
+test "run(app(Isalpha, int(6))) should be 1" {
+
+sp {shift-reset-3-test*propose*create-isalpha
+  (state <s> ^name shift-reset-3-test -^isalpha)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name create-isalpha ^return-to isalpha)}
+
+sp {shift-reset-3-test*propose*create-exp
+  (state <s> ^name shift-reset-3-test -^exp ^isalpha)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name create-exp)}
+
+sp {shift-reset-3-test*apply*create-exp
+  (state <s> ^name shift-reset-3-test ^operator.name create-exp ^isalpha <ISALPHA>)
+-->
+  (<s> ^exp.app <a1>)
+  (<a1> ^major <ISALPHA> ^minor.int 65)}
+
+sp {shift-reset-3-test*propose*run
+  (state <s> ^name shift-reset-3-test ^exp <e> -^run-done)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name run ^exp <e> ^return-to <s>)}
+
+sp {shift-reset-3-test*pass
+  (state <s> ^name shift-reset-3-test ^run-done 1)
+-->
+  (pass)}
+
+}
+
+# exercising getchar and more recursion
+test "run(app(Parser, getchar)) should be 1" {
+
+sp {shift-reset-3-test*propose*create-parser
+  (state <s> ^name shift-reset-3-test -^parser)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name create-parser ^return-to parser)}
+
+sp {shift-reset-3-test*propose*create-exp
+  (state <s> ^name shift-reset-3-test -^exp ^parser)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name create-exp)}
+
+sp {shift-reset-3-test*apply*create-exp
+  (state <s> ^name shift-reset-3-test ^operator.name create-exp ^parser <PARSER>)
+-->
+  (<s> ^exp.app <a1>)
+  (<a1> ^major <PARSER> ^minor getchar)}
+
+sp {shift-reset-3-test*propose*run
+  (state <s> ^name shift-reset-3-test ^exp <e> -^run-done)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name run ^exp <e> ^return-to <s>)}
+
+sp {shift-reset-3-test*pass
+  (state <s> ^name shift-reset-3-test ^run-done 1)
+-->
+  (pass)}
+
+sp {shift-reset-3-test*propose*fake-input
+  (state <s> ^name stepgetchar ^top-state.io.output-link.getchar)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name fake-input)}
+
+sp {shift-reset-3-test*apply*fake-input
+  (state <s> ^name stepgetchar ^operator.name fake-input ^superstate <ss>)
+-->
+  (<ss> ^value 123)}
+
+}
+
+test "interpret(Interpret), service(Service), exit(Exit), run(Interpret, reset(app(Service, Exit))) is 1" {
+
+sp {shift-reset-3-test*propose*create-interpret
+  (state <s> ^name shift-reset-3-test -^interpret)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name create-interpret ^return-to interpret)}
+
+sp {shift-reset-3-test*propose*create-service
+  (state <s> ^name shift-reset-3-test -^service)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name create-service ^return-to service)}
+
+sp {shift-reset-3-test*propose*create-exit
+  (state <s> ^name shift-reset-3-test -^exit)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name create-exit ^return-to exit)}
+
+sp {shift-reset-3-test*propose*create-exp
+  (state <s> ^name shift-reset-3-test -^exp ^interpret ^service ^exit)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name create-exp)}
+
+sp {shift-reset-3-test*apply*create-exp
+  (state <s> ^name shift-reset-3-test ^operator.name create-exp ^interpret <INTERPRET> ^service <SERVICE> ^exit <EXIT>)
+-->
+  (<s> ^exp.app <a1>)
+  (<a1> ^major <INTERPRET> ^minor.reset.app <a2>)
+  (<a2> ^major <SERVICE> ^minor <EXIT>)}
+
+sp {shift-reset-3-test*propose*run
+  (state <s> ^name shift-reset-3-test ^exp <e> -^run-done)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name run ^exp <e> ^return-to <s>)}
+
+sp {shift-reset-3-test*pass
+  (state <s> ^name shift-reset-3-test ^run-done 1)
+-->
+  (pass)}
+
+}
