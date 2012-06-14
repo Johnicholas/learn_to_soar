@@ -1,0 +1,220 @@
+# This is a simple calculator,
+# perhaps useful as an example of an interpreter,
+# based on Andrej Bauer's 'calc' in his PL Zoo.
+#
+# This is terrible Soar style,
+# not because of some rhetorical point that I'm trying to make,
+# but because I am a terrible Soar programmer.
+#
+# data model / grammar:
+#   an <exp> can be (<exp> ^numeral <n>) where <n> is an integer
+#   an <exp> can be (<exp> ^plus <sum>)
+#   a <sum> can be (<sum> ^left <exp> ^right <exp>)
+#   an <exp> can be (<exp> ^minus <diff>)
+#   a <diff> can be (<diff> ^left <exp> ^right <exp>)
+#   an <exp> can be (<exp> ^times <prod>)
+#   a <prod> can be (<prod> ^left <exp> ^right <exp>)
+#   an <exp> can be (<exp> ^divide <div>)
+#   a <div> can be (<div> ^left <exp> ^right <exp>)
+#   an <exp> can be (<exp> ^negate <exp>)
+
+sp {calc*initialize
+  (state <s> ^superstate.operator <o>)
+  (<o> ^name calc ^exp <exp> ^return-to <r>)
+-->
+  (<s> ^name calc ^exp <exp> ^return-to <r>)}
+
+
+# calc(numeral(N), Out) :- !,
+#   Out = N.
+sp {calc*propose*numeral
+  (state <s> ^name calc ^exp.numeral)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name numeral)}
+
+sp {calc*apply*numeral
+  (state <s> ^name calc ^operator.name numeral ^exp.numeral <n>)
+-->
+  (<s> ^answer <n>)}
+
+# calc(plus(E1, E2), Out) :- !,
+#   calc(E1, V1),
+#   calc(E2, V2),
+#  Out is V1 + V2.
+sp {calc*propose*plus
+  (state <s> ^name calc ^exp.plus <x>)
+  (<x> ^left <e1> ^right <e2>)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name plus ^left <e1> ^right <e2>)}
+
+sp {plus*initialize
+  (state <s> ^superstate <ss>)
+  (<ss> ^name calc ^operator <o>)
+  (<o> ^name plus ^left <e1> ^right <e2>)
+-->
+  (<s> ^name plus ^left <e1> ^right <e2>)}
+
+sp {plus*propose*calc*left
+  (state <s> ^name plus ^left <e> -^left-value)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name calc ^exp <e> ^return-to left-value)}
+
+sp {plus*propose*calc*right
+  (state <s> ^name plus ^right <e> -^right-value)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name calc ^exp <e> ^return-to right-value)}
+
+sp {plus*elaborate*compute
+  (state <s> ^name plus ^left-value <v1> ^right-value <v2>)
+-->
+  (<s> ^answer (+ <v1> <v2>))}
+
+sp {plus*return*done
+  (state <s> ^name plus ^superstate <ss> ^answer <a>)
+-->
+  (<ss> ^answer <a>)}
+
+
+# calc(minus(E1, E2), Out) :- !,
+#   calc(E1, V1),
+#   calc(E2, V2),
+#   Out is V1 - V2.
+sp {calc*propose*minus
+  (state <s> ^name calc ^exp.minus <x>)
+  (<x> ^left <e1> ^right <e2>)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name minus ^left <e1> ^right <e2>)}
+
+sp {minus*initialize
+  (state <s> ^superstate <ss>)
+  (<ss> ^name calc ^operator <o>)
+  (<o> ^name minus ^left <e1> ^right <e2>)
+-->
+  (<s> ^name minus ^left <e1> ^right <e2>)}
+
+sp {minus*propose*calc*left
+  (state <s> ^name minus ^left <e> -^left-value)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name calc ^exp <e> ^return-to left-value)}
+
+sp {minus*propose*calc*right
+  (state <s> ^name minus ^right <e> -^right-value)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name calc ^exp <e> ^return-to right-value)}
+
+sp {minus*elaborate*compute
+  (state <s> ^name minus ^left-value <v1> ^right-value <v2>)
+-->
+  (<s> ^answer (- <v1> <v2>))}
+
+sp {minus*return*done
+  (state <s> ^name minus ^superstate <ss> ^answer <a>)
+-->
+  (<ss> ^answer <a>)}
+
+# calc(times(E1, E2), Out) :- !,
+#   calc(E1, V1),
+#   calc(E2, V2),
+#   Out is V1 * V2.
+sp {calc*propose*times
+  (state <s> ^name calc ^exp.times <x>)
+  (<x> ^left <e1> ^right <e2>)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name times ^left <e1> ^right <e2>)}
+
+sp {times*initialize
+  (state <s> ^superstate <ss>)
+  (<ss> ^name calc ^operator <o>)
+  (<o> ^name times ^left <e1> ^right <e2>)
+-->
+  (<s> ^name times ^left <e1> ^right <e2>)}
+
+sp {times*propose*calc*left
+  (state <s> ^name times ^left <e> -^left-value)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name calc ^exp <e> ^return-to left-value)}
+
+sp {times*propose*calc*right
+  (state <s> ^name times ^right <e> -^right-value)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name calc ^exp <e> ^return-to right-value)}
+
+sp {times*elaborate*compute
+  (state <s> ^name times ^left-value <v1> ^right-value <v2>)
+-->
+  (<s> ^answer (* <v1> <v2>))}
+
+sp {times*return*done
+  (state <s> ^name times ^superstate <ss> ^answer <a>)
+-->
+  (<ss> ^answer <a>)}
+
+
+
+# calc(divide(E1, E2), Out) :- !,
+#   calc(E1, V1),
+#   calc(E2, V2),
+#   Out is V1 / V2.
+sp {calc*propose*divide
+  (state <s> ^name calc ^exp.divide <x>)
+  (<x> ^left <e1> ^right <e2>)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name divide ^left <e1> ^right <e2>)}
+
+sp {divide*initialize
+  (state <s> ^superstate <ss>)
+  (<ss> ^name calc ^operator <o>)
+  (<o> ^name divide ^left <e1> ^right <e2>)
+-->
+  (<s> ^name divide ^left <e1> ^right <e2>)}
+
+sp {divide*propose*calc*left
+  (state <s> ^name divide ^left <e> -^left-value)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name calc ^exp <e> ^return-to left-value)}
+
+sp {divide*propose*calc*right
+  (state <s> ^name divide ^right <e> -^right-value)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name calc ^exp <e> ^return-to right-value)}
+
+sp {divide*elaborate*compute
+  (state <s> ^name divide ^left-value <v1> ^right-value <v2>)
+-->
+  (<s> ^answer (/ <v1> <v2>))}
+
+sp {divide*return*done
+  (state <s> ^name divide ^superstate <ss> ^answer <a>)
+-->
+  (<ss> ^answer <a>)}
+
+
+
+# calc(negate(E), Out) :- !,
+#   calc(minus(numeral(0), E), Out).
+sp {calc*negate*propose*recurse
+  (state <s> ^name calc ^exp.negate <e>)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name calc ^exp.minus <m> ^return-to answer)
+  (<m> ^left.numeral 0 ^right <e>)}
+
+
+
+sp {calc*done
+  (state <s> ^name calc ^superstate <ss> ^return-to <r> ^answer <a>)
+-->
+  (<ss> ^<r> <a>)}

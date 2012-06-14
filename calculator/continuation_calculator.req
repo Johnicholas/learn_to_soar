@@ -1,0 +1,57 @@
+# This is a simple calculator,
+# useful as an example of an interpreter,
+# based extremely loosely on Andrej Bauer's 'calc' in his PL Zoo.
+#
+# The language has a grammar:
+#   an expression can be Numeral containing a primitive int
+#   an expression can be Plus containing two expressions
+#   an expression can be Minus containing two expressions
+#   an expression can be Times containing two expressions
+#   an expression can be Divide containing two expressions
+#   an expression can be Negate contianing one expression
+#
+# There is another grammar for the cont:
+#   a cont can be Halt
+#   a cont can be PlusK1 of an exp and a cont
+#   a cont can be PlusK2 of an int and a cont
+#   a cont can be MinusK1 of an exp and a cont
+#   a cont can be MinusK2 of an int and a cont
+#   a cont can be TimesK1 of an exp and a cont
+#   a cont can be TimesK2 of an int and a cont
+#   a cont can be DivideK1 of an exp and a cont
+#   a cont can be DivideK2 of an int and a cont
+#
+# This is "the same" interpreter, but it is converted into
+# continuation passing style, which means that every recursive call
+# is a tail call, and we manage an explicit continuation stack,
+# pushing an object onto it whenever we would have done
+# some sort of sequenced computation.
+
+step(Numeral(?n), ?k) == continue(?k, ?n)
+step(Plus(?e1, ?e2), ?k) == step(?e1, PlusK1(?e2, ?k))
+continue(PlusK1(?e2, ?k), ?v) == step(?e2, PlusK2(?v, ?k))
+continue(PlusK2(?v1, ?k), ?v2) == continue(?k, ?v1 + ?v2)
+step(Minus(?e1, ?e2), ?k) == step(?e1, MinusK1(?e2, ?k))
+continue(MinusK1(?e2, ?k), ?v) == step(?e2, MinusK2(?v, ?k))
+continue(MinusK2(?v1, ?k), ?v2) == continue(?k, ?v1 - ?v2)
+step(Times(?e1, ?e2), ?k) == step(?e1, TimesK1(?e2, ?k))
+continue(TimesK1(?e2, ?k), ?v) == step(?e2, TimesK2(?v, ?k))
+continue(TimesK2(?v1, ?k), ?v2) == continue(?k, ?v1 * ?v2)
+step(Divide(?e1, ?e2), ?k) == step(?e1, DivideK1(?e2, ?k))
+continue(DivideK1(?e2, ?k), ?v) == step(?e2, DivideK2(?v, ?k))
+continue(DivideK2(?v1, ?k), ?v2) == continue(?k, ?v1 / ?v2)
+step(Negate(?e), ?k) == step(Minus(Numeral(0), ?e), ?k)
+run(?e) == step(?e, Halt)
+continue(Halt, ?v) == ?v
+
+# Note that this interpreter is opaque to evaluation order;
+# the interpreted language evaluates left to right,
+# and the base language cannot modify that.
+
+# Tests
+run(Plus(Numeral(2), Numeral(2))) = 4
+run(Times(Numeral(3), Numeral(3))) = 9
+run(Plus(Negate(Numeral(2)), Numeral(2))) = 0
+run(Times(Negate(Numeral(3)), Negate(Numeral(3)))) = 9
+run(Divide(Negate(Numeral(3)), Negate(Numeral(3)))) = 1
+

@@ -1,0 +1,7 @@
+[continuation_calculator].
+
+run(plus(numeral(2), numeral(2)), 4).
+run(times(numeral(3), numeral(3)), 9).
+run(plus(negate(numeral(2)), numeral(2)), 0).
+run(times(negate(numeral(3)), negate(numeral(3))), 9).
+run(divide(negate(numeral(3)), negate(numeral(3))), 1).

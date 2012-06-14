@@ -1,0 +1,49 @@
+# This is a simple calculator,
+# useful as an example of an interpreter,
+# based on Andrej Bauer's 'calc' in his PL Zoo.
+#
+# The language has a grammar:
+#   an expression can be Numeral containing a primitive int
+#   an expression can be Plus containing two expressions
+#   an expression can be Minus containing two expressions
+#   an expression can be Times containing two expressions
+#   an expression can be Divide containing two expressions
+#   an expression can be Negate contianing one expression
+#
+# this is so-called 'big step semantics'
+# where a function call takes an expression all the way to a value
+# usually by recursing on the subexpressions of the expression
+
+eval(Numeral(?n)) == ?n
+eval(Plus(?e1, ?e2)) == eval(?e1) + eval(?e2)
+eval(Minus(?e1, ?e2)) == eval(?e1) - eval(?e2)
+eval(Times(?e1, ?e2)) == eval(?e1) * eval(?e2)
+eval(Divide(?e1, ?e2)) == eval(?e1) / eval(?e2)
+eval(Negate(?e)) == eval(Minus(Numeral(0), ?e))
+
+# Note that Negate is different from the other rules:
+# instead of defining an operation in the interpreted language
+# by referring to a corresponding operation in the base language
+# it defines unary negation by reference to binary negation.
+#
+# This illustrates the idea of an interpreter being transparent
+# or opaque to an operation. This interpreter is transparent
+# with respect to addition, because any quirks, bugs or features
+# in the base language's implementation of addition will 
+# also appear in the interpreted language.
+#
+# By contrast, it's opaque with respect to unary negation,
+# because in the base language's implementation of unary negation
+# will not appear in the interpreted language.
+#
+# For communicating precise, difficult-to-verbalize ideas about
+# programming languages, it is often valuable to give a little
+# interpreter, which is transparent to anything and everything
+# that you are not talking about, and opaque to the feature
+# that you are currently focusing on.
+
+
+# Tests
+eval(Plus(Numeral(2), Numeral(2)))
+eval(Times(Numeral(3), Numeral(3)))
+

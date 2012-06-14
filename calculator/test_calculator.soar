@@ -1,0 +1,90 @@
+setup {
+
+source calculator.soar
+
+sp {initialize
+  (state <s> ^superstate nil)
+-->
+  (<s> ^name test-calc)}
+
+}
+
+test "plus(2, 2) should be 4" {
+
+sp {propose*calc
+  (state <s> ^name test-calc)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name calc ^exp.plus <p1> ^return-to done)
+  (<p1> ^left.numeral 2 ^right.numeral 2)}
+
+sp {pass
+  (state <s> ^name test-calc ^done 4)
+-->
+  (pass)}
+
+}
+
+test "times(3, 3) should be 9" {
+
+sp {propose*calc
+  (state <s> ^name test-calc)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name calc ^exp.times <x1> ^return-to done)
+  (<x1> ^left.numeral 3 ^right.numeral 3)}
+
+sp {pass
+  (state <s> ^name test-calc ^done 9)
+-->
+  (pass)}
+
+}
+
+test "plus(negate(2), 2) should be 0" {
+
+sp {propose*calc
+  (state <s> ^name test-calc)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name calc ^exp.plus <x1> ^return-to done)
+  (<x1> ^left.negate.numeral 2 ^right.numeral 2)}
+
+sp {pass
+  (state <s> ^name test-calc ^done 0)
+-->
+  (pass)}
+
+}
+
+test "times(negate(3), negate(3)) should be 9" {
+
+sp {propose*calc
+  (state <s> ^name test-calc)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name calc ^exp.times <x1> ^return-to done)
+  (<x1> ^left.negate.numeral 3 ^right.negate.numeral 3)}
+
+sp {pass
+  (state <s> ^name test-calc ^done 9)
+-->
+  (pass)}
+
+}
+
+test "divide(negate(9), negate(3)) should be 3" {
+
+sp {propose*calc
+  (state <s> ^name test-calc)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name calc ^exp.divide <x1> ^return-to done)
+  (<x1> ^left.negate.numeral 9 ^right.negate.numeral 3)}
+
+sp {pass
+  (state <s> ^name test-calc ^done 3.0)
+-->
+  (pass)}
+
+}

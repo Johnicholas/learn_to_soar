@@ -1,0 +1,28 @@
+
+source calculator.soar
+
+sp {initialize
+  (state <s> ^superstate nil)
+-->
+  (<s> ^name test-calc)}
+
+sp {propose*calc
+  (state <s> ^name test-calc)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name calc ^exp.divide <x1> ^return-to done)
+  (<x1> ^left.negate.numeral 9 ^right.negate.numeral 3)}
+
+sp {pass
+  (state <s> ^name test-calc ^done 3)
+-->
+  (write |pass|)}
+
+#  assert(run(new Plus(new Numeral(2), new Numeral(2)), 0) == 4);
+#  assert(run(new Times(new Numeral(3), new Numeral(3)), 0) == 9);
+#  assert(run(new Plus(new Negate(new Numeral(2)),
+#		      new Numeral(2)), 0) == 0);
+#  assert(run(new Times(new Negate(new Numeral(3)),
+#		       new Negate(new Numeral(3))), 0) == 9);
+#  assert(run(new Divide(new Negate(new Numeral(9)),
+#			new Negate(new Numeral(3))), 0) == 3);
