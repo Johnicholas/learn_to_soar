@@ -1,0 +1,20 @@
+
+source continuation_calculator.soar
+
+sp {initialize
+  (state <s> ^superstate nil)
+-->
+  (<s> ^name test-calc)}
+
+sp {propose*calc
+  (state <s> ^name test-calc)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name calc ^exp.plus <x1>)
+  (<x1> ^left.negate.numeral 2 ^right.numeral 2)}
+
+sp {pass
+  (state <s> ^name test-calc ^calc-done 0)
+-->
+  (write |pass|)}
+

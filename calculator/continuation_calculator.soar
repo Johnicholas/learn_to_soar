@@ -1,0 +1,262 @@
+# This is a simple calculator,
+# useful as an example of an interpreter,
+# based extremely loosely on Andrej Bauer's 'calc' in his PL Zoo.
+#
+# I understand this is terrible Soar code,
+# and not because of some rhetorical point that I'm trying to make,
+# but because I am a terrible Soar programmer.
+#
+# This variant has manual tail-call optimization applied,
+# and it was in continuation-passing style,
+# so the problem space is very flat, with no opportunity
+# for chunking.
+#
+# data model / grammar:
+#   an <exp> can be (<exp> ^numeral <n>) where <n> is an integer
+#   an <exp> can be (<exp> ^plus <sum>)
+#   a <sum> can be (<sum> ^left <exp> ^right <exp>)
+#   an <exp> can be (<exp> ^minus <diff>)
+#   a <diff> can be (<diff> ^left <exp> ^right <exp>)
+#   an <exp> can be (<exp> ^times <prod>)
+#   a <prod> can be (<prod> ^left <exp> ^right <exp>)
+#   an <exp> can be (<exp> ^divide <div>)
+#   a <div> can be (<div> ^left <exp> ^right <exp>)
+#   an <exp> can be (<exp> ^negate <exp>)
+#
+#   a <k> can be (<k> ^plusk1 <plusk1>)
+#   a <plusk1> can be (<plusk1> ^exp <exp> ^k <k>)
+#   a <k> can be (<k> ^plusk2 <plusk2>)
+#   a <plusk2> can be (<plusk2> ^v <v> ^k <k>) where v is an int
+#   a <k> can be (<k> ^minusk1 <minusk1>)
+#   a <minusk1> can be (<minusk1> ^exp <exp> ^k <k>)
+#   a <k> can be (<k> ^minusk2 <minusk2>)
+#   a <minusk2> can be (<minusk2> ^v <v> ^k <k>) where v is an int
+#   a <k> can be (<k> ^timesk1 <timesk1>)
+#   a <timesk1> can be (<timesk1> ^exp <exp> ^k <k>)
+#   a <k> can be (<k> ^timesk2 <timesk2>)
+#   a <timesk2> can be (<timesk2> ^v <v> ^k <k>) where v is an int
+#   a <k> can be (<k> ^dividek1 <dividek1>)
+#   a <dividek1> can be (<dividek1> ^exp <exp> ^k <k>)
+#   a <k> can be (<k> ^dividek2 <dividek2>)
+#   a <dividek2> can be (<dividek2> ^v <v> ^k <k>) where v is an int
+#   a <k> can be halt
+
+sp {calc*initialize
+  (state <s> ^superstate.operator <o>)
+  (<o> ^name calc ^exp <initialexp>)
+-->
+  (<s> ^name calc ^exp <initialexp> ^k halt)}
+
+sp {calc*propose*numeral
+  (state <s> ^name calc ^exp.numeral -^v)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name numeral)}
+
+sp {calc*apply*numeral
+  (state <s> ^name calc ^operator.name numeral ^exp <e>)
+  (<e> ^numeral <x>)
+-->
+  (<s> ^v <x> ^exp <e> -)}
+
+sp {calc*propose*plus
+  (state <s> ^name calc ^exp.plus ^k)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name plus)}
+
+sp {calc*apply*plus
+  (state <s> ^name calc ^operator.name plus ^exp <e> ^k <k>)
+  (<e> ^plus <plus>)
+  (<plus> ^left <left> ^right <right>)
+-->
+  (<s> ^k <k> - <newk> ^exp <e> - <left>)
+  (<newk> ^plusk1 <plusk1>)
+  (<plusk1> ^exp <right> ^k <k>)}
+
+sp {calc*propose*plusk1
+  (state <s> ^name calc ^k.plusk1 ^v)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name plusk1)}
+
+sp {calc*apply*plusk1
+  (state <s> ^name calc ^operator.name plusk1 ^k <k> ^v <v>)
+  (<k> ^plusk1 <plusk1>)
+  (<plusk1> ^exp <right> ^k <later>)
+-->
+  (<s> ^k <k> - <newk> ^exp <right> ^v <v> -)
+  (<newk> ^plusk2 <plusk2>)
+  (<plusk2> ^v <v> ^k <later>)}
+
+sp {calc*propose*plusk2
+  (state <s> ^name calc ^k.plusk2 ^v)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name plusk2)}
+
+sp {calc*apply*plusk2
+  (state <s> ^name calc ^operator.name plusk2 ^k <k> ^v <v2>)
+  (<k> ^plusk2 <plusk2>)
+  (<plusk2> ^v <v1> ^k <later>)
+-->
+  (<s> ^k <k> - <later> ^v <v2> - (+ <v1> <v2>))}
+
+sp {calc*propose*minus
+  (state <s> ^name calc ^exp.minus ^k)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name minus)}
+
+sp {calc*apply*minus
+  (state <s> ^name calc ^operator.name minus ^exp <e> ^k <k>)
+  (<e> ^minus <minus>)
+  (<minus> ^left <left> ^right <right>)
+-->
+  (<s> ^k <k> - <newk> ^exp <e> - <left>)
+  (<newk> ^minusk1 <minusk1>)
+  (<minusk1> ^exp <right> ^k <k>)}
+
+sp {calc*propose*minusk1
+  (state <s> ^name calc ^k.minusk1 ^v)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name minusk1)}
+
+sp {calc*apply*minusk1
+  (state <s> ^name calc ^operator.name minusk1 ^k <k> ^v <v>)
+  (<k> ^minusk1 <minusk1>)
+  (<minusk1> ^exp <right> ^k <later>)
+-->
+  (<s> ^k <k> - <newk> ^exp <right> ^v <v> -)
+  (<newk> ^minusk2 <minusk2>)
+  (<minusk2> ^v <v> ^k <later>)}
+
+sp {calc*propose*minusk2
+  (state <s> ^name calc ^k.minusk2 ^v)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name minusk2)}
+
+sp {calc*apply*minusk2
+  (state <s> ^name calc ^operator.name minusk2 ^k <k> ^v <v2>)
+  (<k> ^minusk2 <minusk2>)
+  (<minusk2> ^v <v1> ^k <later>)
+-->
+  (<s> ^k <k> - <later> ^v <v2> - (- <v1> <v2>))}
+
+sp {calc*propose*times
+  (state <s> ^name calc ^exp.times ^k)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name times)}
+
+sp {calc*apply*times
+  (state <s> ^name calc ^operator.name times ^exp <e> ^k <k>)
+  (<e> ^times <times>)
+  (<times> ^left <left> ^right <right>)
+-->
+  (<s> ^k <k> - <newk> ^exp <e> - <left>)
+  (<newk> ^timesk1 <timesk1>)
+  (<timesk1> ^exp <right> ^k <k>)}
+
+sp {calc*propose*timesk1
+  (state <s> ^name calc ^k.timesk1 ^v)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name timesk1)}
+
+sp {calc*apply*timesk1
+  (state <s> ^name calc ^operator.name timesk1 ^k <k> ^v <v>)
+  (<k> ^timesk1 <timesk1>)
+  (<timesk1> ^exp <right> ^k <later>)
+-->
+  (<s> ^k <k> - <newk> ^exp <right> ^v <v> -)
+  (<newk> ^timesk2 <timesk2>)
+  (<timesk2> ^v <v> ^k <later>)}
+
+sp {calc*propose*timesk2
+  (state <s> ^name calc ^k.timesk2 ^v)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name timesk2)}
+
+sp {calc*apply*timesk2
+  (state <s> ^name calc ^operator.name timesk2 ^k <k> ^v <v2>)
+  (<k> ^timesk2 <timesk2>)
+  (<timesk2> ^v <v1> ^k <later>)
+-->
+  (<s> ^k <k> - <later> ^v <v2> - (* <v1> <v2>))}
+
+sp {calc*propose*divide
+  (state <s> ^name calc ^exp.divide ^k)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name divide)}
+
+sp {calc*apply*divide
+  (state <s> ^name calc ^operator.name divide ^exp <e> ^k <k>)
+  (<e> ^divide <divide>)
+  (<divide> ^left <left> ^right <right>)
+-->
+  (<s> ^k <k> - <newk> ^exp <e> - <left>)
+  (<newk> ^dividek1 <dividek1>)
+  (<dividek1> ^exp <right> ^k <k>)}
+
+sp {calc*propose*dividek1
+  (state <s> ^name calc ^k.dividek1 ^v)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name dividek1)}
+
+sp {calc*apply*dividek1
+  (state <s> ^name calc ^operator.name dividek1 ^k <k> ^v <v>)
+  (<k> ^dividek1 <dividek1>)
+  (<dividek1> ^exp <right> ^k <later>)
+-->
+  (<s> ^k <k> - <newk> ^exp <right> ^v <v> -)
+  (<newk> ^dividek2 <dividek2>)
+  (<dividek2> ^v <v> ^k <later>)}
+
+sp {calc*propose*dividek2
+  (state <s> ^name calc ^k.dividek2 ^v)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name dividek2)}
+
+sp {calc*apply*dividek2
+  (state <s> ^name calc ^operator.name dividek2 ^k <k> ^v <v2>)
+  (<k> ^dividek2 <dividek2>)
+  (<dividek2> ^v <v1> ^k <later>)
+-->
+  (<s> ^k <k> - <later> ^v <v2> - (/ <v1> <v2>))}
+
+sp {calc*propose*negate
+  (state <s> ^name calc ^exp.negate ^k)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name negate)}
+
+sp {calc*apply*negate
+  (state <s> ^name calc ^operator.name negate ^exp <e>)
+  (<e> ^negate <exptonegate>)
+-->
+  (<s> ^exp <e> - <newexp>)
+  (<newexp> ^minus <minus>)
+  (<minus> ^left.numeral 0 ^right <exptonegate>)}
+
+sp {calc*propose*halt
+  (state <s> ^name calc ^k halt ^v)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name halt)}
+
+sp {calc*apply*halt
+  (state <s> ^name calc ^operator.name halt ^v <v>)
+-->
+  (<s> ^answer <v>)}
+
+sp {calc*elaborate*return*answer
+  (state <s> ^name calc ^superstate <ss> ^answer <a>)
+-->
+  (<ss> ^calc-done <a>)}
