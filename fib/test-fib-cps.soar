@@ -1,7 +1,7 @@
 setup {
 
-source fib.soar
-learn --on
+source fib_cps.soar
+# learn --on
 
 sp {initialize
   (state <s> ^superstate nil)
@@ -52,16 +52,30 @@ sp {test-fib*pass
 
 }
 
-test "fib(30) should be 832040" {
+test "fib(7) should be 13" {
 
 sp {test-fib*trigger*fib
   (state <s> ^name test-fib)
 -->
-  (<s> ^fib-needed 30)}
+  (<s> ^fib-needed 7)}
 
 sp {test-fib*pass
-  (state <s> ^name test-fib ^fib-done 832040)
+  (state <s> ^name test-fib ^fib-done 13)
 -->
   (pass)}
 
 }
+
+#test "fib(30) should be 832040" {
+#
+#sp {test-fib*trigger*fib
+#  (state <s> ^name test-fib)
+#-->
+#  (<s> ^fib-needed 30)}
+#
+#sp {test-fib*pass
+#  (state <s> ^name test-fib ^fib-done 832040)
+#-->
+#  (pass)}
+#
+#}

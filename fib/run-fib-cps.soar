@@ -1,11 +1,11 @@
 
-source fib.soar
+source fib_cps.soar
+# learn --on
 
 sp {initialize
   (state <s> ^superstate nil)
 -->
   (<s> ^name test-fib)}
-
 
 sp {test-fib*trigger*fib
   (state <s> ^name test-fib)
@@ -15,5 +15,4 @@ sp {test-fib*trigger*fib
 sp {test-fib*pass
   (state <s> ^name test-fib ^fib-done 13)
 -->
-  (write |pass|)}
-
+  (write (crlf) |pass|)}

@@ -1,83 +1,178 @@
-# initialize fib with index from operator and halt continuation
-# fibtop(X, Out) :- !, fib(X, halt, Out).
+########################################### fib
+# computes the nth fibonacci number
+# in continuation passing style
+# 
+# Trigger it by putting <s> ^fib-needed <n>
+# When it is done it will reject the ^fib-needed
+# and add ^fib-done <answer>
+
+sp {propose*fib
+  (state <s> ^fib-needed <x>)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name fib
+       ^index <x>)}
 
 sp {fib*elaborate*initialize
   (state <s> ^superstate.operator <o>)
-  (<o> ^name fib ^index <x>)
+  (<o> ^name fib
+       ^index <x>)
 -->
-  (<s> ^name fib ^index <x> ^cont halt)}
+  (<s> ^name fib
+       ^index <x>
+       ^original-index <x>
+       ^cont halt)}
 
-# if fib and index is zero, change to applycontspace, change 'index'
-# fib(0, K, Out) :- !, applycont(K, 0, Out).
-sp {fib*propose*fibzero
-  (state <s> ^name fib ^index 0)
--->
-  (<s> ^name fib - applycont ^index 0 - ^value 0)}
-
-# fib(X, K, Out) :- X > 0, !, Y is X - 1, fib(Y, fibhelperandsum(Y, K), Out).
-sp {fib*propose*fibnonzero
-  (state <s> ^name fib ^index <x> > 0 ^cont <k>)
--->
-  (<s> ^index <x> - (- <x> 1) ^cont <k> - <newk>)
-  (<newk> ^fibhelperandsum <fibhelperandsum>)
-  (<fibhelperandsum> ^index (- <x> 1) ^cont <k>)}
-
-# applycont(halt, V, Out) :- !, Out = V.
-sp {applycont*propose*halt
-  (state <s> ^name applycont ^cont halt ^value)
+############################## fibz
+# base case of fib 
+# fib[0] = 0
+sp {fib*propose*fibz
+  (state <s> ^name fib
+             ^index 0)
 -->
   (<s> ^operator <o> +)
-  (<o> ^name halt)}
+  (<o> ^name fibz)}
+
+sp {fib*apply*fibz
+  (state <s> ^name fib
+             ^operator.name fibz
+             ^index 0)
+-->
+  (<s> ^name fib - applycont
+       ^index 0 -
+       ^value 0)}
+
+################################# fibsucc
+# recursive case
+# fib[x+1] = fib[x] + fibhelper[x]
+sp {fib*propose*fibsucc
+  (state <s> ^name fib
+             ^index > 0)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name fibsucc)}
+
+sp {fib*apply*fibsucc
+  (state <s> ^name fib
+             ^operator.name fibsucc
+             ^index <x>
+             ^cont <k>)
+-->
+  (<s> ^index <x> - (- <x> 1)
+       ^cont <k> - <newk>)
+  (<newk> ^fibhelperandsum <fibhelperandsum>)
+  (<fibhelperandsum> ^index (- <x> 1)
+                     ^cont <k>)}
+
+##################################### halt
+# This is how we leave the fib space
+sp {applycont*propose*halt
+   (state <s> ^name applycont
+              ^cont halt)
+-->
+   (<s> ^operator <o> +)
+   (<o> ^name halt)}
 
 sp {applycont*apply*halt
-  (state <s> ^name applycont ^operator.name halt ^superstate <ss> ^value <v>)
+   (state <s> ^name applycont
+              ^operator.name halt
+              ^superstate <ss>
+              ^original-index <x>
+              ^value <v>)
+   (<ss> ^fib-needed <x>)
 -->
-  (<ss> ^fib-done <v>)}
+   (<ss> ^fib-needed <x> -
+         ^fib-done <v>)}
 
-# applycont(fibhelperandsum(X, K), V, Out) :- !, fibhelper(X, sum(V, K), Out).
+################################## fibhelperandsum
+# This is the second step of the
+# recursive case for fib
+# We've computed fib[x], now we need to go
+# on to computing fibhelper[x]
+# Later we will add them.
 sp {applycont*propose*fibhelperandsum
-  (state <s> ^name applycont ^cont.fibhelperandsum ^value)
+   (state <s> ^name applycont
+              ^cont.fibhelperandsum)
 -->
-  (<s> ^operator <o> +)
-  (<o> ^name fibhelperandsum)}
+   (<s> ^operator <o> +)
+   (<o> ^name fibhelperandsum)}
 
 sp {applycont*apply*fibhelperandsum
-  (state <s> ^name applycont
-             ^operator.name fibhelperandsum
-             ^cont <k>
-             ^value <v>)
-  (<k> ^fibhelperandsum <fibhelperandsum>)
-  (<fibhelperandsum> ^index <x>
-                     ^cont <later>)
+   (state <s> ^name applycont
+              ^operator.name fibhelperandsum
+              ^cont <k>
+              ^value <v>)
+   (<k> ^fibhelperandsum <fibhelperandsum>)
+   (<fibhelperandsum> ^index <x>
+                      ^cont <later>)
 -->
-  (<s> ^name applycont - fibhelper ^cont <k> - <sum> ^value <v> - ^index <x>)
-  (<sum ^value <v> ^cont <later>)}
+   (<s> ^name applycont - fibhelper
+        ^cont <k> - <newk>
+        ^value <v> -
+        ^index <x>)
+   (<newk> ^sum <sum>)
+   (<sum> ^value <v>
+          ^cont <later>)}
 
-# applycont(sum(V1, K), V2, Out) :- !, V is V1 + V2, applycont(K, V, Out).
+################################## sum
+# This is the third step of the
+# recursive case for fib
+# We've computed fib[x] and fibhelper[x],
+# now we want to add them.
 sp {applycont*propose*sum
-  (state <s> ^name applycont ^cont.sum)
+   (state <s> ^name applycont
+              ^cont.sum)
 -->
-  (<s> ^operator <o> +)
-  (<o> ^name sum)}
+   (<s> ^operator <o> +)
+   (<o> ^name sum)}
 
 sp {applycont*apply*sum
-  (state <s> ^name applycont ^operator.name sum ^cont <k> ^value <v2>)
-  (<k> ^sum <sum>)
-  (<sum> ^value <v1> ^cont <later>)
+   (state <s> ^name applycont
+              ^operator.name sum
+              ^cont <k>
+              ^value <v2>)
+   (<k> ^sum <sum>)
+   (<sum> ^value <v1> ^cont <later>)
 -->
-  (<s> ^cont <k> - <sum> ^value <v2> - (+ <v1> <v2>))}
+   (<s> ^value <v2> - (+ <v1> <v2>)
+        ^cont <k> - <later>)}
 
-# fibhelper(0, K, Out) :- !, applycont(K, 1, Out).
-sp {fibhelper*propose*zero
-  (state <s> ^name fibhelper ^index 0)
+############################### fibhelperz
+# This is the base case of fibhelper
+# fibhelper[0] = 1
+sp {fibhelper*propose*fibhelperz
+   (state <s> ^name fibhelper
+              ^index 0)
 -->
-  (<s> ^operator <o> +)
-  (<o> ^name fibhelperzero)}
+   (<s> ^operator <o>)
+   (<o> ^name fibhelperz)}
 
-sp {fibhelper*apply*fibhelperzero
-  (state <s> ^name fibhelper ^operator.name fibhelpzero ^index 0)
+sp {fibhelper*apply*fibhelperz
+   (state <s> ^name fibhelper
+              ^operator.name fibhelperz
+              ^index 0)
 -->
-  (<s> ^name fibhelper - applycont ^index 0 - ^value 1)}
+   (<s> ^name fibhelper - applycont
+        ^index 0 -
+        ^value 1)}
 
-# fibhelper(X, K, Out) :- X > 0, !, Y is X - 1, fib(Y, K, Out).
-sp {fibhelper*propose*
+################################### fibhelpersucc
+# This is the recursive case of fibhelper
+# fibhelper[x+1] = fib[x]
+sp {fibhelper*propose*fibhelpersucc
+   (state <s> ^name fibhelper
+              ^index > 0)
+-->
+   (<s> ^operator <o> +)
+   (<o> ^name fibhelpersucc)}
+
+# fibhelpercps(X, K, Out) :- X > 0, !,
+#   Y is X - 1,
+#   fibcps(Y, K, Out).
+sp {fibhelper*apply*fibhelpersucc
+   (state <s> ^name fibhelper
+              ^operator.name fibhelpersucc
+              ^index <x>)
+-->
+   (<s> ^name fibhelper - fib
+        ^index <x> - (- <x> 1))}

@@ -12,6 +12,14 @@ sp {propose*fib
   (<o> ^name fib
        ^index <x>)}
 
+sp {fib*elaborate*initialize
+  (state <s> ^superstate.operator <o>)
+  (<o> ^name fib
+       ^index <x>)
+-->
+  (<s> ^name fib
+       ^index <x>)}
+
 sp {fib*elaborate*done
   (state <s> ^name fib
              ^index <x>
@@ -22,11 +30,11 @@ sp {fib*elaborate*done
   (<ss> ^fib-needed <x> -
         ^fib-done <a>)}
 
-# This is fib's recursive case
-# fib[x+1] = fib[x] + fibhelper[x]
+# In fib's recursive case,
+# (fib[x+1] = fib[x] + fibhelper[x])
 # This elaboration triggers
 # fib and fibhelper subcomputations
-# then fibsucc adds them together
+# then fibsucc operator will add them together
 sp {fib*elaborate*need-recurse
   (state <s> ^name fib
              ^index <x> > 0)
@@ -34,13 +42,6 @@ sp {fib*elaborate*need-recurse
   (<s> ^fib-needed (- <x> 1)
        ^fibhelper-needed (- <x> 1))}
 
-sp {fib*elaborate*initialize
-  (state <s> ^superstate.operator <o>)
-  (<o> ^name fib
-       ^index <x>)
--->
-  (<s> ^name fib
-       ^index <x>)}
 
 ############################ fibz
 # base case, the 0th fibonnaci number is 0
