@@ -1,0 +1,34 @@
+
+source fib.soar
+
+sp {initialize
+  (state <s> ^superstate nil)
+-->
+  (<s> ^name test-fib)}
+
+
+sp {test-fib*trigger*fib
+  (state <s> ^name test-fib)
+-->
+  (<s> ^fib-needed 0)}
+
+sp {test-fib*pass
+  (state <s> ^name test-fib ^fib-done 0)
+-->
+  (write |pass|)}
+
+
+#test "fib(7) should be 13" {
+#
+#sp {test-fib*propose*fib
+#  (state <s> ^name test-fib -^fib-done)
+#-->
+#  (<s> ^operator <o> +)
+#  (<o> ^name fib ^index 7)}
+#
+#sp {test-fib*pass
+#  (state <s> ^name test-fib ^fib-done 13)
+#-->
+#  (pass)}
+#
+#}

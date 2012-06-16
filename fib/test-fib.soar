@@ -1,0 +1,67 @@
+setup {
+
+source fib.soar
+learn --on
+
+sp {initialize
+  (state <s> ^superstate nil)
+-->
+  (<s> ^name test-fib)}
+
+}
+
+test "fib(0) should be 0" {
+
+sp {test-fib*trigger*fib
+  (state <s> ^name test-fib)
+-->
+  (<s> ^fib-needed 0)}
+
+sp {test-fib*pass
+  (state <s> ^name test-fib ^fib-done 0)
+-->
+  (pass)}
+
+}
+
+test "fib(1) should be 1" {
+
+sp {test-fib*trigger*fib
+  (state <s> ^name test-fib)
+-->
+  (<s> ^fib-needed 1)}
+
+sp {test-fib*pass
+  (state <s> ^name test-fib ^fib-done 1)
+-->
+  (pass)}
+
+}
+
+test "fib(2) should be 1" {
+
+sp {test-fib*trigger*fib
+  (state <s> ^name test-fib)
+-->
+  (<s> ^fib-needed 2)}
+
+sp {test-fib*pass
+  (state <s> ^name test-fib ^fib-done 1)
+-->
+  (pass)}
+
+}
+
+test "fib(25) should be 75025" {
+
+sp {test-fib*trigger*fib
+  (state <s> ^name test-fib)
+-->
+  (<s> ^fib-needed 25)}
+
+sp {test-fib*pass
+  (state <s> ^name test-fib ^fib-done 75025)
+-->
+  (pass)}
+
+}

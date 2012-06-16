@@ -1,0 +1,142 @@
+######################################### fib
+# Computes the nth fibonacci number
+#
+# Trigger it by putting <s> ^fib-needed <n>
+# When it is done, it will reject the ^fib-needed
+# and add ^fib-done <answer>
+
+sp {propose*fib
+  (state <s> ^fib-needed <x>)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name fib
+       ^index <x>)}
+
+sp {fib*elaborate*done
+  (state <s> ^name fib
+             ^index <x>
+             ^superstate <ss>
+             ^answer <a>)
+  (<ss> ^fib-needed <x>)
+-->
+  (<ss> ^fib-needed <x> -
+        ^fib-done <a>)}
+
+# This is fib's recursive case
+# fib[x+1] = fib[x] + fibhelper[x]
+# This elaboration triggers
+# fib and fibhelper subcomputations
+# then fibsucc adds them together
+sp {fib*elaborate*need-recurse
+  (state <s> ^name fib
+             ^index <x> > 0)
+-->
+  (<s> ^fib-needed (- <x> 1)
+       ^fibhelper-needed (- <x> 1))}
+
+sp {fib*elaborate*initialize
+  (state <s> ^superstate.operator <o>)
+  (<o> ^name fib
+       ^index <x>)
+-->
+  (<s> ^name fib
+       ^index <x>)}
+
+############################ fibz
+# base case, the 0th fibonnaci number is 0
+
+sp {fib*propose*fibz
+  (state <s> ^name fib
+             ^index 0)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name fibz)}
+
+sp {fib*apply*fibz
+  (state <s> ^name fib
+             ^operator.name fibz)
+-->
+  (<s> ^answer 0)}
+
+############################## fibsucc
+# the operator that computes the sum
+# after the two recursive answers are available
+
+sp {fib*propose*fibsucc
+  (state <s> ^name fib
+             ^fib-done
+             ^fibhelper-done)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name fibsucc)}
+
+sp {fib*apply*fibsucc
+  (state <s> ^name fib
+             ^operator.name fibsucc
+             ^fib-done <x>
+             ^fibhelper-done <y>)
+-->
+  (<s> ^answer (+ <x> <y>))}
+
+###################################### fibhelper
+# Computes the n+1th fibonacci number
+#
+# Trigger it by putting <s> ^fibhelper-needed <n>
+# When it is done, it will reject the ^fibhelper-needed
+# and add ^fibhelper-done <answer>
+
+sp {propose*fibhelper
+  (state <s> ^fibhelper-needed <x>)
+-->
+  (<s> ^operator <o> + =)
+  (<o> ^name fibhelper
+       ^index <x>)}
+
+sp {fibhelper*elaborate*initialize
+  (state <s> ^superstate.operator <o>)
+  (<o> ^name fibhelper
+       ^index <x>)
+-->
+  (<s> ^name fibhelper
+       ^index <x>)}
+
+# This is fibhelper's recursive case
+# fibhelper[x+1] = fib[x]
+sp {fibhelper*elaborate*need-fib
+  (state <s> ^name fibhelper
+             ^index <x> > 0)
+-->
+  (<s> ^fib-needed (- <x> 1))}
+
+sp {fibhelper*elaborate*return-fib
+  (state <s> ^name fibhelper
+             ^fib-done <a>)
+-->
+  (<s> ^answer <a>)}
+
+sp {fibhelper*elaborate*done
+  (state <s> ^name fibhelper
+             ^index <x>
+             ^superstate <ss>
+             ^answer <a>)
+  (<ss> ^fibhelper-needed <x>)
+-->
+  (<ss> ^fibhelper-needed <x> -
+        ^fibhelper-done <a>)}
+
+##################################### fibhelperz
+# base case, fibhelper of 0 is 1
+
+sp {fibhelper*propose*fibhelperz
+  (state <s> ^name fibhelper
+             ^index 0)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name fibhelperz)}
+
+sp {fibhelper*apply*fibhelperz
+  (state <s> ^name fibhelper
+             ^operator.name fibhelperz)
+-->
+  (<s> ^answer 1)}
+

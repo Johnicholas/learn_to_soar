@@ -1,0 +1,4 @@
+fib(Z) == 0
+fib(S(?x)) == fib(?x) + fibhelper(?x)
+fibhelper(Z) == 1
+fibhelper(S(?x)) == fib(?x)
