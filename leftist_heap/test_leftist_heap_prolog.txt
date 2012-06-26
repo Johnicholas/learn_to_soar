@@ -1,0 +1,25 @@
+[leftist_heap].
+[leftist_heap_test_utilities].
+
+ecba(In),
+map(isempty, In, cons(yes, cons(no, cons(no, cons(no, nil))))).
+
+cba(In),
+map(findmin, In, cons(c, cons(b, cons(a, nil)))).
+
+cba(In),
+map(deletethenfind, In, cons(nothing, cons(just(c), cons(just(b), nil)))).
+
+perms(In),
+repeat(6, a, Expected),
+map(findmin, In, Expected).
+
+perms(In),
+repeat(6, just(b), Expected),
+map(deletethenfind, In, Expected).
+
+perms(P),
+map(deletemin, P, In),
+repeat(6, just(c), Expected),
+map(deletethenfind, In, Expected).
+

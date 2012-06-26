@@ -6,8 +6,8 @@ rank(Tree(?rank, ?elem, ?left, ?right)) == ?rank
 maketree(?elem, ?a, ?b) == if rank(?a) >= rank(?b) then
   Tree(rank(?b)+1, ?elem, ?a, ?b) else
   Tree(rank(?a)+1, ?elem, ?b, ?a)
-isempty(Empty) == yes
-isempty(Tree(?rank, ?elem, ?left, ?right)) == no
+isempty(Empty) == Yes
+isempty(Tree(?rank, ?elem, ?left, ?right)) == No
 merge(Empty, ?right) == ?right
 merge(?left, Empty) == ?left
 merge(Tree(?r1, ?x1, ?a1, ?b1), Tree(?r2, ?x2, ?a2, ?b2)) == if leq(?x1, ?x2) then
@@ -17,15 +17,13 @@ insert(?elem, ?heap) == merge(Tree(1, ?elem, Empty, Empty), ?heap)
 findmin(Tree(?rank, ?elem, ?left, ?right)) == ?elem
 deletemin(Tree(?rank, ?elem, ?left, ?right)) == merge(?left, ?right)
 
-# facts for testing with
+# facts and rules useful for testing
 leq(a, b) == 1
 leq(b, a) == 0
 leq(a, c) == 1
 leq(c, a) == 0
 leq(b, c) == 1
 leq(c, b) == 0
-
-# tests
 cba == Cons(insert(c, Empty),
   Cons(insert(b, insert(c, Empty)),
   Cons(insert(a, insert(b, insert(c, Empty))),
@@ -33,22 +31,26 @@ cba == Cons(insert(c, Empty),
 ecba == Cons(Empty, cba)
 map(?fun, Nil) == Nil
 map(?fun, Cons(?x, ?xs)) == Cons(?fun(?x), map(?fun, ?xs))
-map(isempty, ecba) = Cons(yes, Cons(no, Cons(no, Cons(no, Nil))))
-map(findmin, cba) = Cons(c, Cons(b, Cons(a, Nil)))
 deletethenfind(?x) == deletethenfind3(deletemin(?x))
 deletethenfind3(?x) == deletethenfind4(isempty(?x), ?x)
-deletethenfind4(yes, ?x) == Nothing
-deletethenfind4(no, ?x) == Just(findmin(?x))
-map(deletethenfind, cba)
-#findmin(insert(a, insert(b, insert(c, Empty)))) = a
-#findmin(insert(b, insert(a, insert(c, Empty)))) = a
-#findmin(insert(b, insert(c, insert(a, Empty)))) = a
-#findmin(insert(c, insert(b, insert(a, Empty)))) = a
-#findmin(insert(c, insert(a, insert(b, Empty)))) = a
-#findmin(insert(a, insert(c, insert(b, Empty)))) = a
-#findmin(deletemin(insert(a, insert(b, insert(d, Empty))))) = b
-#findmin(deletemin(insert(b, insert(a, insert(d, Empty))))) = b
-#findmin(deletemin(insert(b, insert(d, insert(a, Empty))))) = b
-#findmin(deletemin(insert(d, insert(b, insert(a, Empty))))) = b
-#findmin(deletemin(insert(d, insert(a, insert(b, Empty))))) = b
-#findmin(deletemin(insert(a, insert(d, insert(b, Empty))))) = b
+deletethenfind4(Yes, ?x) == Nothing
+deletethenfind4(No, ?x) == Just(findmin(?x))
+perms ==
+  Cons(insert(a, insert(b, insert(c, Empty))),
+  Cons(insert(b, insert(a, insert(c, Empty))),
+  Cons(insert(b, insert(c, insert(a, Empty))),
+  Cons(insert(c, insert(b, insert(a, Empty))),
+  Cons(insert(c, insert(a, insert(b, Empty))),
+  Cons(insert(a, insert(c, insert(b, Empty))),
+  Nil))))))
+repeat(?n, ?x) == if ?n > 0 then
+  Cons(?x, repeat(?n - 1, ?x)) else
+  Nil
+
+# tests
+map(isempty, ecba) = Cons(Yes, Cons(No, Cons(No, Cons(No, Nil))))
+map(findmin, cba) = Cons(c, Cons(b, Cons(a, Nil)))
+map(deletethenfind, cba) = Cons(Nothing, Cons(Just(c), Cons(Just(b), Nil)))
+map(findmin, perms) = repeat(6, a)
+map(deletethenfind, perms) = repeat(6, Just(b))
+map(deletethenfind, map(deletemin, perms)) = repeat(6, Just(c))
