@@ -1,0 +1,236 @@
+# leftist heaps implementation
+# adapted from markus mottl's ocaml version
+# of chris okasaki's code
+#
+# operators:
+#   those that are intended to be externally visible
+#     rank
+#     isempty
+#     insert
+#     findmin
+#     deletemin
+#     merge
+#   those that are not intended to be externally visible
+#     maketree
+#   those that are required but not defined in this file
+#     leq
+
+#################################################################
+# leq takes a ^left <e1> and a ^right <e2> and a ^return-to <r>
+# it compares <e1> and <e2> and augments <r> with
+# ^leq-done yes if <e1> is less than or equal to <e2>
+# and ^leq-done no otherwise.
+#
+# Because this is supposed to be a generic container,
+# this heap implementation doesn't provide an implementation
+# of leq - for any given kind of element,
+# you would need to write a leq operator
+# (maybe just a shell around an existing comparison operator).
+
+##################################################
+# rank takes a ^heap <h> and a ^return-to <r>
+# and augments <r> with a ^rank-done <n>
+# where n is the rank of the heap
+sp {rank*elaborate*initialize
+   (state <s> ^superstate.operator <o>)
+   (<o> ^name rank
+        ^heap <h>
+        ^return-to <r>)
+-->
+   (<s> ^name rank
+        ^heap <h>
+        ^return-to <r>)}
+
+# the rank of the empty heap is zero
+sp {rank*elaborate*empty
+   (state <s> ^name rank
+              ^heap empty)
+-->
+   (<s> ^answer 0)}
+
+# the rank of a nonempty heap is stored
+sp {rank*elaborate*nonempty
+   (state <s> ^name rank
+              ^heap.tree.rank <n>)
+-->
+   (<s> ^answer <n>)}
+
+# once we have the answer, return it
+sp {rank*elaborate*done
+   (state <s> ^name rank
+              ^return-to <r>
+              ^answer <a>)
+-->
+   (<r> ^rank-done <a>)}
+
+#################################################
+# isempty takes a ^heap <h> and a ^return-to <r>
+# and augments <r> with ^isempty-done (yes or no)
+sp {isempty*elaborate*initialize
+   (state <s> ^superstate.operator <o>)
+   (<o> ^name isempty
+        ^heap <h>
+        ^return-to <r>)
+-->
+   (<s> ^name isempty
+        ^heap <h>
+        ^return-to <r>)}
+
+sp {isempty*elaborate*empty
+   (state <s> ^name isempty
+              ^heap empty)
+-->
+   (<s> ^answer yes)}
+
+sp {isempty*elaborate*nonempty
+   (state <s> ^name isempty
+              ^heap.tree)
+-->
+   (<s> ^answer no)}
+
+# once we have the answer, return it
+sp {isempty*elaborate*done
+   (state <s> ^name isempty
+              ^return-to <r>
+              ^answer <a>)
+-->
+   (<r> ^isempty-done <a>)}
+
+################################################################
+# insert takes a ^elem and a ^heap <h1> and a ^return-to <r>
+# it augments <r> with ^insert-done <h2>
+# where <h2> is a new heap constructed
+# by inserting the element into <h1>
+sp {insert*elaborate*initialize
+   (state <s> ^superstate.operator <o>)
+   (<o> ^name insert
+        ^elem <e>
+        ^heap <h>
+        ^return-to <r>)
+-->
+   (<s> ^name insert
+        ^elem <e>
+        ^heap <h>
+        ^return-to <r>)}
+
+sp {insert*elaborate*singleton
+   (state <s> ^name insert
+              ^elem <e>)
+-->
+   (<s> ^singleton.tree <new>)
+   (<new> ^rank 1
+          ^elem <e>
+          ^left empty
+          ^right empty)}
+
+sp {insert*propose*merge
+   (state <s> ^name insert
+              ^singleton <h1>
+              ^heap <h2>
+             -^merge-done)
+-->
+   (<s> ^operator <o> +)
+   (<o> ^name merge
+        ^left <h1>
+        ^right <h2>
+        ^return-to <s>)}
+
+sp {insert*elaborate*done
+   (state <s> ^name insert
+              ^return-to <r>
+              ^merge-done <a>)
+-->
+   (<r> ^insert-done <a>)}
+
+#########################################################
+# findmin takes a ^heap and a ^return-to <r>
+# and augments the return-to with a findmin-done <e>
+# where <e> is the minimum element in the heap
+#
+# Note: there will be an impasse of some sort
+# if the heap that you're finding the minimum
+# element of is actually empty.
+sp {findmin*elaborate*initialize
+   (state <s> ^superstate.operator <o>)
+   (<o> ^name findmin
+        ^heap <h>
+        ^return-to <r>)
+-->
+   (<s> ^name findmin
+        ^heap <h>
+        ^return-to <r>)}
+
+sp {findmin*elaborate*done
+   (state <s> ^name findmin
+              ^heap.tree.elem <e>
+              ^return-to <r>)
+-->
+   (<r> ^findmin-done <e>)}
+
+###########################################################
+# deletemin takes a ^heap <h> and a ^return-to
+# and augments the return-to with a ^deletemin-done
+# pointing to a heap containing almost the same elements
+# as <h> but without the minimum element 
+#
+# Note: there will be an impasse of some sort
+# if the heap that yoou're trying to delete the
+# minimum element of is actually empty
+sp {deletemin*elaborate*initialize
+   (state <s> ^superstate.operator <o>)
+   (<o> ^name deletemin
+        ^heap <h>
+        ^return-to <r>)
+-->
+   (<s> ^name deletemin
+        ^heap <h>
+        ^return-to <r>)}
+
+sp {deletemin*propose*merge
+   (state <s> ^name deletemin
+              ^heap.tree <t>
+             -^merge-done)
+   (<t> ^left <l>
+        ^right <r>)
+-->
+   (<s> ^operator <o> +)
+   (<o> ^name merge
+        ^left <l>
+        ^right <r>
+        ^return-to <s>)}
+
+sp {deletemin*elaborate*done
+   (state <s> ^name deletemin
+              ^return-to <r>
+              ^merge-done <m>)
+-->
+   (<r> ^deletemin-done <m>)}
+
+
+#merge(empty, Right, Out) :- !,
+#  Out = Right.
+#merge(Left, empty, Out) :- !,
+#  Out = Left.
+#merge(tree(R1, X1, A1, B1), tree(R2, X2, A2, B2), Out) :- !,
+#  leq(X1, X2, ComparisonResult),
+#  mergehelper(ComparisonResult, tree(R1, X1, A1, B1), tree(R2, X2, A2, B2), Out).
+#
+#mergehelper(yes, tree(_R1, X1, A1, B1), tree(R2, X2, A2, B2), Out) :- !,
+#  merge(B1, tree(R2, X2, A2, B2), Temp),
+#  maketree(X1, A1, Temp, Out).
+#mergehelper(no, tree(R1, X1, A1, B1), tree(_R2, X2, A2, B2), Out) :- !,
+#  merge(tree(R1, X1, A1, B1), B2, Temp),
+#  maketree(X2, A2, Temp, Out).
+#
+#maketree(Elem, A, B, Out) :- !,
+#  rank(A, RankA),
+#  rank(B, RankB), 
+#  maketreehelper(RankA, RankB, Elem, A, B, Out).
+#
+#maketreehelper(RankA, RankB, Elem, A, B, Out) :- RankA >= RankB, !,
+#  NewRank is RankB + 1,
+#  Out = tree(NewRank, Elem, A, B).
+#maketreehelper(RankA, RankB, Elem, A, B, Out) :- RankA < RankB, !,
+#  NewRank is RankA + 1,
+#  Out = tree(NewRank, Elem, B, A).
+
