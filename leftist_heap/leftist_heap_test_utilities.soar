@@ -1,0 +1,332 @@
+# perhaps useful for testing
+
+######################################## leq
+sp {leq*apply*a-b-yes
+   (state <s> ^operator <o> +)
+   (<o> ^name leq
+        ^left a
+        ^right b
+        ^return-to <r>)
+-->
+   (<r> ^leq-done yes)}
+
+sp {leq*apply*b-a-no
+   (state <s> ^operator <o> +)
+   (<o> ^name leq
+        ^left b
+        ^right a
+        ^return-to <r>)
+-->
+   (<r> ^leq-done no)}
+
+sp {leq*apply*a-c-yes
+   (state <s> ^operator <o> +)
+   (<o> ^name leq
+        ^left a
+        ^right c
+        ^return-to <r>)
+-->
+   (<r> ^leq-done yes)}
+
+sp {leq*apply*c-a-no
+   (state <s> ^operator <o> +)
+   (<o> ^name leq
+        ^left c
+        ^right a
+        ^return-to <r>)
+-->
+   (<r> ^leq-done no)}
+
+sp {leq*apply*b-c-yes
+   (state <s> ^operator <o> +)
+   (<o> ^name leq
+        ^left b
+        ^right c
+        ^return-to <r>)
+-->
+   (<r> ^leq-done yes)}
+
+sp {leq*apply*c-b-no
+   (state <s> ^operator <o> +)
+   (<o> ^name leq
+        ^left c
+        ^right b
+        ^return-to <r>)
+-->
+   (<r> ^leq-done no)}
+
+############################################### cba
+# cba takes a return-to and constructs
+# a list of heaps and puts it there
+sp {cba*elaborate*initialize
+   (state <s> ^superstate.operator <o>)
+   (<o> ^name cba
+        ^return-to <r>)
+-->
+   (<s> ^name cba
+        ^return-to <r>
+        ^c <c>
+        ^bc <bc>
+        ^abc <abc>)}
+
+sp {cba*propose*insert-c
+   (state <s> ^name cba
+              ^c <c>)
+   (<c> -^insert-done)
+-->
+   (<s> ^operator <o> +)
+   (<o> ^name insert
+        ^elem c
+        ^heap empty
+        ^return-to <c>)}
+
+sp {cba*propose*insert-b
+   (state <s> ^name cba
+              ^c.insert-done <c>
+              ^bc <bc>)
+   (<bc> -^insert-done)
+-->
+   (<s> ^operator <o> +)
+   (<o> ^name insert
+        ^elem b
+        ^heap <c>
+        ^return-to <bc>)}
+
+sp {cba*propose*insert-a
+   (state <s> ^name cba
+              ^bc.insert-done <bc>
+              ^abc <abc>)
+   (<abc> -^insert-done)
+-->
+   (<s> ^operator <o> +)
+   (<o> ^name insert
+        ^elem a
+        ^heap <bc>
+        ^return-to <abc>)}
+
+sp {cba*elaborate*done
+   (state <s> ^name cba
+              ^return-to <r>
+              ^abc.insert-done <abc>)
+-->
+   (<r> ^cba-done.cons <c1>)
+   (<c1> ^first <c> ^rest.cons <c2>)
+   (<c2> ^first <bc> ^rest.cons <c3>)
+   (<c3> ^first <abc> ^rest nil)}
+
+######################################
+# ecba takes a return-to and puts
+# a list of heaps there
+sp {ecba*elaborate*initialize
+   (state <s> ^superstate.operator <o>)
+   (<o> ^name ecba
+        ^return-to <r>)
+-->
+   (<s> ^name ecba
+        ^return-to <r>
+        ^c <c>
+        ^bc <bc>
+        ^abc <abc>)}
+
+sp {ecba*propose*cba
+   (state <s> ^name ecba
+             -^cba-done)
+-->
+   (<s> ^operator <o> +)
+   (<o> ^name cba
+        ^return-to <s>)}
+
+sp {ecba*elaborate*done
+   (state <s> ^name ecba
+              ^return-to <r>
+              ^cba-done <cba>)
+-->
+   (<r> ^ecba-done.cons <c1>)
+   (<c1> ^first empty ^rest <cba>)}
+
+#############################################
+# map takes a ^fun, a ^list and a ^return-to 
+#
+# Note: since we're testing a heap ADT,
+# the list is a list of heaps.
+# This is not a generic all-purpose map,
+# it's just to get this testing done.
+
+sp {map*elaborate*initialize
+   (state <s> ^superstate.operator <o>)
+   (<o> ^name map
+        ^fun <f>
+        ^list <l>
+        ^return-to <r>)
+-->
+  (<s> ^name map
+       ^fun <f>
+       ^list <l>
+       ^return-to <r>)}
+
+sp {map*elaborate*nil
+   (state <s> ^name map
+              ^list nil)
+-->
+   (<s> ^answer nil)}
+
+# I don't like using RHS functions most of the time
+# but this time more than usual.
+# It's just for testing, is what I tell myself.
+sp {map*elaborate*expected
+   (state <s> ^name map
+              ^fun <f>)
+-->
+   (<s> ^expected (concat <f> -done))}
+
+
+sp {map*propose*fun
+   (state <s> ^name map
+              ^fun <f>
+              ^list.cons.first <heap>
+              ^expected <e>
+             -^<e>)
+-->
+   (<s> ^operator <o> +)
+   (<o> ^name <f>
+        ^heap <heap>
+        ^return-to <s>)}
+
+sp {map*propose*recurse
+   (state <s> ^name map
+              ^expected <e>
+              ^<e> <first>
+              ^fun <f>
+              ^list.cons.rest <list>
+             -^map-done)
+-->
+   (<s> ^operator <o> +)
+   (<o> ^name map
+        ^fun <f>
+        ^list <rest>
+        ^return-to <s>)}
+
+sp {map*elaborate*cons
+   (state <s> ^name map
+              ^expected <e>
+              ^<e> <first>
+              ^map-done <rest>)
+-->
+   (<s> ^answer.cons <c1>)
+   (<c1> ^first <first>
+         ^rest <rest>)}
+
+sp {map*elaborate*done
+   (state <s> ^name map
+              ^return-to <r>
+              ^answer <a>)
+-->
+   (<r> ^map-done <a>)}
+
+################################################
+# deletethenfind takes a ^heap and a ^return-to
+# it first deletemins the heap (assuming it is nonempty)
+# and then tests the result with isempty
+# if it is not empty
+# it goes on to findmin the result
+# it returns maybe elem - either nothing
+# or ^just <elem>
+sp {deletethenfind*elaborate*initialize
+   (state <s> ^superstate.operator <o>)
+   (<o> ^name deletethenfind
+        ^heap <h>
+        ^return-to <r>)
+-->
+   (<s> ^name deletethenfind
+        ^heap <h>
+        ^return-to <r>)}
+
+sp {deletethenfind*propose*deletemin
+   (state <s> ^name deletethenfind
+              ^heap <h>
+             -^deletemin-done)
+-->
+   (<s> ^operator <o> +)
+   (<o> ^name deletemin
+        ^heap <h>
+        ^return-to <s>)}
+
+sp {deletethenfind*propose*isempty
+   (state <s> ^name deletethenfind
+              ^deletemin-done <lessone>
+             -^isempty-done)
+-->
+   (<s> ^operator <o> +)
+   (<o> ^name isempty
+        ^heap <lessone>
+        ^return-to <s>)}
+
+sp {deletethenfind*elaborate*isempty-yes
+   (state <s> ^name deletethenfind
+              ^isempty-done yes)
+-->
+   (<s> ^answer nothing)}
+
+sp {deletethenfind*propose*findmin
+   (state <s> ^name deletethenfind
+              ^deletemin-done <lessone>
+              ^isempty-done no
+             -^findmin-done)
+-->
+   (<s> ^operator <o> +)
+   (<o> ^name findmin
+        ^heap <lessone>
+        ^return-to <s>)}
+
+sp {deletethenfind*elaborate*found
+   (state <s> ^name deletethenfind
+              ^findmin-done <elem>)
+-->
+   (<s> ^answer.just <elem>)}
+
+sp {deletethenfind*elaborate*done
+   (state <s> ^name deletethenfind
+              ^return-to <r>
+              ^answer <a>)
+-->
+   (<r> ^deletethenfind-done <a>)}
+
+######################################
+# perms takes a ^return-to
+# and constructs (laboriously?) a particular list of
+# six heaps
+sp {perms*elaborate*initialize
+   (state <s> ^superstate.operator <o>)
+   (<o> ^name perms
+        ^return-to <r>)
+-->
+   (<s> ^name perms
+        ^return-to <r>
+        ^c ^bc ^abc ^ac ^bac ^a ^ca ^bca ^ba ^cba ^b ^ab ^cab ^cb ^acb)}
+
+# GAH this looks unpleasant
+
+#perms(X) :- !,
+#  insert(c, empty, C),
+#  insert(b, C, BC),
+#  insert(a, BC, ABC),
+#  insert(a, C, AC),
+#  insert(b, AC, BAC),
+#  insert(a, empty, A),
+#  insert(c, A, CA),
+#  insert(b, CA, BCA),
+#  insert(b, A, BA),
+#  insert(c, BA, CBA),
+#  insert(b, empty, B),
+#  insert(a, B, AB),
+#  insert(c, AB, CAB),
+#  insert(c, B, CB),
+#  insert(a, CB, ACB),
+#  X = cons(ABC, cons(BAC, cons(BCA, cons(CBA, cons(CAB, cons(ACB, nil)))))).
+#
+#repeat(0, _X, Out) :- !,
+#  Out = nil.
+#repeat(N, X, Out) :- N > 0, !,
+#  Pred is N - 1,
+#  repeat(Pred, X, Rest),
+#  Out = cons(X, Rest).
