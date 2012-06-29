@@ -2,7 +2,7 @@
 
 ######################################## leq
 sp {leq*apply*a-b-yes
-   (state <s> ^operator <o> +)
+   (state <s> ^operator <o>)
    (<o> ^name leq
         ^left a
         ^right b
@@ -11,7 +11,7 @@ sp {leq*apply*a-b-yes
    (<r> ^leq-done yes)}
 
 sp {leq*apply*b-a-no
-   (state <s> ^operator <o> +)
+   (state <s> ^operator <o>)
    (<o> ^name leq
         ^left b
         ^right a
@@ -20,7 +20,7 @@ sp {leq*apply*b-a-no
    (<r> ^leq-done no)}
 
 sp {leq*apply*a-c-yes
-   (state <s> ^operator <o> +)
+   (state <s> ^operator <o>)
    (<o> ^name leq
         ^left a
         ^right c
@@ -29,7 +29,7 @@ sp {leq*apply*a-c-yes
    (<r> ^leq-done yes)}
 
 sp {leq*apply*c-a-no
-   (state <s> ^operator <o> +)
+   (state <s> ^operator <o>)
    (<o> ^name leq
         ^left c
         ^right a
@@ -38,7 +38,7 @@ sp {leq*apply*c-a-no
    (<r> ^leq-done no)}
 
 sp {leq*apply*b-c-yes
-   (state <s> ^operator <o> +)
+   (state <s> ^operator <o>)
    (<o> ^name leq
         ^left b
         ^right c
@@ -47,7 +47,7 @@ sp {leq*apply*b-c-yes
    (<r> ^leq-done yes)}
 
 sp {leq*apply*c-b-no
-   (state <s> ^operator <o> +)
+   (state <s> ^operator <o>)
    (<o> ^name leq
         ^left c
         ^right b
@@ -107,6 +107,8 @@ sp {cba*propose*insert-a
 sp {cba*elaborate*done
    (state <s> ^name cba
               ^return-to <r>
+              ^c.insert-done <c>
+              ^bc.insert-done <bc>
               ^abc.insert-done <abc>)
 -->
    (<r> ^cba-done.cons <c1>)
@@ -197,7 +199,7 @@ sp {map*propose*recurse
               ^expected <e>
               ^<e> <first>
               ^fun <f>
-              ^list.cons.rest <list>
+              ^list.cons.rest <rest>
              -^map-done)
 -->
    (<s> ^operator <o> +)
@@ -302,7 +304,12 @@ sp {perms*elaborate*initialize
 -->
    (<s> ^name perms
         ^return-to <r>
-        ^c ^bc ^abc ^ac ^bac ^a ^ca ^bca ^ba ^cba ^b ^ab ^cab ^cb ^acb)}
+        ^c <c> ^bc <bc> ^abc <abc>
+	       ^ac <ac> ^bac <bac>
+	^a <a> ^ca <ca> ^bca <bca>
+	       ^ba <ba> ^cba <cba>
+	^b <b> ^ab <ab> ^cab <cab>
+	       ^cb <cb> ^acb <acb>)}
 
 # GAH this looks unpleasant
 

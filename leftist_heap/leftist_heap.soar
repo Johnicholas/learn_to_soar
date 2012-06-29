@@ -206,31 +206,200 @@ sp {deletemin*elaborate*done
 -->
    (<r> ^deletemin-done <m>)}
 
+####################################################################
+# merge takes a ^left heap and a ^right heap and a ^return-to <r>
+# it augments <r> with ^merge-done <m> where <m> is a heap,
+# merged (containing all of) the left and right heaps
+sp {merge*elaborate*initialize
+   (state <s> ^superstate.operator <o>)
+   (<o> ^name merge
+        ^left <lh>
+        ^right <rh>
+        ^return-to <re>)
+-->
+   (<s> ^name merge
+        ^left <lh>
+        ^right <rh>
+        ^return-to <re>)}
 
-#merge(empty, Right, Out) :- !,
-#  Out = Right.
-#merge(Left, empty, Out) :- !,
-#  Out = Left.
-#merge(tree(R1, X1, A1, B1), tree(R2, X2, A2, B2), Out) :- !,
-#  leq(X1, X2, ComparisonResult),
-#  mergehelper(ComparisonResult, tree(R1, X1, A1, B1), tree(R2, X2, A2, B2), Out).
-#
-#mergehelper(yes, tree(_R1, X1, A1, B1), tree(R2, X2, A2, B2), Out) :- !,
-#  merge(B1, tree(R2, X2, A2, B2), Temp),
-#  maketree(X1, A1, Temp, Out).
-#mergehelper(no, tree(R1, X1, A1, B1), tree(_R2, X2, A2, B2), Out) :- !,
-#  merge(tree(R1, X1, A1, B1), B2, Temp),
-#  maketree(X2, A2, Temp, Out).
-#
-#maketree(Elem, A, B, Out) :- !,
-#  rank(A, RankA),
-#  rank(B, RankB), 
-#  maketreehelper(RankA, RankB, Elem, A, B, Out).
-#
-#maketreehelper(RankA, RankB, Elem, A, B, Out) :- RankA >= RankB, !,
-#  NewRank is RankB + 1,
-#  Out = tree(NewRank, Elem, A, B).
-#maketreehelper(RankA, RankB, Elem, A, B, Out) :- RankA < RankB, !,
-#  NewRank is RankA + 1,
-#  Out = tree(NewRank, Elem, B, A).
+sp {merge*elaborate*bothempty
+   (state <s> ^name merge
+              ^left empty
+              ^right empty)
+-->
+   (<s> ^answer empty)}
 
+sp {merge*elaborate*leftempty
+   (state <s> ^name merge
+              ^left empty
+              ^right <r> <> empty)
+   (<r> ^tree)
+-->
+   (<s> ^answer <r>)}
+
+sp {merge*elaborate*rightempty
+   (state <s> ^name merge
+              ^left <l> <> empty
+              ^right empty)
+   (<l> ^tree)
+-->
+   (<s> ^answer <l>)}
+
+sp {merge*propose*leq
+   (state <s> ^name merge
+              ^left.tree.elem <x1>
+              ^right.tree.elem <x2>
+             -^leq-done)
+-->
+   (<s> ^operator <o> +)
+   (<o> ^name leq
+        ^left <x1>
+        ^right <x2>
+        ^return-to <s>)}
+
+sp {merge*propose*recurse-yes
+   (state <s> ^name merge
+              ^leq-done yes
+              ^left.tree.right <b1>
+              ^right <r>
+             -^merge-done)
+-->
+   (<s> ^operator <o> +)
+   (<o> ^name merge
+        ^left <b1>
+        ^right <r>
+        ^return-to <s>)}
+
+sp {merge*propose*maketree-yes
+   (state <s> ^name merge
+              ^leq-done yes
+              ^merge-done <m>
+              ^left.tree <l>
+             -^maketree-done)
+   (<l> ^elem <x1>
+        ^left <a1>)
+-->
+   (<s> ^operator <o> +)
+   (<o> ^name maketree
+        ^elem <x1>
+        ^a <a1>
+        ^b <m>
+        ^return-to <s>)}
+
+sp {merge*propose*recurse-no
+   (state <s> ^name merge
+              ^leq-done no
+              ^left <l>
+              ^right.tree.right <b2>
+             -^merge-done)
+-->
+   (<s> ^operator <o> +)
+   (<o> ^name merge
+        ^left <l>
+        ^right <b2>
+        ^return-to <s>)}
+
+sp {merge*propose*maketree-no
+   (state <s> ^name merge
+              ^leq-done no
+              ^merge-done <m>
+              ^right.tree <r>
+             -^maketree-done)
+   (<r> ^elem <x2>
+        ^left <a2>)
+-->
+   (<s> ^operator <o> +)
+   (<o> ^name maketree
+        ^elem <x2>
+        ^a <a2>
+        ^b <m>
+        ^return-to <s>)}
+
+sp {merge*elaborate*maketree-answer
+   (state <s> ^name merge
+              ^maketree-done <a>)
+-->
+   (<s> ^answer <a>)}
+
+sp {merge*elaborate*done
+   (state <s> ^name merge
+              ^return-to <r>
+              ^answer <a>)
+-->
+   (<r> ^merge-done <a>)}
+
+#########################################################
+# maketree is an intended-to-be-internal operator
+# it takes a ^elem, and two heaps ^a ^b and a ^return-to
+# It builds a tree setting the order and the rank correctly
+sp {maketree*elaborate*initialize
+   (state <s> ^superstate.operator <o>)
+   (<o> ^name maketree
+        ^elem <e>
+        ^a <a>
+        ^b <b>
+        ^return-to <r>)
+-->
+   (<s> ^name maketree
+        ^elem <e>
+        ^a <a> ^ranka <ranka>
+        ^b <b> ^rankb <rankb>
+        ^return-to <r>)}
+
+sp {maketree*propose*rank-a
+   (state <s> ^name maketree
+              ^a <a>
+              ^ranka <ranka>)
+   (<ranka> -^rank-done)
+-->
+   (<s> ^operator <o> +)
+   (<o> ^name rank
+        ^heap <a>
+        ^return-to <ranka>)}
+
+sp {maketree*propose*rank-b
+   (state <s> ^name maketree
+              ^ranka.rank-done
+              ^b <b>
+              ^rankb <rankb>)
+   (<rankb> -^rank-done)
+-->
+   (<s> ^operator <o> +)
+   (<o> ^name rank
+        ^heap <b>
+        ^return-to <rankb>)}
+
+sp {maketree*elaborate*ranka-geq
+   (state <s> ^name maketree
+              ^rankb.rank-done <rankb>
+              ^ranka.rank-done <ranka> >= <rankb>
+              ^elem <e>
+              ^a <a>
+              ^b <b>)
+-->
+   (<s> ^answer.tree <t>)
+   (<t> ^rank (+ <rankb> 1)
+        ^elem <e>
+        ^left <a>
+        ^right <b>)}
+
+sp {maketree*elaborate*rankb-ge
+   (state <s> ^name maketree
+              ^ranka.rank-done <ranka>
+              ^rankb.rank-done <rankb> > <ranka>
+              ^elem <e>
+              ^a <a>
+              ^b <b>)
+-->
+   (<s> ^answer.tree <t>)
+   (<t> ^rank (+ <ranka> 1)
+        ^elem <e>
+        ^left <b>
+        ^right <a>)}
+
+sp {maketree*elaborate*done
+   (state <s> ^name maketree
+              ^return-to <r>
+              ^answer <a>)
+-->
+   (<r> ^maketree-done <a>)}
