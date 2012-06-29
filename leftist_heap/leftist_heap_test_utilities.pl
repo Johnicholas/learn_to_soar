@@ -56,3 +56,30 @@ repeat(N, X, Out) :- N > 0, !,
   Pred is N - 1,
   repeat(Pred, X, Rest),
   Out = cons(X, Rest).
+
+listsequal(nil, nil, Out) :- !,
+  Out = yes.
+listsequal(nil, cons(X, Xs), Out) :- !,
+  Out = no.
+listsequal(cons(X, Xs), nil, Out) :- !,
+  Out = no.
+listsequal(cons(X, Xs), cons(Y, Ys), Out) :- X = Y, !,
+  listsequal(Xs, Ys, Out).
+listsequal(cons(X, Xs), cons(Y, Ys), Out) :- !,
+  maybesequal(X, Y, Temp),
+  listsequalhelper(Temp, Xs, Ys, Out).
+listsequalhelper(yes, Xs, Ys, Out) :- !,
+  listsequal(Xs, Ys, Out).
+listsequalhelper(no, Xs, Ys, Out) :- !,
+  Out = no.
+
+maybesequal(nothing, nothing, Out) :- !,
+  Out = yes.
+maybesequal(nothing, just(X), Out) :- !,
+  Out = no.
+maybesequal(just(X), nothing, Out) :- !,
+  Out = no.
+maybesequal(just(X), just(Y), Out) :- X \= Y, !,
+  Out = no.
+maybesequal(just(X), just(Y), Out) :- X = Y, !,
+  Out = yes.
