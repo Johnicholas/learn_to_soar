@@ -1,0 +1,63 @@
+
+source ethiopian_multiplication.soar
+
+sp {initialize
+   (state <s> ^superstate nil)
+-->
+   (<s> ^name test-ethiopian-multiplication)}
+
+sp {test*elaborate*initialize
+   (state <s> ^superstate.operator <o>)
+   (<o> ^name test
+        ^left <x>
+        ^right <y>
+        ^return-to <r>)
+-->
+   (<s> ^name test
+        ^left <x>
+        ^right <y>
+        ^return-to <r>)}
+
+sp {test*propose*multiply
+   (state <s> ^name test
+              ^left <x>
+              ^right <y>
+             -^multiply-done)
+-->
+   (<s> ^operator <o> +)
+   (<o> ^name multiply
+        ^left <x>
+        ^right <y>
+        ^return-to <s>)}
+
+sp {test*elaborate*expectation
+   (state <s> ^name test
+              ^left <x>
+              ^right <y>)
+-->
+   (<s> ^expected (* <x> <y>))}
+
+sp {test*elaborate*pass
+   (state <s> ^name test
+              ^multiply-done <x>
+              ^expected <x>)
+-->
+   (write (crlf) |pass|)}
+
+sp {test*elaborate*fail
+   (state <s> ^name test
+              ^multiply-done <x>
+              ^expected <> <x>)
+-->
+   (write (crlf) |fail|)}
+
+sp {test-ethiopian-multiplication*propose*test
+   (state <s> ^name test-ethiopian-multiplication)
+-->
+   (<s> ^operator <o> +)
+   (<o> ^name test
+        ^left 17
+        ^right 34
+        ^return-to <s>)}
+
+

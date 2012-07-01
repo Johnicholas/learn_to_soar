@@ -1,0 +1,12 @@
+m(?x, ?y) == if ?x > 0 then (if mod(?x, 2) then ?y else 0) + m(div(?x, 2), ?y * 2) else 0
+
+test(?x, ?y) == m(?x, ?y) = ?x * ?y
+test(0, 0)
+test(0, 1)
+test(1, 0)
+test(1, 1)
+test(1, 2)
+test(2, 1)
+test(2, 2)
+test(17, 34)
+test(34, 17)
