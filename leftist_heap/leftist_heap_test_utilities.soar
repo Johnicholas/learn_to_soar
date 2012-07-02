@@ -297,103 +297,103 @@ sp {deletethenfind*elaborate*done
 # repeat takes an integer ^count and an ^elem
 # and a ^return-to and constructs a list consisting
 # of repeats of that elem
-sp {repeat*elaborate*initialize
-   (state <s> ^superstate.operator <o>)
-   (<o> ^name repeat
-        ^count <c>
-        ^elem <e>
-        ^return-to <r>)
--->
-   (<s> ^name repeat
-        ^count <c>
-        ^elem <e>
-        ^return-to <r>)}
-
-sp {repeat*elaborate*zero
-   (state <s> ^name repeat
-              ^count 0)
--->
-   (<s> ^answer nil)}
-
-sp {repeat*propose*recurse
-   (state <s> ^name repeat
-              ^count <c> > 0
-              ^elem <e>)
--->
-   (<s> ^operator <o> +)
-   (<o> ^name repeat
-        ^count (- <c> 1)
-        ^elem <e>
-        ^return-to <s>)}
-
-sp {repeat*elaborate*nonzero
-   (state <s> ^name repeat
-              ^elem <e>
-              ^repeat-done <a>)
--->
-   (<s> ^answer.cons <c>)
-   (<c> ^first <e>
-        ^rest <a>)}
-
-sp {repeat*elaborate*done
-   (state <s> ^name repeat
-              ^return-to <r>
-              ^answer <a>)
--->
-   (<s> ^repeat-done <a>)}
+#sp {repeat*elaborate*initialize
+#   (state <s> ^superstate.operator <o>)
+#   (<o> ^name repeat
+#        ^count <c>
+#        ^elem <e>
+#        ^return-to <r>)
+#-->
+#   (<s> ^name repeat
+#        ^count <c>
+#        ^elem <e>
+#        ^return-to <r>)}
+#
+#sp {repeat*elaborate*zero
+#   (state <s> ^name repeat
+#              ^count 0)
+#-->
+#   (<s> ^answer nil)}
+#
+#sp {repeat*propose*recurse
+#   (state <s> ^name repeat
+#              ^count <c> > 0
+#              ^elem <e>)
+#-->
+#   (<s> ^operator <o> +)
+#   (<o> ^name repeat
+#        ^count (- <c> 1)
+#        ^elem <e>
+#        ^return-to <s>)}
+#
+#sp {repeat*elaborate*nonzero
+#   (state <s> ^name repeat
+#              ^elem <e>
+#              ^repeat-done <a>)
+#-->
+#   (<s> ^answer.cons <c>)
+#   (<c> ^first <e>
+#        ^rest <a>)}
+#
+#sp {repeat*elaborate*done
+#   (state <s> ^name repeat
+#              ^return-to <r>
+#              ^answer <a>)
+#-->
+#   (<s> ^repeat-done <a>)}
 
 ##############################################
 # listsequal takes two lists ^left and ^right
 # and a ^return-to and returns either
 # yes or no
-sp {listsequal*elaborate*initialize
-   (state <s> ^superstate.operator <o>)
-   (<o> ^name listsequal
-        ^left <le>
-        ^right <ri>
-        ^return-to <ret>)
--->
-   (<s> ^name listsequal
-        ^left <le>
-        ^right <ri>
-        ^return-to <ret>)}
-
-sp {listsequal*elaborate*nil-nil
-   (state <s> ^name listsequal
-              ^left nil
-              ^right nil)
--->
-   (<s> ^answer yes)}
-
-sp {listsequal*elaborate*nil-cons
-   (state <s> ^name listsequal
-              ^left nil
-              ^right.cons)
--->
-   (<s> ^answer no)}
-
-sp {listsequal*elaborate*cons-nil
-   (state <s> ^name listsequal
-              ^left.cons
-              ^right nil)
--->
-   (<s> ^answer no)}
-
-# Sigh - in the prolog version, I'm not just
-# relying on the equality of lists,
-# I'm relying on the equality of maybe too.
-#sp {listsequal*elaborate*cons-cons-diff
-#   (state <s> ^name listsequal
-#              ^left.cons.first <x>
-#              ^right.cons.first <> <x>)
+#sp {listsequal*elaborate*initialize
+#   (state <s> ^superstate.operator <o>)
+#   (<o> ^name listsequal
+#        ^left <le>
+#        ^right <ri>
+#        ^return-to <ret>)
 #-->
-#   (<s>
-#listsequal(cons(X, Xs), cons(Y, Ys), Out) :- X \= Y, !,
-#  Out = no.
-#listsequal(cons(X, Xs), cons(Y, Ys), Out) :- X = Y, !,
-#  listsequal(Xs, Ys, Out).
-
-# TODO: equality of lists
+#   (<s> ^name listsequal
+#        ^left <le>
+#        ^right <ri>
+#        ^return-to <ret>)}
+#
+#sp {listsequal*elaborate*nil-nil
+#   (state <s> ^name listsequal
+#              ^left nil
+#              ^right nil)
+#-->
+#   (<s> ^answer yes)}
+#
+#sp {listsequal*elaborate*nil-cons
+#   (state <s> ^name listsequal
+#              ^left nil
+#              ^right.cons)
+#-->
+#   (<s> ^answer no)}
+#
+#sp {listsequal*elaborate*cons-nil
+#   (state <s> ^name listsequal
+#              ^left.cons
+#              ^right nil)
+#-->
+#   (<s> ^answer no)}
+#
+## Sigh - in the prolog version, I'm not just
+## relying on the equality of lists,
+## I'm relying on the equality of maybe too.
+##sp {listsequal*elaborate*cons-cons-diff
+##   (state <s> ^name listsequal
+##              ^left.cons.first <x>
+##              ^right.cons.first <> <x>)
+##-->
+##   (<s>
+##listsequal(cons(X, Xs), cons(Y, Ys), Out) :- X \= Y, !,
+##  Out = no.
+##listsequal(cons(X, Xs), cons(Y, Ys), Out) :- X = Y, !,
+##  listsequal(Xs, Ys, Out).
+#
+## TODO: equality of lists
 
 ######################################################
 # perms takes a ^return-to
