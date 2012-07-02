@@ -399,6 +399,9 @@ sp {listsequal*elaborate*cons-nil
 # perms takes a ^return-to
 # and constructs (laboriously) a particular list of
 # six heaps
+#
+# GAH this looks unpleasant
+#
 sp {perms*elaborate*initialize
    (state <s> ^superstate.operator <o>)
    (<o> ^name perms
@@ -413,25 +416,206 @@ sp {perms*elaborate*initialize
 	^b <b> ^ab <ab> ^cab <cab>
 	       ^cb <cb> ^acb <acb>)}
 
-# GAH this looks unpleasant
+sp {perms*propose*insert-a-empty
+   (state <s> ^name perms
+              ^a <a>)
+   (<a> -^insert-done)
+-->
+   (<s> ^operator <o> + =)
+   (<o> ^name insert
+        ^elem a
+        ^heap empty
+        ^return-to <a>)}
 
-#perms(X) :- !,
-#  insert(c, empty, C),
-#  insert(b, C, BC),
-#  insert(a, BC, ABC),
-#  insert(a, C, AC),
-#  insert(b, AC, BAC),
-#  insert(a, empty, A),
-#  insert(c, A, CA),
-#  insert(b, CA, BCA),
-#  insert(b, A, BA),
-#  insert(c, BA, CBA),
-#  insert(b, empty, B),
-#  insert(a, B, AB),
-#  insert(c, AB, CAB),
-#  insert(c, B, CB),
-#  insert(a, CB, ACB),
-#  X = cons(ABC, cons(BAC, cons(BCA, cons(CBA, cons(CAB, cons(ACB, nil)))))).
-#
+sp {perms*propose*insert-b-empty
+   (state <s> ^name perms
+              ^b <b>)
+   (<b> -^insert-done)
+-->
+   (<s> ^operator <o> + =)
+   (<o> ^name insert
+        ^elem b
+        ^heap empty
+        ^return-to <b>)}
+
+sp {perms*propose*insert-c-empty
+   (state <s> ^name perms
+              ^c <c>)
+   (<c> -^insert-done)
+-->
+   (<s> ^operator <o> + =)
+   (<o> ^name insert
+        ^elem c
+        ^heap empty
+        ^return-to <c>)}
+
+
+sp {perms*propose*insert-b-a
+   (state <s> ^name perms
+              ^a.insert-done <a>
+              ^ba <ba>)
+   (<ba> -^insert-done)
+-->
+   (<s> ^operator <o> + =)
+   (<o> ^name insert
+        ^elem b
+        ^heap <a>
+        ^return-to <ba>)}
+
+sp {perms*propose*insert-c-a
+   (state <s> ^name perms
+              ^a.insert-done <a>
+              ^ca <ca>)
+   (<ca> -^insert-done)
+-->
+   (<s> ^operator <o> + =)
+   (<o> ^name insert
+        ^elem c
+        ^heap <a>
+        ^return-to <ca>)}
+
+sp {perms*propose*insert-a-b
+   (state <s> ^name perms
+              ^b.insert-done <b>
+              ^ab <ab>)
+   (<ab> -^insert-done)
+-->
+   (<s> ^operator <o> + =)
+   (<o> ^name insert
+        ^elem a
+        ^heap <b>
+        ^return-to <ab>)}
+
+sp {perms*propose*insert-c-b
+   (state <s> ^name perms
+              ^b.insert-done <b>
+              ^cb <cb>)
+   (<cb> -^insert-done)
+-->
+   (<s> ^operator <o> + =)
+   (<o> ^name insert
+        ^elem c
+        ^heap <b>
+        ^return-to <cb>)}
+
+sp {perms*propose*insert-a-c
+   (state <s> ^name perms
+              ^c.insert-done <c>
+              ^ac <ac>)
+   (<ac> -^insert-done)
+-->
+   (<s> ^operator <o> + =)
+   (<o> ^name insert
+        ^elem a
+        ^heap <c>
+        ^return-to <ac>)}
+
+sp {perms*propose*insert-b-c
+   (state <s> ^name perms
+              ^c.insert-done <c>
+              ^bc <bc>)
+   (<bc> -^insert-done)
+-->
+   (<s> ^operator <o> + =)
+   (<o> ^name insert
+        ^elem b
+        ^heap <c>
+        ^return-to <bc>)}
+
+sp {perms*propose*insert-a-bc
+   (state <s> ^name perms
+              ^bc.insert-done <bc>
+              ^abc <abc>)
+   (<abc> -^insert-done)
+-->
+   (<s> ^operator <o> + =)
+   (<o> ^name insert
+        ^elem a
+        ^heap <bc>
+        ^return-to <abc>)}
+
+sp {perms*propose*insert-a-cb
+   (state <s> ^name perms
+              ^cb.insert-done <cb>
+              ^acb <acb>)
+   (<acb> -^insert-done)
+-->
+   (<s> ^operator <o> + =)
+   (<o> ^name insert
+        ^elem a
+        ^heap <cb>
+        ^return-to <acb>)}
+
+sp {perms*propose*insert-b-ac
+   (state <s> ^name perms
+              ^ac.insert-done <ac>
+              ^bac <bac>)
+   (<bac> -^insert-done)
+-->
+   (<s> ^operator <o> + =)
+   (<o> ^name insert
+        ^elem b
+        ^heap <ac>
+        ^return-to <bac>)}
+
+sp {perms*propose*insert-b-ca
+   (state <s> ^name perms
+              ^ca.insert-done <ca>
+              ^bca <bca>)
+   (<bca> -^insert-done)
+-->
+   (<s> ^operator <o> + =)
+   (<o> ^name insert
+        ^elem b
+        ^heap <ca>
+        ^return-to <bca>)}
+
+sp {perms*propose*insert-c-ba
+   (state <s> ^name perms
+              ^ba.insert-done <ba>
+              ^cba <cba>)
+   (<cba> -^insert-done)
+-->
+   (<s> ^operator <o> + =)
+   (<o> ^name insert
+        ^elem c
+        ^heap <ba>
+        ^return-to <cba>)}
+
+sp {perms*propose*insert-c-ab
+   (state <s> ^name perms
+              ^ab.insert-done <ab>
+              ^cab <cab>)
+   (<cab> -^insert-done)
+-->
+   (<s> ^operator <o> + =)
+   (<o> ^name insert
+        ^elem c
+        ^heap <ab>
+        ^return-to <cab>)}
+
+sp {perms*elaborate*done
+   (state <s> ^name perms
+              ^return-to <r>
+              ^abc.insert-done <abc>
+              ^bac.insert-done <bac>
+              ^bca.insert-done <bca>
+              ^cba.insert-done <cba>
+              ^cab.insert-done <cab>
+              ^acb.insert-done <acb>)
+-->
+   (<r> ^perms-done.cons <c1>)
+   (<c1> ^first <abc>
+         ^rest.cons <c2>)
+   (<c2> ^first <bac>
+         ^rest.cons <c3>)
+   (<c3> ^first <bca>
+         ^rest.cons <c4>)
+   (<c4> ^first <cba>
+         ^rest.cons <c5>)
+   (<c5> ^first <cab>
+         ^rest.cons <c6>)
+   (<c6> ^first <acb>
+         ^rest nil)}
 
 

@@ -1,0 +1,169 @@
+setup {
+
+source leftist_heap.soar
+source leftist_heap_test_utilities.soar
+
+sp {initialize
+   (state <s> ^superstate nil)
+-->
+   (<s> ^name test-leftist-heap)}
+
+}
+
+test "map isempty on ecba should be yes, no, no, no" {
+
+sp {test-leftist-heap*propose*ecba
+   (state <s> ^name test-leftist-heap
+             -^ecba-done)
+-->
+   (<s> ^operator <o> +)
+   (<o> ^name ecba
+        ^return-to <s>)}
+
+sp {test-leftist-heap*propose*map
+   (state <s> ^name test-leftist-heap
+              ^ecba-done <in>
+             -^map-done)
+-->
+   (<s> ^operator <o> +)
+   (<o> ^name map
+        ^fun isempty
+        ^list <in>
+        ^return-to <s>)}
+
+sp {test-leftist-heap*elaborate*pass
+   (state <s> ^name test-leftist-heap
+              ^map-done.cons <c1>)
+   (<c1> ^first yes
+         ^rest.cons <c2>)
+   (<c2> ^first no
+         ^rest.cons <c3>)
+   (<c3> ^first no
+         ^rest.cons <c4>)
+   (<c4> ^first no
+         ^rest nil)
+-->
+   (pass)}
+
+}
+
+test "map findmin on cba should be c, b, a" {
+
+sp {test-leftist-heap*propose*cba
+   (state <s> ^name test-leftist-heap
+             -^cba-done)
+-->
+   (<s> ^operator <o> +)
+   (<o> ^name cba
+        ^return-to <s>)}
+
+sp {test-leftist-heap*propose*map
+   (state <s> ^name test-leftist-heap
+              ^cba-done <in>
+             -^map-done)
+-->
+   (<s> ^operator <o> +)
+   (<o> ^name map
+        ^fun findmin
+        ^list <in>
+        ^return-to <s>)}
+
+sp {test-leftist-heap*elaborate*pass
+   (state <s> ^name test-leftist-heap
+              ^map-done.cons <c1>)
+   (<c1> ^first c
+         ^rest.cons <c2>)
+   (<c2> ^first b
+         ^rest.cons <c3>)
+   (<c3> ^first a
+         ^rest nil)
+-->
+   (pass)}
+
+}
+
+test "map deletethenfind on cba should be nothing, just(c), just(b)" {
+
+sp {test-leftist-heap*propose*cba
+   (state <s> ^name test-leftist-heap
+             -^cba-done)
+-->
+   (<s> ^operator <o> +)
+   (<o> ^name cba
+        ^return-to <s>)}
+
+sp {test-leftist-heap*propose*map
+   (state <s> ^name test-leftist-heap
+              ^cba-done <in>
+             -^map-done)
+-->
+   (<s> ^operator <o> +)
+   (<o> ^name map
+        ^fun deletethenfind
+        ^list <in>
+        ^return-to <s>)}
+
+sp {test-leftist-heap*elaborate*pass
+   (state <s> ^name test-leftist-heap
+              ^map-done.cons <c1>)
+   (<c1> ^first nothing
+         ^rest.cons <c2>)
+   (<c2> ^first.just c
+         ^rest.cons <c3>)
+   (<c3> ^first.just b
+         ^rest nil)
+-->
+   (pass)}
+
+}
+
+test "map findmin on perms should be 6*a" {
+
+sp {test-leftist-heap*propose*perms
+   (state <s> ^name test-leftist-heap
+             -^perms-done)
+-->
+   (<s> ^operator <o> +)
+   (<o> ^name perms
+        ^return-to <s>)}
+
+sp {test-leftist-heap*propose*map-findmin
+   (state <s> ^name test-leftist-heap
+              ^perms-done <p>
+             -^map-done)
+-->
+   (<s> ^operator <o> +)
+   (<o> ^name map
+        ^fun findmin
+        ^list <p>
+        ^return-to <s>)}
+
+sp {test-leftist-heap*elaborate*done
+   (state <s> ^name test-leftist-heap
+              ^map-done.cons <c1>)
+   (<c1> ^first a
+         ^rest.cons <c2>)
+   (<c2> ^first a
+         ^rest.cons <c3>)
+   (<c3> ^first a
+         ^rest.cons <c4>)
+   (<c4> ^first a
+         ^rest.cons <c5>)
+   (<c5> ^first a
+         ^rest.cons <c6>)
+   (<c6> ^first a
+         ^rest nil)
+-->
+   (pass)}
+
+}
+
+#perms(In),
+#repeat(6, just(b), Expected),
+#map(deletethenfind, In, Expected).
+
+#perms(P),
+#map(deletemin, P, In),
+#repeat(6, just(c), Expected),
+#map(deletethenfind, In, Expected).
+

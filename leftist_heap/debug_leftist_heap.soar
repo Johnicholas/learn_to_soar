@@ -1,0 +1,43 @@
+
+source leftist_heap.soar
+source leftist_heap_test_utilities.soar
+
+sp {initialize
+   (state <s> ^superstate nil)
+-->
+   (<s> ^name test-leftist-heap)}
+
+sp {test-leftist-heap*propose*ecba
+   (state <s> ^name test-leftist-heap
+             -^ecba-done)
+-->
+   (<s> ^operator <o> +)
+   (<o> ^name ecba
+        ^return-to <s>)}
+
+sp {test-leftist-heap*propose*map
+   (state <s> ^name test-leftist-heap
+              ^ecba-done <in>
+             -^map-done)
+-->
+   (<s> ^operator <o> +)
+   (<o> ^name map
+        ^fun isempty
+        ^list <in>
+        ^return-to <s>)}
+
+sp {test-leftist-heap*elaborate*pass
+   (state <s> ^name test-leftist-heap
+              ^map-done.cons <c1>)
+   (<c1> ^first yes
+         ^rest.cons <c2>)
+   (<c2> ^first no
+         ^rest.cons <c3>)
+   (<c3> ^first no
+         ^rest.cons <c4>)
+   (<c4> ^first no
+         ^rest nil)
+-->
+   (write (crlf) |pass|)}
+
+

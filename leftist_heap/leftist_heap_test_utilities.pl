@@ -73,7 +73,7 @@ listsequalhelper(yes, Xs, Ys, Out) :- !,
 listsequalhelper(no, Xs, Ys, Out) :- !,
   Out = no.
 
-maybesequal(nothing, nothing, Out) :- !,
+maybesequal(X, Y, Out) :- X = Y, !,
   Out = yes.
 maybesequal(nothing, just(X), Out) :- !,
   Out = no.
