@@ -1,0 +1,37 @@
+/* Based on a set of slides by Ralf Hinze:
+"number systems and data structures"
+The data structure might originally be by Chris Okasaki. */
+
+nonfix nil;
+cons a nil = one a nil;
+cons a (zero x) = one a x;
+cons a1 (one a2 x) = zero (cons (pair a1 a2) x);
+uncons (one a nil) = pair a nil;
+uncons (one a x) = pair a (zero x);
+uncons (zero x) = unconszero (uncons x);
+unconszero (pair (pair a1 a2) x) = pair a1 (one a2 x);
+lookup n (one a x)
+  = a if n == 0;
+  = lookup (n - 1) (zero x) otherwise;
+lookup n (zero x)
+  = first (lookup (n div 2) x) if (n mod 2) == 0;
+  = second (lookup (n div 2) x) otherwise;
+first (pair x y) = x;
+second (pair x y) = y;
+toseq [] = nil;
+toseq (x:xs) = cons x (toseq xs);
+
+/* testing */
+toseq (1..11);
+
+sum nil = 0;
+sum (zero x) = sumhelper (uncons (zero x));
+sum (one a x) = sumhelper (uncons (one a x));
+sumhelper (pair a x) = a + (sum x);
+sum (toseq (1..11));
+
+lookupeach x = lookupeachhelper 0 x;
+lookupeachhelper n x
+  = (lookup n x):(lookupeachhelper (n + 1) x) if n < 11;
+  = nil otherwise;
+lookupeach (toseq (1..11));
