@@ -1,0 +1,91 @@
+# These are notes regarding recognize.soar by John T. Hale.
+#
+# The point of attempting to rewrite it in an alternative syntax
+# is simply to force myself to read the original in detail.
+#
+# begin takes a list of words and returns yes
+# (a semi-decision procedure, not thinking about failure at the moment. :P)
+
+# initialize
+glcbegin(words) =>
+  recognize(nil, words)
+
+# done
+recognize(cons(sym(S, found), nil), nil) =>
+  yes
+
+# match
+recognize(cons(sym(x, found), cons(sym(x, sought), stack)), words) =>
+  recognize(stack, words)
+
+# project NP->DT-NN
+recognize(cons(sym(DT, found), rest), w) =>
+  recognize(cons(sym(NN, sought), cons(sym(NP, found), rest)), w)
+
+# project S->NP-VP
+recognize(cons(sym(NP, found), rest), w) =>
+  recognize(cons(sym(VP, sought), cons(sym(S, found), rest)), w)
+
+# project VP->VB-NP
+recognize(cons(sym(VB, found), rest), w) =>
+  recognize(cons(sym(NP, sought), cons(sym(VP, found), rest)), w)
+
+# project NN->JJ-NN
+recognize(cons(sym(JJ, found), rest), w) =>
+  recognize(cons(sym(NN, sought), cons(sym(NN, found), rest)), w)
+
+# project VP->VP-RB
+recognize(cons(sym(VP, found), rest), w) =>
+  recognize(cons(sym(RB, sought), cons(sym(VP, found), rest)), w)
+
+# preterminal DT->the
+recognize(cons(sym(the, found), rest), w) =>
+   recognize(cons(sym(DT, found), rest), w)
+
+# preterminal NN->fund
+recognize(cons(sym(fund, found), rest), w) =>
+   recognize(cons(sym(NN, found), rest), w)
+
+# preterminal VB->bought
+recognize(cons(sym(bought, found), rest), w) =>
+   recognize(cons(sym(VB, found), rest), w)
+
+# preterminal DT->two
+recognize(cons(sym(two, found), rest), w) =>
+   recognize(cons(sym(DT, found), rest), w)
+
+# preterminal JJ->regional
+recognize(cons(sym(regional, found), rest), w) =>
+   recognize(cons(sym(JJ, found), rest), w)
+
+# preterminal NN->banks
+recognize(cons(sym(banks, found), rest), w) =>
+   recognize(cons(sym(NN, found), rest), w)
+
+# preterminal RB->today
+recognize(cons(sym(today, found), rest), w) =>
+   recognize(cons(sym(RB, found), rest), w)
+
+# shift
+recognize(stack, cons(head, tail)) =>
+  recognize(cons(sym(head, found), stack), tail)
+
+# operator preferences:
+# shift is worst preference
+# prefer match over project if the rule is not VP->VP-RB
+# prefer project over match if the rule is VP->VP-RB and we have not exhausted the input
+# prefer match over project if the rule is VP->VP-RB and we have exhausted the input
+
+# to test
+trace(glcbegin(
+cons(the,
+cons(fund,
+cons(bought,
+cons(two,
+cons(regional,
+cons(banks,
+cons(today,
+nil)))))))))
+
+
+

@@ -1,0 +1,492 @@
+# context-free recognizer
+# John Hale  July 4th 2012
+
+# there are two linked lists
+#   1. ^words, which uses ^head and ^tail to implement an input queue of in coming symbols
+#   2. ^stack, which uses ^car and ^cdr, to implement a pushdown
+
+# we also need to keep track of the difference between Sought and Found stack symbols
+# do this using two attributes, ^spelling and ^variety
+
+# the "begin" operator initializes the input queue with an example sentence
+sp {recognize*propose*begin
+    (state <s> ^superstate nil
+              -^name)           # we haven't begun the "recognize" task
+-->
+    (<s> ^operator.name begin)
+}
+
+sp {recognize*apply*begin
+    (state <s> ^operator.name begin)
+-->
+    (<s> ^name recognize
+         ^stack nil
+         ^words <w1>)
+    (<w1> ^head |the| 
+          ^tail <w2> )
+    (<w2> ^head |fund| 
+          ^tail <w3> )
+    (<w3> ^head |bought| 
+          ^tail <w4> )
+    (<w4> ^head |two| 
+          ^tail <w5> )
+    (<w5> ^head |regional| 
+          ^tail <w6> )
+    (<w6> ^head |banks| 
+          ^tail <w7> )
+    (<w7> ^head |today| 
+          ^tail nil )
+}
+
+# BEGIN GOAL TEST
+sp {recognize*detect*goal
+   (state <s> ^name recognize
+              ^stack <cell>
+	      ^words nil)
+   (<cell> ^car <symbol>
+           ^cdr nil)
+   (<symbol> ^spelling |S|
+             ^variety found)
+-->
+   (write (crlf) |Halted with S symbol on stack, empty input|)
+   (halt)
+}
+# END GOAL TEST
+
+
+
+
+# the "shift" operator transfers a word from the input queue
+# onto the stack. applicable all the time, unless there aren't any words left on the input queue
+sp {recognize*propose*shift
+   (state <s> ^name recognize
+              ^words.head <> nil )
+-->
+   (<s> ^operator.name shift +)
+}
+
+sp {recognize*apply*shift
+   (state <s> ^name recognize
+              ^operator.name shift
+              ^words <w> 
+	      ^stack <oldstack>)
+   (<w> ^head <h>
+        ^tail <t>)
+-->
+   (<s> ^stack <oldstack> - <newstack>
+        ^words <w> - <t>)
+   (<newstack> ^car <symbol>
+               ^cdr <oldstack>)
+   (<symbol> ^spelling <h>
+             ^variety found)  # shift is, by definition, bottom-up
+}
+
+
+
+
+# the "match" operator notices matching pairs of found and sought symbols on the stack
+# and gets rid of them. 
+sp {recognize*propose*match
+   (state <s> ^name recognize
+              ^stack <stackcell>)
+   (<stackcell> ^car <sym1>
+                ^cdr <nextstackcell>)
+   (<nextstackcell> ^car <sym2>)
+   (<sym1> ^variety found
+   	   ^spelling <same>)
+   (<sym2> ^variety sought
+           ^spelling <same>)
+-->
+   (<s> ^operator.name match +)
+}
+
+sp {recognize*apply*match
+   (state <s> ^operator.name match
+              ^stack <oldstack>)
+   (<oldstack> ^cdr <nextstackcell>)
+   (<nextstackcell> ^cdr <nstack>)   # pop off two levels (since they match)
+-->
+   (<s> ^stack <oldstack> - <nstack>)
+}
+
+
+
+
+# the "project" operator notices a left corner of a rule,
+# converting that into sought and found categories as indicate in the rest of the rule
+# the strategy here is to have a separate production for each PDT transition
+# a more generic solution would interpret some rule representation in semantic memory
+# design issue: Project / Complete / Compose as in Goldwater slide 20?
+# or lc / lc-complete as in Stabler C185 notes page 82
+#  http://www.linguistics.ucla.edu/people/stabler/185-03.pdf
+# these example rules are all binary
+
+sp {recognize*propose*NP->DT-NN
+  (state <s> ^name recognize
+             ^stack.car <symbol>)
+  (<symbol> ^spelling |DT|         # if you have found a determiner...
+            ^variety found)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name project
+       ^rule NP->DT-NN )
+}
+
+sp {recognize*apply*NP->DT-NN
+   (state <s> ^operator <o>
+              ^stack <oldstack>)
+   (<o> ^name project
+        ^rule NP->DT-NN)
+   (<oldstack> ^car <head>
+               ^cdr <rest>)
+--> 
+   (<s> ^stack <oldstack> - <newstack>)  # and push Found(NP) as well as Sought(NN)
+   (<newstack> ^car <nsymbol1>
+               ^cdr <newstack2>)
+   (<newstack2> ^car <nsymbol2>
+                ^cdr <rest>)
+   (<nsymbol2> ^spelling |NP|
+               ^variety found)
+   (<nsymbol1> ^spelling |NN|
+               ^variety sought)
+}
+
+sp {recognize*propose*S->NP-VP
+  (state <s> ^name recognize
+             ^stack.car <symbol> )
+  (<symbol> ^spelling |NP|
+            ^variety found)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name project
+       ^rule S->NP-VP )
+}
+
+sp {recognize*apply*S->NP-VP
+   (state <s> ^operator <o>
+              ^stack <oldstack>)
+   (<o> ^name project
+        ^rule S->NP-VP )
+   (<oldstack> ^car <head>
+               ^cdr <rest> )
+--> 
+   (<s> ^stack <oldstack> - <newstack>)  # and push Found(S) as well as Sought(VP)
+   (<newstack> ^car <nsymbol1>
+               ^cdr <newstack2>)
+   (<nsymbol1> ^spelling |VP|
+               ^variety sought)
+   (<newstack2> ^car <nsymbol2>
+                ^cdr <rest>)
+   (<nsymbol2> ^spelling |S|
+               ^variety found)
+}
+
+sp {recognize*propose*VP->VB-NP
+  (state <s> ^name recognize
+             ^stack.car <symbol> )
+  (<symbol> ^spelling |VB|
+            ^variety found)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name project
+       ^rule VP->VB-NP )
+}
+
+sp {recognize*apply*VP->VB-NP
+   (state <s> ^operator <o>
+              ^stack <oldstack>)
+   (<o> ^name project
+        ^rule VP->VB-NP )
+   (<oldstack> ^car <head>
+               ^cdr <rest>)
+--> 
+   (<oldstack> ^car <head> -)
+   (<s> ^stack <oldstack> - <newstack>)
+   (<newstack> ^car <nsymbol1> ^cdr <newstack2>)
+   (<nsymbol1> ^spelling |NP|
+               ^variety sought)
+   (<newstack2> ^car <nsymbol2> ^cdr <rest>)
+   (<nsymbol2> ^spelling |VP|
+               ^variety found)
+}
+
+
+sp {recognize*propose*NN->JJ-NN
+   (state <s> ^name recognize
+              ^stack.car <symbol> )
+   (<symbol> ^spelling |JJ| )
+   (<symbol> ^variety found)
+-->
+   (<s> ^operator <o> +)
+   (<o> ^name project
+        ^rule NN->JJ-NN )
+}
+
+sp {recognize*apply*NN->JJ-NN
+   (state <s> ^operator.name project
+              ^operator.rule NN->JJ-NN )
+   (<s> ^stack <oldstack>)
+   (<oldstack> ^car <head> ^cdr <rest> )
+--> 
+   (<s> ^stack <oldstack> - <newstack>)
+   (<newstack> ^car <nsymbol1> ^cdr <newstack2>)
+   (<nsymbol1> ^spelling |NN| ^variety sought)
+   (<newstack2> ^car <nsymbol2> ^cdr <rest>)
+   (<nsymbol2> ^spelling |NN| ^variety found)    # match won't apply since sought is inside found
+         (<nsymbol2> ^variety found)    # rather than the other way around
+   (<newstack2> ^cdr <rest>)
+}
+
+sp {recognize*propose*VP->VP-RB
+  (state <s> ^name recognize
+             ^stack.car <symbol> )
+  (<symbol> ^spelling |VP| )
+  (<symbol> ^variety found)
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name project
+       ^rule VP->VP-RB )
+}
+
+sp {recognize*apply*VP->VP-RB
+   (state <s> ^operator.name project
+              ^operator.rule VP->VP-RB )
+   (<s> ^stack <oldstack>)
+   (<oldstack> ^car <head> ^cdr <rest> )
+--> 
+   (<s> ^stack <oldstack> - <newstack>)
+   (<newstack> ^car <nsymbol1> ^cdr <newstack2>)
+   (<nsymbol1> ^spelling |RB| ^variety sought)
+   (<newstack2> ^car <nsymbol2> ^cdr <rest>)
+   (<nsymbol2> ^spelling |VP|   # hopefully match won't apply here either
+               ^variety found)   # b/c it's not at the top of the stack
+}
+
+
+
+
+
+
+
+
+
+
+# the following seven productions are for unary rules
+# which happen to be just the preterminal rules in this example
+# they only apply if the stack top *is* the literal word they are designed for,
+# for instance "the" will trigger the preterminal rule DT -> the
+# Please show me how to define these all in one go with gp!
+# the relevant parameters are the name of the rule, the literal word it matches on the stack 
+# and the category that replaces this literal word.
+sp {recognize*propose*DTthe
+  (state <s> ^name recognize
+             ^stack.car <symbol>)
+  (<symbol> ^spelling |the|)
+  (<symbol> ^variety found)
+-->
+  (<s> ^operator.name DTthe +)
+}
+
+sp {recognize*apply*DTthe
+   (state <s> ^operator.name DTthe)
+   (<s> ^stack <oldstack>)
+   (<oldstack> ^car <c> )
+--> 
+   (<oldstack> ^car <c> - <nsymbol>)
+   (<nsymbol> ^spelling |DT|
+              ^variety found)
+}
+
+sp {recognize*propose*NNfund
+  (state <s> ^name recognize
+             ^stack.car <symbol>)
+  (<symbol> ^spelling |fund|)
+  (<symbol> ^variety found)
+-->
+  (<s> ^operator.name NNfund +)
+}
+
+sp {recognize*apply*NNfund
+   (state <s> ^operator.name NNfund)
+   (<s> ^stack <oldstack>)
+   (<oldstack> ^car <c> )
+--> 
+   (<oldstack> ^car <c> -)
+   (<oldstack> ^car <nsymbol>)
+   (<nsymbol> ^spelling |NN|)
+   (<nsymbol> ^variety found)
+}
+
+sp {recognize*propose*VBbought
+  (state <s> ^name recognize
+             ^stack.car <symbol>)
+  (<symbol> ^spelling |bought|)
+  (<symbol> ^variety found)
+-->
+  (<s> ^operator.name VBbought +)
+}
+
+sp {recognize*apply*VBbought
+   (state <s> ^operator.name VBbought)
+   (<s> ^stack <oldstack>)
+   (<oldstack> ^car <c> )
+--> 
+   (<oldstack> ^car <c> -)
+   (<oldstack> ^car <nsymbol>)
+   (<nsymbol> ^spelling |VB|)
+   (<nsymbol> ^variety found)
+}
+
+sp {recognize*propose*DTtwo
+  (state <s> ^name recognize
+             ^stack.car <symbol>)
+  (<symbol> ^spelling |two|)
+  (<symbol> ^variety found)
+-->
+  (<s> ^operator.name DTtwo +)
+}
+
+sp {recognize*apply*DTtwo
+   (state <s> ^operator.name DTtwo)
+   (<s> ^stack <oldstack>)
+   (<oldstack> ^car <c> )
+--> 
+   (<oldstack> ^car <c> -)
+   (<oldstack> ^car <nsymbol>)
+   (<nsymbol> ^spelling |DT|)
+   (<nsymbol> ^variety found)
+}
+
+sp {recognize*propose*JJregional
+  (state <s> ^name recognize
+             ^stack.car <symbol>)
+  (<symbol> ^spelling |regional|)
+  (<symbol> ^variety found)
+-->
+  (<s> ^operator.name JJregional +)
+}
+
+sp {recognize*apply*JJregional
+   (state <s> ^operator.name JJregional)
+   (<s> ^stack <oldstack>)
+   (<oldstack> ^car <c> )
+--> 
+   (<oldstack> ^car <c> -)
+   (<oldstack> ^car <nsymbol>)
+   (<nsymbol> ^spelling |JJ|)
+   (<nsymbol> ^variety found)
+
+}
+
+sp {recognize*propose*NNbanks
+  (state <s> ^name recognize
+             ^stack.car <symbol>)
+  (<symbol> ^spelling |banks|)
+  (<symbol> ^variety found)
+-->
+  (<s> ^operator.name NNbanks +)
+}
+
+sp {recognize*apply*NNbanks
+   (state <s> ^operator.name NNbanks)
+   (<s> ^stack <oldstack>)
+   (<oldstack> ^car <c> )
+--> 
+   (<oldstack> ^car <c> -)
+   (<oldstack> ^car <nsymbol>)
+   (<nsymbol> ^spelling |NN|)
+   (<nsymbol> ^variety found)
+}
+
+sp {recognize*propose*RBtoday
+  (state <s> ^name recognize
+             ^stack.car <symbol>)
+  (<symbol> ^spelling |today|)
+  (<symbol> ^variety found)
+
+-->
+  (<s> ^operator <o> +)
+  (<o> ^name RBtoday +)
+}
+
+sp {recognize*apply*RBtoday
+   (state <s> ^operator.name RBtoday)
+   (<s> ^stack <oldstack>)
+   (<oldstack> ^car <c> )
+--> 
+   (<oldstack> ^car <c> - <nsymbol>)
+   (<nsymbol> ^spelling |RB|
+              ^variety found)
+}
+
+
+# BEGIN CONTROL KNOWLEDGE
+# prefer anything over shifting
+sp {recognize*select*operator*nonshift
+   (state <s> ^name recognize
+              ^operator <shift> +)
+   (<shift> ^name shift)
+-->
+   (<s> ^operator <shift> < )  # shift is DIS-prefered
+}
+
+sp {recognize*select*operator*match-over-project
+   (state <s> ^name recognize
+              ^operator <match> +
+	      ^operator <project> +)
+   (<match> ^name match)
+   (<project> ^name project
+              ^rule <> VP->VP-RB )
+-->
+   (<s> ^operator <match> > <project> )
+}
+
+# ....except if it's an adjunct rule!
+# lookahead case 1: we have not exhausted the input
+sp {recognize*select*operator*adjuncts-special1
+   (state <s> ^name recognize
+              ^operator <match> +
+	      ^operator <project> +)
+   (<match> ^name match)
+   (<project> ^name project
+   	      ^rule VP->VP-RB )
+  (<s> ^words <> nil)
+-->
+   (<s> ^operator <project> > <match>)  # then we should project
+}
+# lookahead case 2: we _have_ exhausted the input
+sp {recognize*select*operator*adjuncts-special2
+   (state <s> ^name recognize
+              ^operator <match> +
+	      ^operator <project> +)
+   (<match> ^name match)
+   (<project> ^name project
+   	      ^rule VP->VP-RB )
+   (<s> ^words nil)
+-->
+   (<s> ^operator <match> > <project>)  # then we should match
+}
+# END CONTROL KNOWLEDGE
+
+# BEGIN MONITOR
+sp {recognize*monitor*operator-application*project
+   (state <s> ^name recognize
+              ^operator <o>)
+   (<o> ^name project
+        ^rule <r>)
+-->
+   (write (crlf) |projecting | <r>)
+}
+sp {recognize*monitor*operator-application*match
+   (state <s> ^name recognize
+              ^operator.name match
+              ^stack <cell1>)
+   (<cell1> ^car.spelling <sought>
+            ^cdr <cell2>)
+   (<cell2> ^car.spelling <found>)
+-->
+   (write (crlf) |matching sought | <sought> | with | <found> )
+}
+# END MONITOR
+
+
